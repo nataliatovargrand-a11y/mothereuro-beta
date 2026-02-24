@@ -8,24 +8,24 @@
       </p>
     </div>
 
-    <div v-if="loading" class="loading">
+    <div v-if="loading">
       Loading events...
     </div>
 
     <div v-else class="events-grid">
 
-      <div
+      <NuxtLink
         v-for="event in events"
         :key="event.id"
+        :to="`/events/${event.id}`"
         class="event-card"
-        @click="navigateTo(`/events/${event.id}`)"
       >
 
         <div class="card-top">
           <div class="event-meta">
-            <span class="date">{{ formatDate(event.event_date) }}</span>
+            <span>{{ formatDate(event.event_date) }}</span>
             <span class="dot">•</span>
-            <span class="location">{{ event.location }}</span>
+            <span>{{ event.location }}</span>
           </div>
         </div>
 
@@ -37,7 +37,7 @@
           <span class="cta">View Event →</span>
         </div>
 
-      </div>
+      </NuxtLink>
 
     </div>
 
@@ -48,22 +48,24 @@
 
 const supabase = useSupabaseClient()
 
-const { data: events, pending: loading } = await useAsyncData(
-  'events',
-  async () => {
-    const { data, error } = await supabase
-      .from('events')
-      .select('*')
-      .order('event_date', { ascending: true })
+const events = ref([])
+const loading = ref(true)
 
-    if (error) {
-      console.error(error)
-      return []
-    }
+onMounted(async () => {
 
-    return data
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .order('event_date', { ascending: true })
+
+  if (!error) {
+    events.value = data
+  } else {
+    console.error(error)
   }
-)
+
+  loading.value = false
+})
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
@@ -91,11 +93,6 @@ const formatDate = (date) => {
   max-width: 500px;
 }
 
-.loading {
-  font-weight: 300;
-  color: var(--me-muted);
-}
-
 .events-grid {
   display: flex;
   flex-direction: column;
@@ -103,12 +100,14 @@ const formatDate = (date) => {
 }
 
 .event-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   background: white;
   padding: 35px;
   border-radius: 8px;
   border: 1px solid #eee;
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .event-card:hover {
@@ -141,16 +140,6 @@ const formatDate = (date) => {
   font-size: 13px;
   letter-spacing: 1px;
   text-transform: uppercase;
-}
-
-@media (max-width: 768px) {
-  .header h1 {
-    font-size: 30px;
-  }
-
-  .title {
-    font-size: 20px;
-  }
 }
 
 </style>
