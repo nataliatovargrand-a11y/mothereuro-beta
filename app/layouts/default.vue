@@ -5,13 +5,13 @@
       <slot />
     </main>
 
-    <!-- Luxury Glass Footer -->
+    <!-- Refined Glass Footer -->
     <nav class="bottom-nav">
 
       <NuxtLink to="/upcoming">Events</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
 
-      <!-- Floating Center Logo -->
+      <!-- Center Logo (naturally breaking above bar) -->
       <NuxtLink to="/" class="home-logo">
         <img src="/images/logo.png" alt="Mother Euro" />
       </NuxtLink>
@@ -34,9 +34,9 @@
   background: #D8D0C6;
 }
 
-/* Space for footer */
+/* Leave space for bar */
 .page-content {
-  padding-bottom: 100px;
+  padding-bottom: 110px;
 }
 
 /* GLASS BAR */
@@ -50,13 +50,18 @@
   justify-content: space-around;
   align-items: center;
 
-  padding: 14px 10px;
+  padding: 10px 10px;
 
-  backdrop-filter: blur(18px);
-  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 
-  border-top: 1px solid rgba(255,255,255,0.6);
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.04);
+  background: rgba(255, 255, 255, 0.35);
+
+  border-top: 1px solid rgba(255,255,255,0.7);
+
+  box-shadow:
+    0 -8px 30px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 /* Nav text */
@@ -77,24 +82,23 @@
   color: #A8985F;
 }
 
-/* FLOATING CENTER LOGO */
+/* CENTER LOGO */
 .home-logo {
-  position: relative;
-  top: -18px; /* This creates the "breaking" effect */
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: -28px; /* allows logo to break above */
 }
 
 .home-logo img {
-  width: 50px;
+  width: 70px; /* larger logo */
   height: auto;
-  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.15));
   transition: 0.3s ease;
 }
 
 .home-logo img:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 </style>
