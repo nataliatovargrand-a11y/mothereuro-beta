@@ -18,7 +18,7 @@
         v-for="event in events"
         :key="event.id"
         class="event-card"
-        @click="goToEvent(event.luma_url)"
+        @click="navigateTo(`/events/${event.id}`)"
       >
 
         <div class="card-top">
@@ -46,10 +46,12 @@
 
 <script setup>
 
-const { data: events, pending: loading, error } = await useAsyncData(
+const supabase = useSupabaseClient()
+
+const { data: events, pending: loading } = await useAsyncData(
   'events',
   async () => {
-    const { data, error } = await useSupabaseClient()
+    const { data, error } = await supabase
       .from('events')
       .select('*')
       .order('event_date', { ascending: true })
@@ -62,10 +64,6 @@ const { data: events, pending: loading, error } = await useAsyncData(
     return data
   }
 )
-
-const goToEvent = (url) => {
-  window.open(url, '_blank')
-}
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
