@@ -1,86 +1,57 @@
 <template>
-  <div class="layout">
-    <header class="header">
-      <div class="brand">MOTHER EURO</div>
-    </header>
+  <div>
 
-    <main class="content">
-      <NuxtPage />
-    </main>
+    <section class="me-container hero">
 
-    <nav class="bottom-nav">
-      <NuxtLink to="/">Home</NuxtLink>
-      <NuxtLink to="/upcoming">Upcoming</NuxtLink>
-      <NuxtLink to="/partners">Partners</NuxtLink>
-      <NuxtLink to="/account">Account</NuxtLink>
-    </nav>
+      <img src="/images/logo.png" class="logo" />
+
+      <h1 class="headline">
+        Mindful Motherhood<br />
+        Across Europe
+      </h1>
+
+      <p class="subtitle">
+        A curated community supporting women building
+        life, business, and belonging abroad.
+      </p>
+
+      <button class="me-button">
+        Explore Membership
+      </button>
+
+    </section>
+
   </div>
 </template>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
+<style scoped>
 
-:root {
-  --me-bg: #FAF3EA;
-  --me-dark: #2E2B29;
-  --me-grey: #9AA1A7;
-  --me-gold: #A8985F;
-  --me-olive: #5E5130;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--me-bg);
-  color: var(--me-dark);
-  font-family: 'Inter', sans-serif;
-}
-
-h1, h2, h3 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 300;
-  letter-spacing: 2px;
-}
-
-.layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--me-bg);
-}
-
-.header {
+.hero {
   text-align: center;
-  padding: 20px;
-  font-family: 'Playfair Display', serif;
-  letter-spacing: 4px;
-  font-size: 18px;
 }
 
-.content {
-  flex: 1;
-  padding: 40px 20px 80px;
+.logo {
+  width: 110px;
+  margin-bottom: 40px;
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: white;
-  display: flex;
-  justify-content: space-around;
-  padding: 14px 0;
-  font-size: 12px;
-  letter-spacing: 1px;
-  border-top: 1px solid #eee;
+.headline {
+  font-size: 42px;
+  line-height: 1.2;
+  margin-bottom: 30px;
 }
 
-.bottom-nav a {
-  text-decoration: none;
-  color: var(--me-dark);
+.subtitle {
+  font-weight: 300;
+  max-width: 500px;
+  margin: 0 auto 40px;
+  color: var(--me-muted);
 }
 
-.bottom-nav a.router-link-active {
-  color: var(--me-gold);
+@media (max-width: 768px) {
+  .headline {
+    font-size: 32px;
+  }
 }
+
 </style>
