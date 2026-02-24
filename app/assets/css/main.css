@@ -1,0 +1,24 @@
+:root {
+  --me-bg: #D8D0C6;
+  --me-text: #2E2B29;
+  --me-accent: #A8985F;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--me-bg);
+  color: var(--me-text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
