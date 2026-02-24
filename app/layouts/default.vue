@@ -10,7 +10,6 @@
       <NuxtLink to="/upcoming">Events</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
 
-      <!-- Center Logo -->
       <NuxtLink to="/" class="home-logo">
         <img src="/images/logo.png" alt="Mother Euro" />
       </NuxtLink>
@@ -34,7 +33,7 @@
 }
 
 .page-content {
-  padding-bottom: 120px;
+  padding-bottom: 110px;
 }
 
 /* GLASS BAR */
@@ -64,20 +63,22 @@
   overflow: visible;
 }
 
-/* PERFECT CIRCLE CUT-OUT */
+/* PRECISE CIRCLE CUT-OUT */
 .bottom-nav::before {
   content: "";
   position: absolute;
-  top: -35px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90px;
-  height: 90px;
+  top: -38px;
+
+  width: 76px;
+  height: 76px;
+
   background: #D8D0C6;
   border-radius: 50%;
 }
 
-/* Nav Text */
+/* NAV TEXT */
 .bottom-nav a {
   text-decoration: none;
   color: #2E2B29;
@@ -98,7 +99,7 @@
 /* CENTER LOGO */
 .home-logo {
   position: relative;
-  margin-top: -40px;
+  transform: translateY(-32px);
   z-index: 2;
 }
 
