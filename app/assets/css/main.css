@@ -1,4 +1,4 @@
-/* GOOGLE FONTS IMPORT */
+/* GOOGLE FONTS – Luxury Web Equivalent to Brand Manual */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400&family=IBM+Plex+Mono:wght@400&display=swap');
 
 :root {
@@ -7,7 +7,7 @@
   --me-accent: #A8985F;
 }
 
-/* Reset */
+/* RESET */
 * {
   box-sizing: border-box;
 }
@@ -29,10 +29,7 @@ h1, h2, h3 {
   letter-spacing: 0.03em;
 }
 
-/* Navigation / Accent Mono */
-.nav-mono {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+/* Buttons */
+button {
+  font-family: 'Inter', sans-serif;
 }
