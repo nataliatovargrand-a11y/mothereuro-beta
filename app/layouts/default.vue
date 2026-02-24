@@ -35,7 +35,7 @@
 }
 
 .page-content {
-  padding-bottom: 120px;
+  padding-bottom: 110px;
 }
 
 /* GLASS BAR */
@@ -62,22 +62,21 @@
     0 -8px 30px rgba(0,0,0,0.06),
     inset 0 1px 0 rgba(255,255,255,0.6);
 
-  position: fixed;
   overflow: visible;
 }
 
-/* Soft Curve Effect */
+/* Tight Curve hugging logo */
 .bottom-nav::before {
   content: "";
   position: absolute;
-  top: -35px;
+  top: -28px;
   left: 50%;
   transform: translateX(-50%);
-  width: 140px;
-  height: 70px;
+  width: 90px;        /* tighter */
+  height: 50px;       /* shorter */
   background: #D8D0C6;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
+  border-bottom-left-radius: 45px;
+  border-bottom-right-radius: 45px;
 }
 
 /* Nav Text */
@@ -101,7 +100,7 @@
 /* CENTER LOGO */
 .home-logo {
   position: relative;
-  margin-top: -32px;
+  margin-top: -30px;
   z-index: 2;
 }
 
