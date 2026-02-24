@@ -2,7 +2,7 @@
   <div class="page">
 
     <section class="hero">
-      <img src="/logome.png" class="logo" />
+     <img src="/logo.png" class="logo" />
 
       <h1 class="headline">
         Mindful Motherhood<br />
