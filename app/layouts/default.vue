@@ -1,58 +1,59 @@
 <template>
-  <div class="me-root">
-    <slot />
+  <div class="app-wrapper">
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <slot />
+    </main>
+
+    <!-- Global Fixed Bottom Nav -->
+    <nav class="bottom-nav">
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/upcoming">Upcoming</NuxtLink>
+      <NuxtLink to="/partners">Partners</NuxtLink>
+      <NuxtLink to="/account">Account</NuxtLink>
+    </nav>
+
   </div>
 </template>
 
-<style>
-:root {
-  --me-bg: #FAF3EA;
-  --me-dark: #2E2B29;
-  --me-gold: #A8985F;
-  --me-gold-deep: #5E5130;
-  --me-grey: #9AA1A7;
-}
+<script setup>
+</script>
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--me-bg);
-  color: var(--me-dark);
-  font-family: "Helvetica Neue", sans-serif;
-}
+<style scoped>
 
-.me-root {
+.app-wrapper {
   min-height: 100vh;
-  background: var(--me-bg);
+  background: #D8D0C6;
 }
 
-.me-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 40px;
+/* Leave space for fixed nav */
+.page-content {
+  padding-bottom: 90px;
 }
 
-h1 {
-  font-size: 48px;
-  font-weight: 300;
-  letter-spacing: -0.5px;
+/* FIXED FOOTER */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 18px 0;
+  background: #E3DED7;
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-.me-button {
-  background: var(--me-dark);
-  color: white;
-  padding: 14px 24px;
-  border-radius: 40px;
-  border: none;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s ease;
+.bottom-nav a {
+  text-decoration: none;
+  color: #2E2B29;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-.me-button:hover {
-  background: var(--me-gold);
-  color: var(--me-dark);
+.bottom-nav a.router-link-active {
+  color: #A8985F;
 }
+
 </style>

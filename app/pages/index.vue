@@ -1,38 +1,26 @@
 <template>
   <div class="home">
 
-    <div class="hero">
+    <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
 
-      <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
+    <h1 class="brand-title">
+      MOTHER EURO
+    </h1>
 
-      <h1 class="brand-title">
-        MOTHER EURO
-      </h1>
+    <p class="tagline">
+      A curated community supporting women
+      building life, business, and belonging abroad.
+    </p>
 
-      <p class="tagline">
-        A curated community supporting women
-        building life, business, and belonging abroad.
-      </p>
+    <div class="cta-group">
+      <NuxtLink to="/login" class="btn-primary">
+        Login
+      </NuxtLink>
 
-      <div class="cta-group">
-        <NuxtLink to="/login" class="btn-primary">
-          Login
-        </NuxtLink>
-
-        <NuxtLink to="/signup" class="btn-secondary">
-          Sign Up
-        </NuxtLink>
-      </div>
-
+      <NuxtLink to="/signup" class="btn-secondary">
+        Sign Up
+      </NuxtLink>
     </div>
-
-    <!-- Fixed Bottom Navigation -->
-    <nav class="bottom-nav">
-      <NuxtLink to="/">Home</NuxtLink>
-      <NuxtLink to="/upcoming">Upcoming</NuxtLink>
-      <NuxtLink to="/partners">Partners</NuxtLink>
-      <NuxtLink to="/account">Account</NuxtLink>
-    </nav>
 
   </div>
 </template>
@@ -43,19 +31,13 @@
 <style scoped>
 
 .home {
-  height: 100vh;
-  background: #D8D0C6;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 40px;
   text-align: center;
-}
-
-/* HERO CENTERED */
-.hero {
-  max-width: 500px;
-  margin-bottom: 80px; /* space above fixed nav */
 }
 
 .logo {
@@ -76,9 +58,9 @@
   line-height: 1.6;
   color: #4A4745;
   margin-bottom: 50px;
+  max-width: 420px;
 }
 
-/* BUTTONS */
 .cta-group {
   display: flex;
   gap: 20px;
@@ -114,29 +96,6 @@
 .btn-secondary:hover {
   background: #2E2B29;
   color: white;
-}
-
-/* FIXED FOOTER */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  padding: 20px 0;
-  background: #E3DED7;
-  border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-.bottom-nav a {
-  text-decoration: none;
-  color: #2E2B29;
-  font-size: 16px;
-}
-
-.bottom-nav a:hover {
-  color: #A8985F;
 }
 
 </style>
