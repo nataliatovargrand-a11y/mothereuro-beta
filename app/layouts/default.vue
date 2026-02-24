@@ -5,13 +5,13 @@
       <slot />
     </main>
 
-    <!-- Refined Glass Footer -->
+    <!-- Sculpted Glass Footer -->
     <nav class="bottom-nav">
 
       <NuxtLink to="/upcoming">Events</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
 
-      <!-- Center Logo (naturally breaking above bar) -->
+      <!-- Center Logo -->
       <NuxtLink to="/" class="home-logo">
         <img src="/images/logo.png" alt="Mother Euro" />
       </NuxtLink>
@@ -34,9 +34,8 @@
   background: #D8D0C6;
 }
 
-/* Leave space for bar */
 .page-content {
-  padding-bottom: 110px;
+  padding-bottom: 120px;
 }
 
 /* GLASS BAR */
@@ -50,7 +49,7 @@
   justify-content: space-around;
   align-items: center;
 
-  padding: 10px 10px;
+  padding: 12px 10px 18px 10px;
 
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
@@ -62,9 +61,26 @@
   box-shadow:
     0 -8px 30px rgba(0,0,0,0.06),
     inset 0 1px 0 rgba(255,255,255,0.6);
+
+  position: fixed;
+  overflow: visible;
 }
 
-/* Nav text */
+/* Soft Curve Effect */
+.bottom-nav::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 70px;
+  background: #D8D0C6;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+}
+
+/* Nav Text */
 .bottom-nav a {
   text-decoration: none;
   color: #2E2B29;
@@ -84,14 +100,13 @@
 
 /* CENTER LOGO */
 .home-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: -28px; /* allows logo to break above */
+  position: relative;
+  margin-top: -32px;
+  z-index: 2;
 }
 
 .home-logo img {
-  width: 70px; /* larger logo */
+  width: 70px;
   height: auto;
   filter: drop-shadow(0 12px 18px rgba(0,0,0,0.15));
   transition: 0.3s ease;
