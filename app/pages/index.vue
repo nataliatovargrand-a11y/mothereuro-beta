@@ -1,38 +1,46 @@
 <template>
   <div class="home">
-    <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
+    <img src="/logome.png" class="logo" />
 
-    <h1 class="brand">MOTHER EURO</h1>
+    <h1>Embrace. Connect. Thrive.</h1>
 
-    <p class="subtitle">
+    <p>
       A curated community for women building life across Europe.
     </p>
+
+    <button class="primary-btn">
+      Join the Community
+    </button>
   </div>
 </template>
 
 <style scoped>
 .home {
-  padding-top: 60px;
   text-align: center;
 }
 
 .logo {
-  width: 160px;
+  width: 120px;
   margin-bottom: 30px;
 }
 
-.brand {
-  font-size: 34px;
+p {
   font-weight: 300;
-  letter-spacing: 6px;
-  margin-bottom: 20px;
+  margin: 20px 0 40px;
 }
 
-.subtitle {
-  font-size: 16px;
-  color: #4a4a4a;
-  max-width: 280px;
-  margin: 0 auto;
-  line-height: 1.6;
+.primary-btn {
+  background: var(--me-dark);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--me-gold);
 }
 </style>
