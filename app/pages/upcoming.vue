@@ -1,30 +1,48 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-
-const events = ref<any[]>([])
-
-onMounted(async () => {
-  const { data } = await supabase
-    .from('events')
-    .select('*')
-
-  if (data) events.value = data
-})
-</script>
-
 <template>
-  <div>
-    <h1>Upcoming Events</h1>
+  <section class="upcoming">
+    <div class="container">
+      <h1>Upcoming Events</h1>
 
-    <div
-      v-for="event in events"
-      :key="event.id"
-      style="margin-bottom:20px; border:1px solid #ddd; padding:20px"
-    >
-      <h2>{{ event.title }}</h2>
-      <p>{{ event.date }}</p>
-      <p>{{ event.city }}</p>
+      <p class="subtitle">
+        Discover our curated gatherings across Europe.
+      </p>
+
+      <div class="luma-embed">
+        <iframe
+          src="https://lu.ma/YOUR-LUMA-LINK"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
+
+<style scoped>
+.upcoming {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.subtitle {
+  margin: 20px 0 40px;
+  font-weight: 300;
+}
+
+.luma-embed {
+  position: relative;
+  width: 100%;
+  height: 800px;
+}
+
+.luma-embed iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+</style>
