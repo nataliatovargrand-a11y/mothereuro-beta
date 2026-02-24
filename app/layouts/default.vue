@@ -1,44 +1,28 @@
-<template>
-  <div class="app-wrapper">
+<nav class="bottom-nav">
 
-    <main class="page-content">
-      <slot />
-    </main>
+  <NuxtLink to="/upcoming" class="nav-link">
+    EVENTS
+  </NuxtLink>
 
-    <!-- Editorial Glass Footer -->
-    <nav class="bottom-nav">
+  <NuxtLink to="/partners" class="nav-link">
+    PARTNERS
+  </NuxtLink>
 
-      <NuxtLink to="/upcoming">EVENTS</NuxtLink>
-      <NuxtLink to="/partners">PARTNERS</NuxtLink>
+  <NuxtLink to="/" class="home-logo">
+    <img src="/images/logo.png" alt="Mother Euro" />
+  </NuxtLink>
 
-      <!-- Center Logo -->
-      <NuxtLink to="/" class="home-logo">
-        <img src="/images/logo.png" alt="Mother Euro" />
-      </NuxtLink>
+  <NuxtLink to="/resources" class="nav-link">
+    RESOURCES
+  </NuxtLink>
 
-      <NuxtLink to="/resources">RESOURCES</NuxtLink>
-      <NuxtLink to="/account">ACCOUNT</NuxtLink>
+  <NuxtLink to="/account" class="nav-link">
+    ACCOUNT
+  </NuxtLink>
 
-    </nav>
+</nav>
+<style>
 
-  </div>
-</template>
-
-<script setup>
-</script>
-
-<style scoped>
-
-.app-wrapper {
-  min-height: 100vh;
-  background: #D8D0C6;
-}
-
-.page-content {
-  padding-bottom: 100px;
-}
-
-/* Glass Bar */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -63,27 +47,29 @@
     inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
-/* Editorial Nav Text */
-.bottom-nav a {
+/* Editorial Nav Links */
+.nav-link {
   text-decoration: none;
   color: #2E2B29;
 
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   letter-spacing: 2px;
   font-weight: 400;
+  text-transform: uppercase;
 
   transition: 0.3s ease;
 }
 
-.bottom-nav a.router-link-active {
+.nav-link.router-link-active {
   color: #A8985F;
 }
 
-.bottom-nav a:hover {
+.nav-link:hover {
   color: #A8985F;
 }
 
-/* Center Logo (no break) */
+/* Center Logo */
 .home-logo img {
   width: 52px;
   height: auto;
