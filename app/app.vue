@@ -1,120 +1,79 @@
 <template>
-  <div class="app-wrapper">
+  <div class="me-root">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
 
-<script setup>
-</script>
-
 <style>
-
-/* ============================= */
-/* BRAND VARIABLES */
-/* ============================= */
+/* ===== BRAND VARIABLES ===== */
 
 :root {
-  --me-bg: #f6f3ee;
-  --me-accent: #4b7c6b;
-  --me-text: #111111;
-  --me-muted: #8a8a8a;
-  --me-card: #ffffff;
+  --me-bg: #FAF3EA;
+  --me-dark: #2E2B29;
+  --me-gold: #A8985F;
+  --me-gold-deep: #5E5130;
+  --me-grey: #9AA1A7;
 }
 
-/* ============================= */
-/* GLOBAL RESET */
-/* ============================= */
+/* ===== GLOBAL RESET ===== */
 
-* {
-  box-sizing: border-box;
-}
-
-body {
+html, body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  padding: 0;
   background: var(--me-bg);
-  color: var(--me-text);
+  color: var(--me-dark);
+  font-family: "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ============================= */
-/* GLOBAL LAYOUT */
-/* ============================= */
+/* ===== GLOBAL TYPOGRAPHY ===== */
 
-.app-wrapper {
-  min-height: 100vh;
+h1, h2, h3 {
+  font-weight: 300;
+  letter-spacing: -0.5px;
+  color: var(--me-dark);
 }
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 32px;
+}
+
+p {
+  color: var(--me-dark);
+  line-height: 1.6;
+}
+
+/* ===== CONTAINER ===== */
 
 .me-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 40px;
+  padding: 60px 40px;
 }
 
-/* ============================= */
-/* HEADINGS */
-/* ============================= */
-
-h1 {
-  font-size: 48px;
-  font-weight: 500;
-  margin-bottom: 40px;
-}
-
-h2 {
-  font-weight: 500;
-}
-
-/* ============================= */
-/* BUTTON SYSTEM */
-/* ============================= */
-
-button {
-  font-family: inherit;
-}
+/* ===== BUTTON SYSTEM ===== */
 
 .me-button {
-  background: black;
+  background: var(--me-dark);
   color: white;
-  border: none;
-  padding: 14px 26px;
+  padding: 14px 24px;
   border-radius: 40px;
-  font-size: 13px;
-  letter-spacing: 1px;
+  border: none;
+  font-size: 12px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.3s ease;
 }
 
 .me-button:hover {
-  background: var(--me-accent);
-  transform: translateY(-2px);
+  background: var(--me-gold);
+  color: var(--me-dark);
 }
-
-/* ============================= */
-/* CARD BASE */
-/* ============================= */
-
-.me-card {
-  background: var(--me-card);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-}
-
-/* ============================= */
-/* RESPONSIVE */
-/* ============================= */
-
-@media (max-width: 768px) {
-  .me-container {
-    padding: 60px 20px;
-  }
-
-  h1 {
-    font-size: 36px;
-  }
-}
-
 </style>
