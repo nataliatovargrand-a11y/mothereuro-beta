@@ -5,11 +5,13 @@
       <slot />
     </main>
 
+    <!-- Clean Luxury Glass Footer -->
     <nav class="bottom-nav">
 
       <NuxtLink to="/upcoming">Events</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
 
+      <!-- Center Logo -->
       <NuxtLink to="/" class="home-logo">
         <img src="/images/logo.png" alt="Mother Euro" />
       </NuxtLink>
@@ -33,7 +35,7 @@
 }
 
 .page-content {
-  padding-bottom: 110px;
+  padding-bottom: 120px;
 }
 
 /* GLASS BAR */
@@ -49,33 +51,18 @@
 
   padding: 14px 10px;
 
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
 
   background: rgba(255, 255, 255, 0.35);
 
-  border-top: 1px solid rgba(255,255,255,0.7);
+  border-top: 1px solid rgba(255,255,255,0.6);
 
   box-shadow:
-    0 -8px 30px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    0 -6px 25px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.5);
 
   overflow: visible;
-}
-
-/* PRECISE CIRCLE CUT-OUT */
-.bottom-nav::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -38px;
-
-  width: 76px;
-  height: 76px;
-
-  background: #D8D0C6;
-  border-radius: 50%;
 }
 
 /* NAV TEXT */
@@ -99,19 +86,19 @@
 /* CENTER LOGO */
 .home-logo {
   position: relative;
-  transform: translateY(-32px);
+  transform: translateY(-22px); /* slight break above bar */
   z-index: 2;
 }
 
 .home-logo img {
-  width: 70px;
+  width: 80px; /* bigger */
   height: auto;
-  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.12));
   transition: 0.3s ease;
 }
 
 .home-logo img:hover {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
 </style>
