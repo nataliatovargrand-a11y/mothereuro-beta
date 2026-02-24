@@ -1,54 +1,83 @@
 <template>
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-inner">
       <img src="/logome.png" class="logo" />
 
       <h1 class="headline">
-        Embrace.<br />
-        Connect.<br />
-        Thrive.
+        Mindful Motherhood<br />
+        Across Europe
       </h1>
 
       <p class="tagline">
-        A curated community for women building life across Europe.
+        A curated community supporting women building
+        life, business, and belonging abroad.
       </p>
 
       <button class="primary-btn">
-        Join the Community
+        Explore Membership
       </button>
     </div>
   </section>
 
-  <section class="about">
-    <h2>Why Mother Euro</h2>
+  <!-- VALUE PILLARS -->
+  <section class="pillars">
+    <div class="pillar">
+      <h3>Community</h3>
+      <p>Meaningful connection in every city.</p>
+    </div>
+
+    <div class="pillar">
+      <h3>Wellness</h3>
+      <p>Movement, mindfulness, and motherhood aligned.</p>
+    </div>
+
+    <div class="pillar">
+      <h3>Growth</h3>
+      <p>Business, creativity, and expansion abroad.</p>
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP POSITIONING -->
+  <section class="membership">
+    <h2>Not Just Events.</h2>
+    <h2>A Private Network.</h2>
+
     <p>
-      We bring together women navigating motherhood, career,
-      and life transitions across Europe.
+      Mother Euro is a carefully cultivated space for
+      American mothers transitioning to life in Europe.
+      We move intentionally. We gather thoughtfully.
+      We build slowly.
     </p>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <button class="secondary-btn">
+      View Upcoming Events
+    </button>
   </section>
 </template>
 
 <style scoped>
 .hero {
-  background: var(--me-bg);
-  padding: 80px 20px;
+  padding: 100px 20px 80px;
   text-align: center;
 }
 
 .hero-inner {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .logo {
-  width: 120px;
+  width: 110px;
   margin-bottom: 40px;
 }
 
 .headline {
-  font-size: 40px;
+  font-size: 42px;
   line-height: 1.2;
-  margin: 0;
 }
 
 .tagline {
@@ -66,27 +95,55 @@
   font-size: 12px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.primary-btn:hover {
-  background: var(--me-gold);
-}
-
-.about {
-  padding: 60px 20px;
+.pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  padding: 80px 20px;
   text-align: center;
   background: white;
 }
 
-.about h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
+.pillar h3 {
+  font-size: 22px;
+  letter-spacing: 2px;
 }
 
-.about p {
-  max-width: 500px;
-  margin: 0 auto;
+.pillar p {
   font-weight: 300;
+  margin-top: 10px;
+}
+
+.membership {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.membership h2 {
+  font-size: 32px;
+  margin: 0;
+}
+
+.membership p {
+  max-width: 600px;
+  margin: 40px auto 0;
+  font-weight: 300;
+}
+
+.cta {
+  padding: 80px 20px 120px;
+  text-align: center;
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 1px solid var(--me-dark);
+  padding: 14px 32px;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 </style>
