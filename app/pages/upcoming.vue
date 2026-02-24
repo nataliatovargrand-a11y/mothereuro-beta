@@ -1,48 +1,53 @@
 <template>
   <section class="upcoming">
     <div class="container">
-      <h1>Upcoming Events</h1>
-
+      <h1 class="title">Upcoming Events</h1>
       <p class="subtitle">
-        Discover our curated gatherings across Europe.
+        Curated gatherings across Europe & online.
       </p>
+    </div>
 
-      <div class="luma-embed">
-        <iframe
-          src="https://lu.ma/YOUR-LUMA-LINK"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
-      </div>
+    <div class="embed-wrapper">
+      <iframe
+        src="https://luma.com/user/mothereuro"
+        loading="lazy"
+        allowfullscreen
+      ></iframe>
     </div>
   </section>
 </template>
 
 <style scoped>
 .upcoming {
-  padding: 60px 20px;
-  text-align: center;
+  padding-top: 60px;
+  background: var(--me-bg);
 }
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
+  text-align: center;
+  padding: 0 20px 40px;
+}
+
+.title {
+  font-size: 28px;
+  letter-spacing: 2px;
 }
 
 .subtitle {
-  margin: 20px 0 40px;
+  margin-top: 20px;
   font-weight: 300;
+  color: var(--me-grey);
 }
 
-.luma-embed {
-  position: relative;
+.embed-wrapper {
   width: 100%;
-  height: 800px;
+  height: calc(100vh - 160px);
+  overflow: hidden;
 }
 
-.luma-embed iframe {
+.embed-wrapper iframe {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border: none;
 }
 </style>
