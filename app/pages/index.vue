@@ -5,105 +5,132 @@
 
       <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
 
-      <h1>Mother Euro</h1>
+      <h1 class="brand-title">
+        MOTHER EURO
+      </h1>
 
       <p class="tagline">
-        A curated community supporting women building life, business, and belonging abroad
+        A curated community supporting women
+        <br />
+        building life, business, and belonging abroad.
       </p>
 
-      <button class="cta" @click="goMembership">
-        Explore Membership
-      </button>
+      <div class="cta-group">
+        <NuxtLink to="/login" class="btn-primary">
+          Login
+        </NuxtLink>
+
+        <NuxtLink to="/signup" class="btn-secondary">
+          Sign Up
+        </NuxtLink>
+      </div>
 
     </div>
 
-    <footer class="footer">
+    <nav class="bottom-nav">
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/upcoming">Upcoming</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
       <NuxtLink to="/account">Account</NuxtLink>
-    </footer>
+    </nav>
 
   </div>
 </template>
 
 <script setup>
-const router = useRouter()
-
-const goMembership = () => {
-  router.push('/account')
-}
 </script>
 
 <style scoped>
 
 .home {
   min-height: 100vh;
-  background: #FAF3EA;
+  background: #D8D0C6;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  padding: 60px 20px;
+  padding-top: 100px;
 }
 
-.hero {
-  margin-top: 60px;
-}
-
+/* LOGO */
 .logo {
-  width: 80px;
-  margin-bottom: 30px;
+  width: 120px;
+  margin-bottom: 50px;
 }
 
-h1 {
-  font-size: 42px;
+/* TITLE */
+.brand-title {
+  font-size: 34px;
+  letter-spacing: 12px;
   font-weight: 300;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   color: #2E2B29;
 }
 
+/* TAGLINE */
 .tagline {
-  max-width: 600px;
-  margin: 0 auto 40px auto;
   font-size: 18px;
-  color: #2E2B29;
   line-height: 1.6;
+  color: #4A4745;
+  margin-bottom: 50px;
 }
 
-.cta {
+/* CTA BUTTONS */
+.cta-group {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn-primary {
   background: #2E2B29;
   color: white;
-  padding: 14px 30px;
-  border-radius: 40px;
-  border: none;
-  letter-spacing: 2px;
-  font-size: 12px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s ease;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: 0.3s;
 }
 
-.cta:hover {
+.btn-primary:hover {
   background: #A8985F;
+}
+
+.btn-secondary {
+  border: 1px solid #2E2B29;
   color: #2E2B29;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: 0.3s;
 }
 
-.footer {
-  margin-top: 80px;
+.btn-secondary:hover {
+  background: #2E2B29;
+  color: white;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  width: 100%;
   display: flex;
-  gap: 30px;
-  padding-bottom: 30px;
+  justify-content: space-around;
+  padding: 20px 0;
+  background: #E3DED7;
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-.footer a {
+.bottom-nav a {
   text-decoration: none;
   color: #2E2B29;
-  font-size: 14px;
+  font-size: 16px;
 }
 
-.footer a:hover {
+.bottom-nav a:hover {
   color: #A8985F;
 }
 
