@@ -2,7 +2,7 @@
   <div class="page">
 
     <section class="hero">
-     <img src="/logo.png" class="logo" />
+      <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
 
       <h1 class="headline">
         Mindful Motherhood<br />
@@ -20,17 +20,17 @@
     </section>
 
     <section class="pillars">
-      <div>
+      <div class="pillar">
         <h3>Community</h3>
         <p>Meaningful connection in every city.</p>
       </div>
 
-      <div>
+      <div class="pillar">
         <h3>Wellness</h3>
         <p>Movement, mindfulness, and motherhood aligned.</p>
       </div>
 
-      <div>
+      <div class="pillar">
         <h3>Growth</h3>
         <p>Business, creativity, and expansion abroad.</p>
       </div>
@@ -90,13 +90,13 @@
   gap: 60px;
 }
 
-.pillars h3 {
+.pillar h3 {
   font-family: 'Playfair Display', serif;
   font-size: 22px;
   letter-spacing: 2px;
 }
 
-.pillars p {
+.pillar p {
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   margin-top: 10px;
