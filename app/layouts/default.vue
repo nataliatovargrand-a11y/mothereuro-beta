@@ -5,7 +5,6 @@
       <slot />
     </main>
 
-    <!-- Sculpted Glass Footer -->
     <nav class="bottom-nav">
 
       <NuxtLink to="/upcoming">Events</NuxtLink>
@@ -35,7 +34,7 @@
 }
 
 .page-content {
-  padding-bottom: 110px;
+  padding-bottom: 120px;
 }
 
 /* GLASS BAR */
@@ -49,7 +48,7 @@
   justify-content: space-around;
   align-items: center;
 
-  padding: 12px 10px 18px 10px;
+  padding: 14px 10px;
 
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
@@ -65,18 +64,17 @@
   overflow: visible;
 }
 
-/* Tight Curve hugging logo */
+/* PERFECT CIRCLE CUT-OUT */
 .bottom-nav::before {
   content: "";
   position: absolute;
-  top: -28px;
+  top: -35px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90px;        /* tighter */
-  height: 50px;       /* shorter */
+  width: 90px;
+  height: 90px;
   background: #D8D0C6;
-  border-bottom-left-radius: 45px;
-  border-bottom-right-radius: 45px;
+  border-radius: 50%;
 }
 
 /* Nav Text */
@@ -100,7 +98,7 @@
 /* CENTER LOGO */
 .home-logo {
   position: relative;
-  margin-top: -30px;
+  margin-top: -40px;
   z-index: 2;
 }
 
