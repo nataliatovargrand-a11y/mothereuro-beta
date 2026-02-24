@@ -8,16 +8,11 @@
       </p>
     </div>
 
-    <div v-if="loading">
-      Loading events...
-    </div>
+    <div class="events-grid">
 
-    <div v-else class="events-grid">
-
-      <NuxtLink
+      <div
         v-for="event in events"
         :key="event.id"
-        :to="`/events/${event.id}`"
         class="event-card"
       >
 
@@ -33,11 +28,15 @@
           {{ event.title }}
         </h2>
 
-        <div class="card-footer">
-          <span class="cta">View Event →</span>
-        </div>
+        <p v-if="event.description" class="description">
+          {{ event.description }}
+        </p>
 
-      </NuxtLink>
+        <button class="me-button" @click="openLuma(event.luma_url)">
+          Register
+        </button>
+
+      </div>
 
     </div>
 
@@ -49,10 +48,8 @@
 const supabase = useSupabaseClient()
 
 const events = ref([])
-const loading = ref(true)
 
 onMounted(async () => {
-
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -63,14 +60,19 @@ onMounted(async () => {
   } else {
     console.error(error)
   }
-
-  loading.value = false
 })
+
+const openLuma = (url) => {
+  if (url) {
+    window.open(url, '_blank')
+  }
+}
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    year: 'numeric'
   })
 }
 
@@ -96,22 +98,18 @@ const formatDate = (date) => {
 .events-grid {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 40px;
 }
 
 .event-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
   background: white;
-  padding: 35px;
-  border-radius: 8px;
+  padding: 40px;
+  border-radius: 10px;
   border: 1px solid #eee;
   transition: all 0.3s ease;
 }
 
 .event-card:hover {
-  transform: translateY(-6px);
   box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
@@ -131,15 +129,18 @@ const formatDate = (date) => {
 }
 
 .title {
-  font-size: 24px;
-  line-height: 1.3;
-  margin-bottom: 20px;
+  font-size: 26px;
+  margin-bottom: 15px;
 }
 
-.cta {
-  font-size: 13px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+.description {
+  font-weight: 300;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.me-button {
+  margin-top: 10px;
 }
 
 </style>
