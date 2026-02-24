@@ -1,4 +1,11 @@
 export default defineNuxtConfig({
-  compatibilityDate: '2026-02-23'
-})
 
+  ssr: true,
+
+  nitro: {
+    preset: 'vercel'
+  },
+
+  compatibilityDate: '2026-02-24'
+
+})
