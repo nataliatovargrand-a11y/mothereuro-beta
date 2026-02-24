@@ -11,7 +11,6 @@
 
       <p class="tagline">
         A curated community supporting women
-        <br />
         building life, business, and belonging abroad.
       </p>
 
@@ -27,6 +26,7 @@
 
     </div>
 
+    <!-- Fixed Bottom Navigation -->
     <nav class="bottom-nav">
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/upcoming">Upcoming</NuxtLink>
@@ -43,23 +43,26 @@
 <style scoped>
 
 .home {
-  min-height: 100vh;
+  height: 100vh;
   background: #D8D0C6;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  padding: 40px;
   text-align: center;
-  padding-top: 100px;
 }
 
-/* LOGO */
+/* HERO CENTERED */
+.hero {
+  max-width: 500px;
+  margin-bottom: 80px; /* space above fixed nav */
+}
+
 .logo {
   width: 120px;
   margin-bottom: 50px;
 }
 
-/* TITLE */
 .brand-title {
   font-size: 34px;
   letter-spacing: 12px;
@@ -68,7 +71,6 @@
   color: #2E2B29;
 }
 
-/* TAGLINE */
 .tagline {
   font-size: 18px;
   line-height: 1.6;
@@ -76,7 +78,7 @@
   margin-bottom: 50px;
 }
 
-/* CTA BUTTONS */
+/* BUTTONS */
 .cta-group {
   display: flex;
   gap: 20px;
@@ -114,8 +116,11 @@
   color: white;
 }
 
-/* BOTTOM NAV */
+/* FIXED FOOTER */
 .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
   display: flex;
   justify-content: space-around;
