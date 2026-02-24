@@ -5,13 +5,13 @@
       <slot />
     </main>
 
-    <!-- Luxury Thin Glass Footer -->
+    <!-- Luxury Glass Footer -->
     <nav class="bottom-nav">
 
       <NuxtLink to="/upcoming">Events</NuxtLink>
       <NuxtLink to="/partners">Partners</NuxtLink>
 
-      <!-- Center Logo (Home) -->
+      <!-- Floating Center Logo -->
       <NuxtLink to="/" class="home-logo">
         <img src="/images/logo.png" alt="Mother Euro" />
       </NuxtLink>
@@ -36,10 +36,10 @@
 
 /* Space for footer */
 .page-content {
-  padding-bottom: 85px;
+  padding-bottom: 100px;
 }
 
-/* THINNER GLASS FOOTER */
+/* GLASS BAR */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -50,7 +50,7 @@
   justify-content: space-around;
   align-items: center;
 
-  padding: 12px 10px;
+  padding: 14px 10px;
 
   backdrop-filter: blur(18px);
   background: rgba(255, 255, 255, 0.45);
@@ -77,15 +77,20 @@
   color: #A8985F;
 }
 
-/* CENTER LOGO (NO BACKGROUND) */
+/* FLOATING CENTER LOGO */
 .home-logo {
-  transform: translateY(-4px);
+  position: relative;
+  top: -18px; /* This creates the "breaking" effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .home-logo img {
-  width: 38px;
+  width: 50px;
   height: auto;
-  transition: 0.3s;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+  transition: 0.3s ease;
 }
 
 .home-logo img:hover {
