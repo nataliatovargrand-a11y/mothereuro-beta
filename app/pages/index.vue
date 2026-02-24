@@ -1,104 +1,110 @@
 <template>
-  <div class="page">
+  <div class="home">
 
-    <section class="hero">
+    <div class="hero">
+
       <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
 
-      <h1 class="headline">
-        Mindful Motherhood<br />
-        Across Europe
-      </h1>
+      <h1>Mother Euro</h1>
 
       <p class="tagline">
-        A curated community supporting women building
-        life, business, and belonging abroad.
+        A curated community supporting women building life, business, and belonging abroad
       </p>
 
-      <button class="primary-btn">
+      <button class="cta" @click="goMembership">
         Explore Membership
       </button>
-    </section>
 
-    <section class="pillars">
-      <div class="pillar">
-        <h3>Community</h3>
-        <p>Meaningful connection in every city.</p>
-      </div>
+    </div>
 
-      <div class="pillar">
-        <h3>Wellness</h3>
-        <p>Movement, mindfulness, and motherhood aligned.</p>
-      </div>
-
-      <div class="pillar">
-        <h3>Growth</h3>
-        <p>Business, creativity, and expansion abroad.</p>
-      </div>
-    </section>
+    <footer class="footer">
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/upcoming">Upcoming</NuxtLink>
+      <NuxtLink to="/partners">Partners</NuxtLink>
+      <NuxtLink to="/account">Account</NuxtLink>
+    </footer>
 
   </div>
 </template>
 
-<style>
-.page {
+<script setup>
+const router = useRouter()
+
+const goMembership = () => {
+  router.push('/account')
+}
+</script>
+
+<style scoped>
+
+.home {
+  min-height: 100vh;
+  background: #FAF3EA;
   display: flex;
   flex-direction: column;
-  background: #FAF3EA;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
 }
 
-/* HERO */
 .hero {
-  padding: 100px 20px 80px;
-  text-align: center;
+  margin-top: 60px;
 }
 
 .logo {
-  width: 110px;
-  margin-bottom: 40px;
+  width: 80px;
+  margin-bottom: 30px;
 }
 
-.headline {
-  font-family: 'Playfair Display', serif;
-  font-size: 40px;
-  line-height: 1.2;
+h1 {
+  font-size: 42px;
+  font-weight: 300;
+  margin-bottom: 20px;
+  color: #2E2B29;
 }
 
 .tagline {
-  margin: 30px 0 40px;
-  font-weight: 300;
-  font-family: 'Inter', sans-serif;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  font-size: 18px;
+  color: #2E2B29;
+  line-height: 1.6;
 }
 
-.primary-btn {
+.cta {
   background: #2E2B29;
   color: white;
+  padding: 14px 30px;
+  border-radius: 40px;
   border: none;
-  padding: 14px 32px;
   letter-spacing: 2px;
   font-size: 12px;
   text-transform: uppercase;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
-/* PILLARS */
-.pillars {
-  background: white;
-  padding: 80px 20px;
-  text-align: center;
+.cta:hover {
+  background: #A8985F;
+  color: #2E2B29;
+}
+
+.footer {
+  margin-top: 80px;
   display: flex;
-  flex-direction: column;
-  gap: 60px;
+  gap: 30px;
+  padding-bottom: 30px;
 }
 
-.pillar h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  letter-spacing: 2px;
+.footer a {
+  text-decoration: none;
+  color: #2E2B29;
+  font-size: 14px;
 }
 
-.pillar p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  margin-top: 10px;
+.footer a:hover {
+  color: #A8985F;
 }
+
 </style>
