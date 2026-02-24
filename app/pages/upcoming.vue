@@ -8,7 +8,11 @@
       </p>
     </div>
 
-    <div class="events-grid">
+    <div v-if="loading" class="loading">
+      Loading events...
+    </div>
+
+    <div v-else class="events-grid">
 
       <div
         v-for="event in events"
@@ -19,7 +23,7 @@
 
         <div class="card-top">
           <div class="event-meta">
-            <span class="date">{{ event.date }}</span>
+            <span class="date">{{ formatDate(event.event_date) }}</span>
             <span class="dot">•</span>
             <span class="location">{{ event.location }}</span>
           </div>
@@ -42,32 +46,32 @@
 
 <script setup>
 
-const events = [
-  {
-    id: 1,
-    title: "Trip Planning Hacked – Globe Thrivers",
-    date: "March 4",
-    location: "Virtual",
-    luma_url: "https://luma.com/ME_GlobeThrivers"
-  },
-  {
-    id: 2,
-    title: "An Evening with Flabelus",
-    date: "March 4",
-    location: "Madrid",
-    luma_url: "https://luma.com/ME_Flabelus"
-  },
-  {
-    id: 3,
-    title: "Nervous System Reset – AMUNA",
-    date: "March 10",
-    location: "Madrid",
-    luma_url: "https://luma.com/ME_AMUNA"
+const { data: events, pending: loading, error } = await useAsyncData(
+  'events',
+  async () => {
+    const { data, error } = await useSupabaseClient()
+      .from('events')
+      .select('*')
+      .order('event_date', { ascending: true })
+
+    if (error) {
+      console.error(error)
+      return []
+    }
+
+    return data
   }
-]
+)
 
 const goToEvent = (url) => {
   window.open(url, '_blank')
+}
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric'
+  })
 }
 
 </script>
@@ -87,6 +91,11 @@ const goToEvent = (url) => {
   font-weight: 300;
   color: var(--me-muted);
   max-width: 500px;
+}
+
+.loading {
+  font-weight: 300;
+  color: var(--me-muted);
 }
 
 .events-grid {
@@ -128,10 +137,6 @@ const goToEvent = (url) => {
   font-size: 24px;
   line-height: 1.3;
   margin-bottom: 20px;
-}
-
-.card-footer {
-  margin-top: auto;
 }
 
 .cta {
