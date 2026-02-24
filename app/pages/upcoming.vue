@@ -1,7 +1,12 @@
 <template>
   <div class="me-container">
 
-    <h1 class="page-title">Upcoming Events</h1>
+    <div class="header">
+      <h1>Upcoming Events</h1>
+      <p class="intro">
+        Thoughtfully curated gatherings across Europe and virtually.
+      </p>
+    </div>
 
     <div class="events-grid">
 
@@ -11,9 +16,23 @@
         class="event-card"
         @click="goToEvent(event.luma_url)"
       >
-        <h2>{{ event.title }}</h2>
-        <p class="date">{{ event.date }}</p>
-        <p class="location">{{ event.location }}</p>
+
+        <div class="card-top">
+          <div class="event-meta">
+            <span class="date">{{ event.date }}</span>
+            <span class="dot">•</span>
+            <span class="location">{{ event.location }}</span>
+          </div>
+        </div>
+
+        <h2 class="title">
+          {{ event.title }}
+        </h2>
+
+        <div class="card-footer">
+          <span class="cta">View Event →</span>
+        </div>
+
       </div>
 
     </div>
@@ -55,42 +74,80 @@ const goToEvent = (url) => {
 
 <style scoped>
 
-.page-title {
-  margin-bottom: 50px;
-  font-size: 36px;
+.header {
+  margin-bottom: 60px;
+}
+
+.header h1 {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.intro {
+  font-weight: 300;
+  color: var(--me-muted);
+  max-width: 500px;
 }
 
 .events-grid {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 35px;
 }
 
 .event-card {
   background: white;
-  padding: 30px;
-  cursor: pointer;
-  transition: 0.3s ease;
+  padding: 35px;
+  border-radius: 8px;
   border: 1px solid #eee;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .event-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
-.event-card h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
+.card-top {
+  margin-bottom: 15px;
 }
 
-.date {
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.location {
+.event-meta {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   color: var(--me-muted);
-  font-weight: 300;
+}
+
+.dot {
+  margin: 0 8px;
+}
+
+.title {
+  font-size: 24px;
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+
+.card-footer {
+  margin-top: auto;
+}
+
+.cta {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 30px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
 }
 
 </style>
