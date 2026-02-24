@@ -1,25 +1,23 @@
 <template>
   <div class="home">
 
-    <img src="/images/logo.png" alt="Mother Euro Logo" class="logo" />
+    <div class="hero">
 
-    <h1 class="brand-title">
-      MOTHER EURO
-    </h1>
+      <img src="/images/logo.png" alt="Mother Euro Logo" class="hero-logo" />
 
-    <p class="tagline">
-      A curated community supporting women
-      building life, business, and belonging abroad.
-    </p>
+      <div class="brand-name">
+        MOTHER EURO
+      </div>
 
-    <div class="cta-group">
-      <NuxtLink to="/login" class="btn-primary">
-        Login
+      <p class="tagline">
+        A curated community supporting women building life,
+        business, and belonging abroad
+      </p>
+
+      <NuxtLink to="/account" class="cta">
+        LOGIN / SIGN UP
       </NuxtLink>
 
-      <NuxtLink to="/signup" class="btn-secondary">
-        Sign Up
-      </NuxtLink>
     </div>
 
   </div>
@@ -28,74 +26,57 @@
 <script setup>
 </script>
 
-<style scoped>
+<style>
 
 .home {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 40px;
-  text-align: center;
-}
-
-.logo {
-  width: 120px;
-  margin-bottom: 50px;
-}
-
-.brand-title {
-  font-size: 34px;
-  letter-spacing: 12px;
-  font-weight: 300;
-  margin-bottom: 30px;
-  color: #2E2B29;
-}
-
-.tagline {
-  font-size: 18px;
-  line-height: 1.6;
-  color: #4A4745;
-  margin-bottom: 50px;
-  max-width: 420px;
-}
-
-.cta-group {
-  display: flex;
-  gap: 20px;
   justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
 }
 
-.btn-primary {
-  background: #2E2B29;
-  color: white;
-  padding: 12px 28px;
-  border-radius: 30px;
-  text-decoration: none;
+.hero-logo {
+  width: 110px;
+  margin-bottom: 18px;
+}
+
+/* THIS is the ISOLA-style replacement */
+.brand-name {
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 14px;
-  letter-spacing: 1px;
-  transition: 0.3s;
-}
-
-.btn-primary:hover {
-  background: #A8985F;
-}
-
-.btn-secondary {
-  border: 1px solid #2E2B29;
+  letter-spacing: 4px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 22px;
   color: #2E2B29;
-  padding: 12px 28px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-size: 14px;
-  letter-spacing: 1px;
-  transition: 0.3s;
 }
 
-.btn-secondary:hover {
-  background: #2E2B29;
+/* Editorial serif tagline */
+.tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  max-width: 480px;
+  margin: 0 auto 40px auto;
+  line-height: 1.5;
+}
+
+.cta {
+  display: inline-block;
+  padding: 14px 30px;
+  background: #A8985F;
   color: white;
+  text-decoration: none;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  transition: 0.3s ease;
+}
+
+.cta:hover {
+  background: #5E5130;
 }
 
 </style>
