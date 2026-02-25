@@ -13,18 +13,32 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-      <NuxtLink to="/" class="nav-item">Home</NuxtLink>
-      <NuxtLink to="/upcoming" class="nav-item">Events</NuxtLink>
+  <div class="bottom-nav-inner">
 
-      <div class="logo-center">
-        <NuxtLink to="/">
-          <img src="/images/logo.png" class="footer-logo" />
-        </NuxtLink>
-      </div>
+    <NuxtLink to="/upcoming" class="nav-item">
+      Events
+    </NuxtLink>
 
-      <NuxtLink to="/partners" class="nav-item">Partners</NuxtLink>
-      <NuxtLink to="/account" class="nav-item">Account</NuxtLink>
-    </nav>
+    <NuxtLink to="/partners" class="nav-item">
+      Partners
+    </NuxtLink>
+
+    <div class="logo-center">
+      <NuxtLink to="/">
+        <img src="/images/logo.png" class="footer-logo" />
+      </NuxtLink>
+    </div>
+
+    <NuxtLink to="/" class="nav-item">
+      Explore
+    </NuxtLink>
+
+    <NuxtLink to="/account" class="nav-item">
+      Account
+    </NuxtLink>
+
+  </div>
+</nav>
 
   </div>
 </template>
@@ -79,36 +93,51 @@ onMounted(async () => {
 
 .bottom-nav {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 700px;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(20px);
-  border-radius: 40px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  padding: 16px 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  z-index: 999;
+}
+
+.bottom-nav-inner {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  position: relative;
 }
 
 .nav-item {
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 2px;
   text-decoration: none;
   color: black;
+  opacity: 0.8;
+  transition: 0.2s ease;
+}
+
+.nav-item:hover {
+  opacity: 1;
 }
 
 .logo-center {
-  width: 60px;
-  display: flex;
-  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .footer-logo {
-  width: 40px;
+  width: 36px;
 }
 
 @media (max-width: 768px) {
