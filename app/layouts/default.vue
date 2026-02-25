@@ -13,50 +13,66 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-  <div class="bottom-nav-inner">
+      <div class="bottom-nav-inner">
 
-    <NuxtLink to="/upcoming" class="nav-item">
-      Events
-    </NuxtLink>
+        <NuxtLink
+          to="/upcoming"
+          class="nav-item"
+          :class="{ active: route.path === '/upcoming' }"
+        >
+          Events
+        </NuxtLink>
 
-    <NuxtLink to="/partners" class="nav-item">
-      Partners
-    </NuxtLink>
+        <NuxtLink
+          to="/partners"
+          class="nav-item"
+          :class="{ active: route.path === '/partners' }"
+        >
+          Partners
+        </NuxtLink>
 
-    <div class="logo-center">
-      <NuxtLink to="/">
-        <img src="/images/logo.png" class="footer-logo" />
-      </NuxtLink>
-    </div>
+        <div class="logo-center">
+          <NuxtLink to="/">
+            <img src="/images/logo.png" class="footer-logo" />
+          </NuxtLink>
+        </div>
 
-   <NuxtLink to="/resources" class="nav-item">
-  Explore
-</NuxtLink>
+        <NuxtLink
+          to="/resources"
+          class="nav-item"
+          :class="{ active: route.path === '/resources' }"
+        >
+          Explore
+        </NuxtLink>
 
-    <NuxtLink to="/account" class="nav-item">
-      Account
-    </NuxtLink>
+        <NuxtLink
+          to="/account"
+          class="nav-item"
+          :class="{ active: route.path === '/account' }"
+        >
+          Account
+        </NuxtLink>
 
-  </div>
-</nav>
+      </div>
+    </nav>
 
   </div>
 </template>
 
 <script setup>
-
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { supabase } from '~/utils/supabase'
+
+const route = useRoute()
 
 const user = ref(null)
 const firstName = ref(null)
 
 onMounted(async () => {
-
   const { data } = await supabase.auth.getUser()
 
   if (data.user) {
-
     user.value = data.user
 
     const { data: member } = await supabase
@@ -67,9 +83,7 @@ onMounted(async () => {
 
     firstName.value = member?.first_name
   }
-
 })
-
 </script>
 
 <style scoped>
@@ -88,23 +102,23 @@ onMounted(async () => {
 
 .page-content {
   padding-top: 70px;
-  padding-bottom: 120px;
+  padding-bottom: 90px;
 }
 
+/* Glass bar */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 70px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255,255,255,0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0,0,0,0.05);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
 }
 
 .bottom-nav-inner {
@@ -122,12 +136,13 @@ onMounted(async () => {
   letter-spacing: 2px;
   text-decoration: none;
   color: black;
-  opacity: 0.8;
+  opacity: 0.5;
   transition: 0.2s ease;
 }
 
-.nav-item:hover {
+.nav-item.active {
   opacity: 1;
+  font-weight: 500;
 }
 
 .logo-center {
@@ -138,12 +153,6 @@ onMounted(async () => {
 
 .footer-logo {
   width: 36px;
-}
-
-@media (max-width: 768px) {
-  .member-bar {
-    padding: 14px 20px;
-  }
 }
 
 </style>
