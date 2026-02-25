@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-const supabase = useSupabaseClient()
+import { supabase } from '~/utils/supabase'
 const events = ref([])
 
 onMounted(async () => {
@@ -66,9 +66,6 @@ onMounted(async () => {
     .from('events')
     .select('*')
     .order('event_date', { ascending: true })
-
-  console.log("SUPABASE DATA:", data)
-  console.log("SUPABASE ERROR:", error)
 
   if (!error && data) {
     events.value = data
