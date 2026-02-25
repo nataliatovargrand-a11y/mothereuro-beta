@@ -10,8 +10,8 @@
       </div>
 
       <p class="tagline">
-        A curated community supporting women building life,
-        business, and belonging abroad
+        A curated community for women<br />
+        building life across Europe.
       </p>
 
       <NuxtLink to="/account" class="cta">
@@ -37,39 +37,42 @@
   padding: 40px 20px;
 }
 
+/* Logo */
 .hero-logo {
-  width: 110px;
-  margin-bottom: 18px;
+  width: 130px;
+  margin-bottom: 30px;
 }
 
-/* THIS is the ISOLA-style replacement */
+/* ISOLA-style title refinement */
 .brand-name {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 14px;
-  letter-spacing: 4px;
-  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 8px;
+  font-weight: 300;
   text-transform: uppercase;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
   color: #2E2B29;
 }
 
-/* Editorial serif tagline */
+/* Elegant serif tagline */
 .tagline {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 300;
-  max-width: 480px;
-  margin: 0 auto 40px auto;
-  line-height: 1.5;
+  max-width: 520px;
+  margin: 0 auto 50px auto;
+  line-height: 1.6;
+  color: #5E5130;
 }
 
+/* Button */
 .cta {
   display: inline-block;
-  padding: 14px 30px;
+  padding: 16px 40px;
   background: #A8985F;
   color: white;
   text-decoration: none;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   font-size: 12px;
   text-transform: uppercase;
   transition: 0.3s ease;
