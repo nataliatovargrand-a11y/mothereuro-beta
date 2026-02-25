@@ -2,16 +2,14 @@ export default defineNuxtConfig({
 
   ssr: true,
 
-  modules: ['@nuxtjs/supabase'],
-
-  supabase: {
-    redirect: false
-  },
-
   nitro: {
     preset: 'vercel'
   },
 
-  compatibilityDate: '2026-02-24'
+  compatibilityDate: '2026-02-24',
+
+  css: [
+    '@/assets/css/main.css'
+  ]
 
 })
