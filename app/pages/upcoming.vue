@@ -1,6 +1,11 @@
 <template>
   <div class="events-wrapper">
 
+    <!-- Top Greeting -->
+    <div class="top-greeting" v-if="firstName">
+      Hi, {{ firstName }}
+    </div>
+
     <!-- Under Review Banner -->
     <div v-if="membershipStatus === 'pending'" class="review-banner">
       Your membership application is under review.
@@ -71,10 +76,10 @@ const router = useRouter()
 
 const events = ref([])
 const membershipStatus = ref(null)
+const firstName = ref(null)
 
 onMounted(async () => {
 
-  // Check logged in user
   const { data } = await supabase.auth.getUser()
 
   if (!data.user) {
@@ -82,16 +87,15 @@ onMounted(async () => {
     return
   }
 
-  // Fetch membership status
   const { data: member } = await supabase
     .from('members')
-    .select('membership_status')
+    .select('membership_status, first_name')
     .eq('email', data.user.email)
     .single()
 
   membershipStatus.value = member?.membership_status || 'pending'
+  firstName.value = member?.first_name || ''
 
-  // Fetch events
   const { data: eventsData } = await supabase
     .from('events')
     .select('*')
@@ -124,6 +128,13 @@ const formatDate = (date) => {
   padding: 120px 40px 140px 40px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.top-greeting {
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 30px;
+  opacity: 0.8;
 }
 
 .review-banner {
