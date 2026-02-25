@@ -1,30 +1,26 @@
 <template>
   <div class="account-wrapper">
 
-    <h1>MEMBER ACCESS</h1>
+    <h1>Account</h1>
 
-    <div v-if="!user">
+    <div class="account-card">
 
-      <input v-model="email" placeholder="Email" />
-      <input v-model="password" type="password" placeholder="Password" />
+      <div class="row">
+        <span class="label">Name</span>
+        <span class="value">{{ firstName }}</span>
+      </div>
 
-      <button class="primary-btn" @click="login">
-        LOGIN
+      <div class="row">
+        <span class="label">Email</span>
+        <span class="value">{{ user?.email }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="logout-btn" @click="logout">
+        Log Out
       </button>
 
-      <button class="secondary-btn" @click="signup">
-        REQUEST ACCESS
-      </button>
-
-    </div>
-
-    <div v-else>
-      <p class="status">Logged in as {{ user.email }}</p>
-      <p class="status">Status: {{ membershipStatus }}</p>
-
-      <button class="primary-btn" @click="logout">
-        LOGOUT
-      </button>
     </div>
 
   </div>
@@ -32,136 +28,84 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '~/utils/supabase'
 
+const router = useRouter()
+
 const user = ref(null)
-const email = ref('')
-const password = ref('')
-const membershipStatus = ref(null)
+const firstName = ref(null)
 
 onMounted(async () => {
   const { data } = await supabase.auth.getUser()
+
   if (data.user) {
     user.value = data.user
-    await checkMembership()
+
+    const { data: member } = await supabase
+      .from('members')
+      .select('first_name')
+      .eq('email', data.user.email)
+      .single()
+
+    firstName.value = member?.first_name
   }
 })
 
-const login = async () => {
-  const { error } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
-  })
-
-  if (!error) {
-    const { data } = await supabase.auth.getUser()
-    user.value = data.user
-    await checkMembership()
-  } else {
-    alert(error.message)
-  }
-}
-
-const signup = async () => {
-  const { error } = await supabase.auth.signUp({
-    email: email.value,
-    password: password.value
-  })
-
-  if (!error) {
-    alert("Application received. Awaiting approval.")
-  } else {
-    alert(error.message)
-  }
-}
-
 const logout = async () => {
   await supabase.auth.signOut()
-  user.value = null
-  membershipStatus.value = null
-}
-
-const checkMembership = async () => {
-  const { data } = await supabase
-    .from('members')
-    .select('*')
-    .eq('email', user.value.email)
-    .single()
-
-  if (!data) {
-    await supabase.from('members').insert({
-      email: user.value.email,
-      membership_status: 'pending'
-    })
-    membershipStatus.value = 'pending'
-  } else {
-    membershipStatus.value = data.membership_status
-  }
+  router.push('/')
 }
 </script>
 
 <style scoped>
 
 .account-wrapper {
-  padding: 140px 24px;
-  max-width: 420px;
-  margin: auto;
-  text-align: center;
+  padding: 160px 40px 120px 40px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 36px;
+.account-wrapper h1 {
   margin-bottom: 40px;
 }
 
-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 18px;
-  padding: 14px;
-  border: 1px solid #ddd;
+.account-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid #eee;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.6;
+}
+
+.value {
   font-size: 14px;
 }
 
-.primary-btn {
-  width: 100%;
-  background: #A8985F;
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 30px 0;
+}
+
+.logout-btn {
+  background: black;
   color: white;
+  padding: 12px 20px;
   border: none;
-  padding: 14px;
-  letter-spacing: 3px;
-  font-size: 12px;
-  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: 0.3s ease;
-  margin-bottom: 14px;
-}
-
-.primary-btn:hover {
-  background: #5E5130;
-}
-
-.secondary-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px solid #A8985F;
-  color: #A8985F;
-  padding: 14px;
-  letter-spacing: 3px;
-  font-size: 12px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.secondary-btn:hover {
-  background: #A8985F;
-  color: white;
-}
-
-.status {
-  margin-bottom: 20px;
 }
 
 </style>
