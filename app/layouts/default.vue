@@ -1,108 +1,65 @@
 <template>
-  <div class="app-wrapper">
+  <div>
 
-    <main class="page-content">
-      <slot />
-    </main>
+    <!-- Top Greeting Bar -->
+    <div v-if="user && firstName" class="member-bar">
+      Hi, {{ firstName }}
+    </div>
 
-    <!-- Luxury Editorial Footer -->
-    <nav class="bottom-nav">
-
-      <NuxtLink to="/upcoming" class="nav-link">
-        EVENTS
-      </NuxtLink>
-
-      <NuxtLink to="/partners" class="nav-link">
-        PARTNERS
-      </NuxtLink>
-
-      <NuxtLink to="/" class="home-logo">
-        <img src="/images/logo.png" alt="Mother Euro" />
-      </NuxtLink>
-
-      <NuxtLink to="/resources" class="nav-link">
-        RESOURCES
-      </NuxtLink>
-
-      <NuxtLink to="/account" class="nav-link">
-        ACCOUNT
-      </NuxtLink>
-
-    </nav>
+    <NuxtPage />
 
   </div>
 </template>
 
 <script setup>
+
+import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
+
+const user = ref(null)
+const firstName = ref(null)
+
+onMounted(async () => {
+
+  const { data } = await supabase.auth.getUser()
+
+  if (data.user) {
+
+    user.value = data.user
+
+    const { data: member } = await supabase
+      .from('members')
+      .select('first_name')
+      .eq('email', data.user.email)
+      .single()
+
+    firstName.value = member?.first_name
+
+  }
+
+})
+
 </script>
 
-<style>
+<style scoped>
 
-.app-wrapper {
-  min-height: 100vh;
-  background: #FAF3EA;
-}
-
-.page-content {
-  padding-bottom: 100px;
-}
-
-/* Glass Footer */
-.bottom-nav {
+.member-bar {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
-  padding: 18px 12px;
-
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-
-  background: rgba(255, 255, 255, 0.35);
-
-  border-top: 1px solid rgba(255,255,255,0.6);
-
-  box-shadow:
-    0 -6px 20px rgba(0,0,0,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.5);
+  background: #FAF3EA;
+  border-bottom: 1px solid #E5DCD2;
+  padding: 16px 40px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  z-index: 1000;
 }
 
-/* Editorial Navigation */
-.nav-link {
-  text-decoration: none;
-  color: #2E2B29;
-
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 2px;
-  font-weight: 400;
-  text-transform: uppercase;
-
-  transition: 0.3s ease;
-}
-
-.nav-link.router-link-active {
-  color: #A8985F;
-}
-
-.nav-link:hover {
-  color: #A8985F;
-}
-
-/* Center Logo */
-.home-logo img {
-  width: 52px;
-  height: auto;
-  transition: 0.3s ease;
-}
-
-.home-logo img:hover {
-  transform: scale(1.05);
+@media (max-width: 768px) {
+  .member-bar {
+    padding: 14px 20px;
+  }
 }
 
 </style>
