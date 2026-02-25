@@ -10,6 +10,22 @@ export default defineNuxtConfig({
 
   css: [
     '@/assets/css/main.css'
-  ]
+  ],
+
+  app: {
+    head: {
+      title: 'Mother Euro',
+      meta: [
+        { name: 'theme-color', content: '#FAF3EA' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+        { name: 'apple-mobile-web-app-title', content: 'Mother Euro' }
+      ],
+      link: [
+        { rel: 'manifest', href: '/manifest.json' },
+        { rel: 'apple-touch-icon', href: '/icon-192.png' }
+      ]
+    }
+  }
 
 })
