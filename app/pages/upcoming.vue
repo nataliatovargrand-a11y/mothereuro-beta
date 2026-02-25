@@ -67,7 +67,12 @@ onMounted(async () => {
     .select('*')
     .order('event_date', { ascending: true })
 
-  if (!error) events.value = data
+  console.log("SUPABASE DATA:", data)
+  console.log("SUPABASE ERROR:", error)
+
+  if (!error && data) {
+    events.value = data
+  }
 })
 
 const openLuma = (url) => {
