@@ -1,15 +1,16 @@
 <template>
   <div class="events-wrapper">
 
+    <!-- Under Review Banner -->
+    <div v-if="membershipStatus === 'pending'" class="review-banner">
+      Your membership application is under review.
+    </div>
+
     <div class="events-header">
-      <h1>EVENTS</h1>
+      <h1>Events</h1>
     </div>
 
-    <div v-if="events.length === 0" class="empty-state">
-      Upcoming gatherings are being curated.
-    </div>
-
-    <div v-else class="events-grid">
+    <div class="events-grid">
 
       <div
         v-for="event in events"
@@ -17,7 +18,13 @@
         class="event-card"
       >
 
-        <div class="event-left">
+        <img
+          v-if="event.image_url"
+          :src="event.image_url"
+          class="event-image"
+        />
+
+        <div class="event-content">
 
           <div class="event-date">
             {{ formatDate(event.event_date) }}
@@ -37,19 +44,14 @@
 
           <button
             class="register-btn"
-            @click="openLuma(event.luma_url)"
+            :disabled="membershipStatus !== 'active'"
+            @click="handleRegister(event.luma_url)"
           >
-            REGISTER
+            {{ membershipStatus === 'active'
+                ? 'REGISTER'
+                : 'MEMBERSHIP REQUIRED' }}
           </button>
 
-        </div>
-
-        <div class="event-right">
-          <img
-            v-if="event.image_url"
-            :src="event.image_url"
-            alt="Event Image"
-          />
         </div>
 
       </div>
@@ -60,192 +62,166 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const events = ref([])
+const membershipStatus = ref(null)
 
 onMounted(async () => {
-  const { data, error } = await supabase
+
+  // Check logged in user
+  const { data } = await supabase.auth.getUser()
+
+  if (!data.user) {
+    router.push('/account')
+    return
+  }
+
+  // Fetch membership status
+  const { data: member } = await supabase
+    .from('members')
+    .select('membership_status')
+    .eq('email', data.user.email)
+    .single()
+
+  membershipStatus.value = member?.membership_status || 'pending'
+
+  // Fetch events
+  const { data: eventsData } = await supabase
     .from('events')
     .select('*')
     .order('event_date', { ascending: true })
 
-  if (!error && data) {
-    events.value = data
+  if (eventsData) {
+    events.value = eventsData
   }
+
 })
 
-const openLuma = (url) => {
-  if (url) window.open(url, '_blank')
+const handleRegister = (url) => {
+  if (membershipStatus.value === 'active' && url) {
+    window.open(url, '_blank')
+  }
 }
 
 const formatDate = (date) => {
-  const d = new Date(date)
-  return d.toLocaleDateString('en-GB', {
-    day: 'numeric',
+  return new Date(date).toLocaleDateString('en-US', {
     month: 'long',
-    year: 'numeric'
+    day: 'numeric'
   })
 }
+
 </script>
 
 <style scoped>
 
 .events-wrapper {
-  padding: 100px 24px 160px 24px;
+  padding: 120px 40px 140px 40px;
   max-width: 1200px;
-  margin: auto;
-  background: #FAF3EA;
+  margin: 0 auto;
+}
+
+.review-banner {
+  background: #F3EBDD;
+  border: 1px solid #A8985F;
+  color: #5E5130;
+  padding: 18px;
+  margin-bottom: 50px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 14px;
 }
 
 .events-header {
-  margin-bottom: 80px;
-  text-align: center;
+  margin-bottom: 50px;
 }
 
 .events-header h1 {
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 8px;
-  font-weight: 300;
-  font-size: 14px;
-  color: #2E2B29;
-}
-
-.empty-state {
-  text-align: center;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  color: #7A746E;
+  font-size: 40px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .events-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 70px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
 }
 
 .event-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #F7F1E7;
-  border-radius: 36px;
-  padding: 60px;
-  border: 1px solid rgba(168, 152, 95, 0.15);
-  position: relative;
-  transition: all 0.4s ease;
-}
-
-.event-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50px;
-  height: 60%;
-  width: 3px;
-  background: #A8985F;
-  border-radius: 10px;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  transition: 0.3s ease;
 }
 
 .event-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.06);
+  transform: translateY(-6px);
 }
 
-.event-left {
-  flex: 1;
-  padding-right: 60px;
+.event-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.event-content {
+  padding: 30px;
 }
 
 .event-date {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #A8985F;
-  margin-bottom: 20px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  opacity: 0.7;
 }
 
 .event-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 32px;
-  font-weight: 400;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  font-size: 22px;
+  margin-bottom: 12px;
 }
 
 .event-location {
   font-size: 14px;
-  letter-spacing: 1px;
-  color: #7A746E;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
+  opacity: 0.7;
 }
 
 .event-description {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 40px;
-  max-width: 540px;
-  color: #4A4744;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.6;
 }
 
 .register-btn {
-  background: transparent;
-  border: 1px solid #A8985F;
-  color: #A8985F;
-  padding: 14px 38px;
+  background: black;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  letter-spacing: 2px;
   font-size: 12px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
   cursor: pointer;
   transition: 0.3s ease;
 }
 
-.register-btn:hover {
+.register-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.register-btn:not(:disabled):hover {
   background: #A8985F;
-  color: white;
 }
 
-.event-right {
-  width: 320px;
-  height: 320px;
-  border-radius: 30px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.event-right img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.event-card:hover .event-right img {
-  transform: scale(1.05);
-}
-
-/* Mobile */
-
-@media (max-width: 900px) {
-  .event-card {
-    flex-direction: column;
-    padding: 40px;
-  }
-
-  .event-card::before {
-    display: none;
-  }
-
-  .event-left {
-    padding-right: 0;
-  }
-
-  .event-right {
-    width: 100%;
-    height: 240px;
-    margin-top: 40px;
+@media (max-width: 768px) {
+  .events-wrapper {
+    padding: 100px 20px 140px 20px;
   }
 }
 
