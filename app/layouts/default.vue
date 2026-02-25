@@ -29,9 +29,9 @@
       </NuxtLink>
     </div>
 
-    <NuxtLink to="/" class="nav-item">
-      Explore
-    </NuxtLink>
+   <NuxtLink to="/resources" class="nav-item">
+  Explore
+</NuxtLink>
 
     <NuxtLink to="/account" class="nav-item">
       Account
