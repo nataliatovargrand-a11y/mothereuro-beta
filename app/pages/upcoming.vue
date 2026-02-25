@@ -1,11 +1,15 @@
 <template>
-  <div class="events-page">
+  <div class="events-wrapper">
 
-    <div class="page-header">
+    <div class="events-header">
       <h1>EVENTS</h1>
     </div>
 
-    <div class="events-container">
+    <div v-if="events.length === 0" class="empty-state">
+      Upcoming gatherings are being curated.
+    </div>
+
+    <div v-else class="events-grid">
 
       <div
         v-for="event in events"
@@ -13,8 +17,7 @@
         class="event-card"
       >
 
-        <!-- Left Content -->
-        <div class="event-content">
+        <div class="event-left">
 
           <div class="event-date">
             {{ formatDate(event.event_date) }}
@@ -24,7 +27,7 @@
             {{ event.title }}
           </h2>
 
-          <div class="event-meta">
+          <div class="event-location">
             {{ event.location }}
           </div>
 
@@ -41,8 +44,7 @@
 
         </div>
 
-        <!-- Image -->
-        <div class="event-image">
+        <div class="event-right">
           <img
             v-if="event.image_url"
             :src="event.image_url"
@@ -58,7 +60,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
+
 const events = ref([])
 
 onMounted(async () => {
@@ -88,27 +92,34 @@ const formatDate = (date) => {
 
 <style scoped>
 
-.events-page {
-  padding: 60px 24px 140px 24px;
+.events-wrapper {
+  padding: 80px 24px 140px 24px;
   max-width: 1200px;
   margin: auto;
 }
 
-.page-header {
-  margin-bottom: 50px;
+.events-header {
+  margin-bottom: 60px;
+  text-align: center;
 }
 
-.page-header h1 {
+.events-header h1 {
   font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 8px;
+  letter-spacing: 6px;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-.events-container {
+.empty-state {
+  text-align: center;
+  font-size: 20px;
+  color: #777;
+}
+
+.events-grid {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 50px;
 }
 
 .event-card {
@@ -116,46 +127,46 @@ const formatDate = (date) => {
   justify-content: space-between;
   align-items: center;
   background: white;
-  padding: 40px;
-  border-radius: 28px;
-  border: 1px solid #e8e6e2;
-  transition: 0.3s ease;
+  border-radius: 32px;
+  padding: 50px;
+  border: 1px solid #eae7e2;
+  transition: all 0.3s ease;
 }
 
 .event-card:hover {
-  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.05);
 }
 
-.event-content {
+.event-left {
   flex: 1;
-  padding-right: 40px;
+  padding-right: 50px;
 }
 
 .event-date {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 12px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
+  color: #888;
+  margin-bottom: 18px;
 }
 
 .event-title {
-  font-size: 24px;
-  margin-bottom: 14px;
+  font-size: 26px;
+  margin-bottom: 16px;
 }
 
-.event-meta {
+.event-location {
   font-size: 14px;
-  color: #888;
-  margin-bottom: 20px;
+  color: #777;
+  margin-bottom: 24px;
 }
 
 .event-description {
   font-size: 15px;
   line-height: 1.6;
-  max-width: 520px;
-  margin-bottom: 30px;
+  margin-bottom: 34px;
+  max-width: 500px;
   color: #444;
 }
 
@@ -163,45 +174,43 @@ const formatDate = (date) => {
   background: #A8985F;
   color: white;
   border: none;
-  padding: 14px 36px;
+  padding: 14px 40px;
   font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .register-btn:hover {
   background: #5E5130;
 }
 
-.event-image {
-  width: 260px;
-  height: 260px;
+.event-right {
+  width: 280px;
+  height: 280px;
   border-radius: 24px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
-.event-image img {
+.event-right img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Mobile */
-
 @media (max-width: 900px) {
   .event-card {
     flex-direction: column;
-    padding: 30px;
+    padding: 40px;
   }
 
-  .event-content {
+  .event-left {
     padding-right: 0;
   }
 
-  .event-image {
+  .event-right {
     width: 100%;
     height: 240px;
     margin-top: 30px;
