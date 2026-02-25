@@ -46,11 +46,11 @@
 /* ISOLA-style title refinement */
 .brand-name {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 18px;
-  letter-spacing: 8px;
+  font-size: 34px;          /* Bigger */
+  letter-spacing: 14px;     /* More editorial spacing */
   font-weight: 300;
   text-transform: uppercase;
-  margin-bottom: 28px;
+  margin-bottom: 38px;
   color: #2E2B29;
 }
 
