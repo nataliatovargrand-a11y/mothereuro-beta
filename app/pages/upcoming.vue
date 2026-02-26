@@ -50,7 +50,7 @@
           <button
             class="register-btn"
             :disabled="membershipStatus !== 'active'"
-            @click="handleRegister(event.luma_url)"
+            @click="reserveEvent(event)"
           >
             {{ membershipStatus === 'active'
                 ? 'REGISTER'
@@ -67,7 +67,6 @@
 </template>
 
 <script setup>
-
 import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
@@ -107,9 +106,24 @@ onMounted(async () => {
 
 })
 
-const handleRegister = (url) => {
-  if (membershipStatus.value === 'active' && url) {
-    window.open(url, '_blank')
+const reserveEvent = async (event) => {
+
+  const { data } = await supabase.auth.getUser()
+  if (!data.user) return
+
+  if (membershipStatus.value !== 'active') return
+
+  // Save booking in database
+  await supabase.from('bookings').insert({
+    user_email: data.user.email,
+    event_id: event.id,
+    event_title: event.title,
+    event_date: event.event_date
+  })
+
+  // Then open Luma
+  if (event.luma_url) {
+    window.open(event.luma_url, '_blank')
   }
 }
 
@@ -119,7 +133,6 @@ const formatDate = (date) => {
     day: 'numeric'
   })
 }
-
 </script>
 
 <style scoped>
