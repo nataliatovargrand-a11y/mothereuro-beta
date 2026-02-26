@@ -43,7 +43,12 @@
         <h2>Account Information</h2>
 
         <div class="account-card">
-          <div class="avatar"></div>
+        <div>
+  <img v-if="avatarUrl" :src="avatarUrl" class="avatar-img" />
+  <div v-else class="avatar"></div>
+
+  <input type="file" @change="uploadAvatar" class="file-input" />
+</div>
 
           <div class="info">
             <div><strong>Name:</strong> {{ firstName }}</div>
@@ -98,40 +103,37 @@ const user = ref(null)
 const firstName = ref(null)
 const membershipStatus = ref(null)
 const bookings = ref([])
+const avatarUrl = ref(null)
 
 const email = ref('')
 const password = ref('')
 
 onMounted(async () => {
+
   const { data } = await supabase.auth.getUser()
+
+  if (!data.user) return
+
   user.value = data.user
-
-  if (data.user) {
-    loadMemberData(data.user.email)
-  }
-})
-
-const loadMemberData = async (emailAddress) => {
 
   const { data: member } = await supabase
     .from('members')
-    .select('first_name, membership_status')
-    .eq('email', emailAddress)
+    .select('*')
+    .eq('email', data.user.email)
     .single()
 
   firstName.value = member?.first_name || ''
   membershipStatus.value = member?.membership_status || 'pending'
+  avatarUrl.value = member?.avatar_url || null
 
   const { data: bookingData } = await supabase
     .from('bookings')
     .select('*')
-    .eq('user_email', emailAddress)
+    .eq('user_email', data.user.email)
     .order('event_date', { ascending: true })
 
-  if (bookingData) {
-    bookings.value = bookingData
-  }
-}
+  bookings.value = bookingData || []
+})
 
 const login = async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -139,17 +141,44 @@ const login = async () => {
     password: password.value
   })
 
-  if (!error && data.user) {
-    user.value = data.user
-    loadMemberData(data.user.email)
+  if (error) {
+    alert(error.message)
+    return
   }
+
+  user.value = data.user
+  location.reload()
 }
+
 const logout = async () => {
   await supabase.auth.signOut()
   user.value = null
   firstName.value = null
-  membershipStatus.value = null
   bookings.value = []
+}
+
+const uploadAvatar = async (event) => {
+
+  const file = event.target.files[0]
+  if (!file || !user.value) return
+
+  const filePath = `${user.value.id}-${Date.now()}`
+
+  await supabase.storage
+    .from('avatars')
+    .upload(filePath, file)
+
+  const { data } = supabase
+    .storage
+    .from('avatars')
+    .getPublicUrl(filePath)
+
+  avatarUrl.value = data.publicUrl
+
+  await supabase
+    .from('members')
+    .update({ avatar_url: data.publicUrl })
+    .eq('email', user.value.email)
 }
 
 const formatDate = (date) => {
@@ -159,162 +188,3 @@ const formatDate = (date) => {
   })
 }
 </script>
-
-<style scoped>
-
-.account-wrapper {
-  padding: 140px 40px 160px 40px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Greeting */
-
-.greeting {
-  font-size: 28px;
-  letter-spacing: 2px;
-  margin-bottom: 70px;
-  font-weight: 400;
-}
-
-/* Sections */
-
-.section {
-  margin-bottom: 90px;
-}
-
-.section h2 {
-  font-size: 18px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 30px;
-  opacity: 0.7;
-}
-
-/* Account Info Card */
-
-.account-card {
-  display: flex;
-  gap: 40px;
-  background: white;
-  padding: 40px;
-  border-radius: 28px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.04);
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: #e8e2d6;
-}
-
-.info div {
-  margin-bottom: 12px;
-  font-size: 15px;
-}
-
-/* Bookings */
-
-.booking-card {
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.04);
-  transition: all 0.3s ease;
-}
-
-.booking-card:hover {
-  transform: translateY(-4px);
-}
-
-.booking-title {
-  font-size: 18px;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.booking-date {
-  font-size: 14px;
-  letter-spacing: 1px;
-  opacity: 0.6;
-}
-
-/* Membership */
-
-.membership-card {
-  background: #F3EBDD;
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid #A8985F;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-/* Login Block */
-
-.login-block {
-  max-width: 420px;
-}
-
-.input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 18px;
-  border: 1px solid #ddd;
-  background: white;
-  font-size: 14px;
-}
-
-.primary-btn {
-  background: #A8985F;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  letter-spacing: 2px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.primary-btn:hover {
-  background: #8f8151;
-}
-
-.empty {
-  opacity: 0.6;
-}
-
-@media (max-width: 768px) {
-
-  .account-wrapper {
-    padding: 120px 20px 160px 20px;
-  }
-
-  .account-card {
-    flex-direction: column;
-  }
-.greeting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 70px;
-}
-
-.logout-btn {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.2);
-  padding: 8px 16px;
-  font-size: 12px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: rgba(0,0,0,0.05);
-}
-}
-
-</style>
