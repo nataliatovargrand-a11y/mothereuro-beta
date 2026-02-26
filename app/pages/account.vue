@@ -188,3 +188,158 @@ const formatDate = (date) => {
   })
 }
 </script>
+<style scoped>
+
+.account-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 120px 40px 140px 40px;
+}
+
+/* Greeting Row */
+.greeting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.greeting {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #000;
+  padding: 8px 16px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #000;
+  color: white;
+}
+
+/* Section Layout */
+.section {
+  margin-bottom: 80px;
+}
+
+.section h2 {
+  font-size: 34px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+
+/* Account Card */
+.account-card {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+/* Avatar */
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  background: #eee;
+}
+
+.file-input {
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+.info {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* Bookings */
+.booking-card {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.04);
+}
+
+.booking-title {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.booking-date {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* Membership */
+.membership-card {
+  background: #F3EBDD;
+  border: 1px solid #A8985F;
+  padding: 30px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Login Block */
+.login-block {
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 80px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  background: #A8985F;
+  color: white;
+  border: none;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .account-wrapper {
+    padding: 100px 20px 140px 20px;
+  }
+
+  .account-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+}
+
+</style>
