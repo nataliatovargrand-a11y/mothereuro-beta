@@ -1,16 +1,6 @@
 <template>
   <div class="events-wrapper">
 
-    <!-- Top Greeting -->
-    <div class="top-greeting" v-if="firstName">
-      Hi, {{ firstName }}
-    </div>
-
-    <!-- Under Review Banner -->
-    <div v-if="membershipStatus === 'pending'" class="review-banner">
-      Your membership application is under review.
-    </div>
-
     <div class="events-header">
       <h1>Events</h1>
     </div>
@@ -49,12 +39,9 @@
 
           <button
             class="register-btn"
-            :disabled="membershipStatus !== 'active'"
             @click="reserveEvent(event)"
           >
-            {{ membershipStatus === 'active'
-                ? 'REGISTER'
-                : 'MEMBERSHIP REQUIRED' }}
+            REGISTER
           </button>
 
         </div>
@@ -72,28 +59,9 @@ import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
 const events = ref([])
-const membershipStatus = ref(null)
-const firstName = ref(null)
 
 onMounted(async () => {
-
-  const { data } = await supabase.auth.getUser()
-
-  if (!data.user) {
-    router.push('/account')
-    return
-  }
-
-  const { data: member } = await supabase
-    .from('members')
-    .select('membership_status, first_name')
-    .eq('email', data.user.email)
-    .single()
-
-  membershipStatus.value = member?.membership_status || 'pending'
-  firstName.value = member?.first_name || ''
 
   const { data: eventsData } = await supabase
     .from('events')
@@ -109,11 +77,14 @@ onMounted(async () => {
 const reserveEvent = async (event) => {
 
   const { data } = await supabase.auth.getUser()
-  if (!data.user) return
 
-  if (membershipStatus.value !== 'active') return
+  // If not logged in → send to account page
+  if (!data.user) {
+    router.push('/account')
+    return
+  }
 
-  // Save booking in database
+  // Save booking
   await supabase.from('bookings').insert({
     user_email: data.user.email,
     event_id: event.id,
@@ -121,7 +92,7 @@ const reserveEvent = async (event) => {
     event_date: event.event_date
   })
 
-  // Then open Luma
+  // Open Luma
   if (event.luma_url) {
     window.open(event.luma_url, '_blank')
   }
@@ -139,26 +110,8 @@ const formatDate = (date) => {
 
 .events-wrapper {
   padding: 120px 40px 140px 40px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-}
-
-.top-greeting {
-  font-size: 18px;
-  letter-spacing: 1px;
-  margin-bottom: 30px;
-  opacity: 0.8;
-}
-
-.review-banner {
-  background: #F3EBDD;
-  border: 1px solid #A8985F;
-  color: #5E5130;
-  padding: 18px;
-  margin-bottom: 50px;
-  text-align: center;
-  letter-spacing: 1px;
-  font-size: 14px;
 }
 
 .events-header {
@@ -169,6 +122,7 @@ const formatDate = (date) => {
   font-size: 40px;
   letter-spacing: 2px;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 .events-grid {
@@ -182,11 +136,12 @@ const formatDate = (date) => {
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .event-card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
 }
 
 .event-image {
@@ -209,6 +164,7 @@ const formatDate = (date) => {
 .event-title {
   font-size: 22px;
   margin-bottom: 12px;
+  font-weight: 500;
 }
 
 .event-location {
@@ -234,12 +190,7 @@ const formatDate = (date) => {
   transition: 0.3s ease;
 }
 
-.register-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.register-btn:not(:disabled):hover {
+.register-btn:hover {
   background: #A8985F;
 }
 
