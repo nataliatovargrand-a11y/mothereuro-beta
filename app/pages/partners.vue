@@ -1,152 +1,172 @@
 <template>
   <div class="partners-wrapper">
 
-    <div class="hero">
-      <h1>Trusted Partners</h1>
+    <div class="partners-header">
+      <h1>Our Strategic Partners</h1>
       <p>
-        Strategic collaborators supporting the Mother Euro community
-        across Europe.
+        Mother Euro collaborates with curated brands across Europe
+        to support our members' transition, growth, and belonging.
       </p>
     </div>
 
-    <!-- Community Partners -->
-    <div class="section">
-      <h2>Community Benefit Partners</h2>
+    <div class="partners-grid">
 
-      <div class="partners-grid">
+      <div
+        v-for="partner in partners"
+        :key="partner.id"
+        class="partner-card"
+      >
 
-        <div class="partner-card">
-          <div class="partner-logo"></div>
-          <h3>Relocation & Visa Services</h3>
-          <p>Legal and residency support across Europe.</p>
-          <span class="badge">Member Benefit</span>
-        </div>
+        <img
+          v-if="partner.logo_url"
+          :src="partner.logo_url"
+          class="partner-logo"
+        />
 
-        <div class="partner-card">
-          <div class="partner-logo"></div>
-          <h3>Coworking Spaces</h3>
-          <p>Curated workspaces in major European cities.</p>
-          <span class="badge">Member Benefit</span>
-        </div>
+        <div class="partner-content">
 
-        <div class="partner-card">
-          <div class="partner-logo"></div>
-          <h3>Wellness & Therapy</h3>
-          <p>Private mental health and wellness support.</p>
-          <span class="badge">Member Benefit</span>
+          <h2>{{ partner.name }}</h2>
+
+          <p class="partner-description">
+            {{ partner.description }}
+          </p>
+
+          <div class="discount-box" v-if="partner.discount_code">
+            <span>Member Benefit</span>
+            <strong>{{ partner.discount_code }}</strong>
+          </div>
+
+          <a
+            :href="partner.website_url"
+            target="_blank"
+            class="partner-btn"
+          >
+            Visit Partner
+          </a>
+
         </div>
 
       </div>
-    </div>
 
-    <!-- Brand Collaborators -->
-    <div class="section">
-      <h2>Brand Collaborations</h2>
-
-      <div class="logo-grid">
-        <div class="logo-placeholder"></div>
-        <div class="logo-placeholder"></div>
-        <div class="logo-placeholder"></div>
-        <div class="logo-placeholder"></div>
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="cta">
-      <h2>Become a Partner</h2>
-      <p>
-        Interested in collaborating with Mother Euro?
-      </p>
-      <button class="primary-btn">
-        Apply to Partner
-      </button>
     </div>
 
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
+
+const partners = ref([])
+
+onMounted(async () => {
+  const { data } = await supabase
+    .from('partners')
+    .select('*')
+    .eq('active', true)
+
+  partners.value = data || []
+})
+</script>
+
 <style scoped>
 
 .partners-wrapper {
-  max-width: 1100px;
+  padding: 120px 40px 140px 40px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 120px 40px 140px;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 100px;
+.partners-header {
+  max-width: 700px;
+  margin-bottom: 60px;
 }
 
-.hero h1 {
+.partners-header h1 {
   font-size: 42px;
   margin-bottom: 20px;
 }
 
-.hero p {
-  max-width: 600px;
-  margin: 0 auto;
-  opacity: 0.7;
-}
-
-.section {
-  margin-bottom: 100px;
-}
-
-.section h2 {
-  font-size: 28px;
-  margin-bottom: 40px;
+.partners-header p {
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0.8;
 }
 
 .partners-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 40px;
 }
 
 .partner-card {
   background: white;
-  padding: 40px;
   border-radius: 24px;
+  padding: 40px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  transition: 0.3s ease;
+}
+
+.partner-card:hover {
+  transform: translateY(-6px);
 }
 
 .partner-logo {
-  width: 60px;
-  height: 60px;
-  background: #eee;
-  margin-bottom: 20px;
+  max-width: 140px;
+  margin-bottom: 25px;
 }
 
-.badge {
+.partner-content h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.partner-description {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.discount-box {
+  background: #F3EBDD;
+  border: 1px solid #A8985F;
+  padding: 16px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.discount-box span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  opacity: 0.7;
+}
+
+.discount-box strong {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.partner-btn {
+  display: inline-block;
+  padding: 14px 24px;
+  background: black;
+  color: white;
+  text-decoration: none;
   font-size: 12px;
   letter-spacing: 2px;
-  opacity: 0.6;
+  transition: 0.3s ease;
 }
 
-.logo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 40px;
-}
-
-.logo-placeholder {
-  height: 60px;
-  background: #f2f2f2;
-}
-
-.cta {
-  text-align: center;
-  margin-top: 100px;
-}
-
-.primary-btn {
-  margin-top: 20px;
-  padding: 14px 28px;
+.partner-btn:hover {
   background: #A8985F;
-  color: white;
-  border: none;
-  letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+  .partners-wrapper {
+    padding: 100px 20px 140px 20px;
+  }
 }
 
 </style>
