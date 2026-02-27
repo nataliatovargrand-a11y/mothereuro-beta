@@ -8,31 +8,30 @@
 
     <!-- Bottom Glass Navigation -->
     <nav class="bottom-nav">
-      <div class="bottom-nav-inner">
+  <div class="bottom-nav-inner">
 
-        <NuxtLink to="/upcoming" class="nav-item">
-          EVENTS
-        </NuxtLink>
+    <NuxtLink to="/upcoming" class="nav-item">
+      Events
+    </NuxtLink>
 
-        <NuxtLink to="/partners" class="nav-item">
-          PARTNERS
-        </NuxtLink>
+    <NuxtLink to="/partners" class="nav-item">
+      Partners
+    </NuxtLink>
 
-        <!-- Center Logo -->
-        <NuxtLink to="/" class="logo-center">
-          <img src="/images/logo.png" class="footer-logo" />
-        </NuxtLink>
+    <NuxtLink to="/" class="nav-item logo-item">
+      <img src="/images/logo.png" class="footer-logo" />
+    </NuxtLink>
 
-        <NuxtLink to="/resources" class="nav-item">
-          EXPLORE
-        </NuxtLink>
+    <NuxtLink to="/resources" class="nav-item">
+      Explore
+    </NuxtLink>
 
-        <NuxtLink to="/account" class="nav-item">
-          ACCOUNT
-        </NuxtLink>
+    <NuxtLink to="/account" class="nav-item">
+      Account
+    </NuxtLink>
 
-      </div>
-    </nav>
+  </div>
+</nav>
 
   </div>
 </template>
@@ -56,30 +55,23 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 72px;
-
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-
-  border-top: 1px solid rgba(0,0,0,0.06);
-
+  height: 70px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(0,0,0,0.05);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  align-items: center;
 }
 
 .bottom-nav-inner {
   width: 100%;
   max-width: 900px;
-
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   align-items: center;
-  justify-content: space-between;
-
-  padding: 0 40px;
-  position: relative;
+  text-align: center;
 }
 
 .nav-item {
@@ -87,24 +79,16 @@
   letter-spacing: 2px;
   text-decoration: none;
   color: black;
-  opacity: 0.6;
-  transition: 0.3s ease;
+  opacity: 0.7;
 }
 
-.nav-item:hover {
-  opacity: 1;
-}
-
-/* Center Logo */
-.logo-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+.logo-item {
+  display: flex;
+  justify-content: center;
 }
 
 .footer-logo {
-  width: 44px;
-  display: block;
+  width: 34px;
 }
 
 </style>

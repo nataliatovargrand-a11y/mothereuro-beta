@@ -77,14 +77,8 @@ onMounted(async () => {
 const reserveEvent = async (event) => {
 
   const { data } = await supabase.auth.getUser()
+  if (!data.user) return
 
-  // If not logged in → send to account page
-  if (!data.user) {
-    router.push('/account')
-    return
-  }
-
-  // Save booking
   await supabase.from('bookings').insert({
     user_email: data.user.email,
     event_id: event.id,
@@ -92,7 +86,8 @@ const reserveEvent = async (event) => {
     event_date: event.event_date
   })
 
-  // Open Luma
+  alert("Booking confirmed. Redirecting to event.")
+
   if (event.luma_url) {
     window.open(event.luma_url, '_blank')
   }
@@ -105,6 +100,7 @@ const formatDate = (date) => {
   })
 }
 </script>
+const loading = ref(true)
 
 <style scoped>
 
@@ -142,7 +138,7 @@ const formatDate = (date) => {
 .event-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 30px 60px rgba(0,0,0,0.08);
-}
+} 
 
 .event-image {
   width: 100%;
