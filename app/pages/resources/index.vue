@@ -4,10 +4,11 @@
     <!-- Editorial Hero -->
     <div class="explore-hero">
       <h1>Explore</h1>
-      <p>
-        A curated collection of trusted beauty, travel, food,
-        and wellness resources across Europe.
-      </p>
+
+      <div class="hero-subline">
+        Curated beauty, travel, food, and wellness discoveries
+        across Europe for women building abroad.
+      </div>
 
       <input
         v-model="search"
@@ -15,6 +16,29 @@
         placeholder="Search by keyword..."
         class="search-input"
       />
+    </div>
+
+    <!-- Featured Resource -->
+    <div v-if="featured" class="featured-resource">
+
+      <img
+        :src="featured.image_url"
+        class="featured-image"
+      />
+
+      <div class="featured-content">
+        <h2>{{ featured.title }}</h2>
+        <p>{{ featured.description }}</p>
+
+        <a
+          :href="featured.link_url"
+          target="_blank"
+          class="resource-btn"
+        >
+          Explore Resource
+        </a>
+      </div>
+
     </div>
 
     <!-- Luxury Category Visual Blocks -->
@@ -45,11 +69,12 @@
     <!-- Divider -->
     <div class="divider"></div>
 
-    <!-- Featured Resources -->
+    <!-- Section Header -->
     <div class="section-header">
       Featured Resources
     </div>
 
+    <!-- Resources Grid -->
     <div class="resources-grid">
 
       <div
@@ -64,6 +89,7 @@
         />
 
         <div class="resource-content">
+
           <h2>{{ resource.title }}</h2>
 
           <p class="description">
@@ -87,6 +113,7 @@
           >
             View Resource
           </a>
+
         </div>
       </div>
 
@@ -101,8 +128,10 @@ import { supabase } from '~/utils/supabase'
 
 const resources = ref([])
 const search = ref('')
+const featured = ref(null)
 
 onMounted(async () => {
+
   const { data } = await supabase
     .from('resources')
     .select('*')
@@ -110,6 +139,7 @@ onMounted(async () => {
     .eq('access_level', 'public')
 
   resources.value = data || []
+  featured.value = resources.value.find(r => r.featured === true)
 })
 
 const filteredResources = computed(() => {
@@ -124,49 +154,81 @@ const filteredResources = computed(() => {
 
 /* Layout */
 .explore-wrapper {
-  padding: 140px 40px 140px;
+  padding: 160px 40px 140px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Hero */
+/* Editorial Hero */
 .explore-hero {
-  max-width: 720px;
-  margin-bottom: 100px;
+  max-width: 760px;
+  margin-bottom: 140px;
 }
 
 .explore-hero h1 {
-  font-size: 56px;
-  font-weight: 400;
-  margin-bottom: 20px;
+  font-size: 68px;
+  font-weight: 300;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
 }
 
-.explore-hero p {
-  font-size: 18px;
-  line-height: 1.7;
-  margin-bottom: 40px;
-  opacity: 0.75;
+.hero-subline {
+  font-size: 20px;
+  line-height: 1.8;
+  opacity: 0.7;
+  margin-bottom: 50px;
+  max-width: 620px;
 }
 
 .search-input {
   width: 100%;
-  padding: 18px;
-  border: 1px solid rgba(0,0,0,0.1);
-  font-size: 14px;
-  background: #f6f4ef;
+  padding: 20px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  background: transparent;
+  font-size: 15px;
+  letter-spacing: 1px;
 }
 
-/* Luxury Category Grid */
+/* Featured Section */
+.featured-resource {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-bottom: 160px;
+}
+
+.featured-image {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+}
+
+.featured-content h2 {
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+.featured-content p {
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  opacity: 0.85;
+}
+
+/* Category Visual Grid */
 .category-visual-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
-  margin-bottom: 120px;
+  margin-bottom: 160px;
 }
 
 .category-visual {
   position: relative;
-  height: 260px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,20 +240,30 @@ const filteredResources = computed(() => {
 .category-visual span {
   position: relative;
   color: white;
-  font-size: 22px;
-  letter-spacing: 4px;
+  font-size: 26px;
+  font-weight: 300;
+  letter-spacing: 6px;
+  text-transform: uppercase;
   z-index: 2;
 }
 
 .category-visual .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.15)
+  );
   transition: 0.4s ease;
 }
 
 .category-visual:hover .overlay {
-  background: rgba(0,0,0,0.2);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.05)
+  );
 }
 
 /* Background Images */
@@ -215,67 +287,61 @@ const filteredResources = computed(() => {
 .divider {
   height: 1px;
   background: rgba(0,0,0,0.08);
-  margin-bottom: 80px;
+  margin-bottom: 100px;
 }
 
 /* Section Header */
 .section-header {
-  font-size: 16px;
-  letter-spacing: 3px;
-  margin-bottom: 60px;
+  font-size: 14px;
+  letter-spacing: 4px;
+  margin-bottom: 80px;
+  opacity: 0.6;
 }
 
-/* Resources */
+/* Resources Grid */
 .resources-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 60px;
-}
-
-.resource-card {
-  transition: 0.3s ease;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 80px;
 }
 
 .resource-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
 }
 
 .resource-image {
   width: 100%;
-  height: 240px;
+  height: 340px;
   object-fit: cover;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .resource-content h2 {
-  font-size: 22px;
-  margin-bottom: 12px;
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 16px;
 }
 
 .description {
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 18px;
-  opacity: 0.8;
-}
-
-.tag-row {
-  margin-bottom: 25px;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  opacity: 0.75;
 }
 
 .tag {
   font-size: 11px;
-  margin-right: 8px;
-  opacity: 0.6;
+  margin-right: 10px;
+  opacity: 0.5;
 }
 
 .resource-btn {
-  padding: 14px 24px;
+  padding: 16px 30px;
   background: black;
   color: white;
   text-decoration: none;
   font-size: 12px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   transition: 0.3s ease;
 }
 
@@ -288,6 +354,10 @@ const filteredResources = computed(() => {
   .category-visual-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .featured-resource {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -295,5 +365,4 @@ const filteredResources = computed(() => {
     padding: 120px 20px 140px;
   }
 }
-
 </style>
