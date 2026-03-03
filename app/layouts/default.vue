@@ -7,8 +7,20 @@
     </div>
 
     <!-- Bottom Glass Navigation -->
-    <nav class="bottom-nav">
+   <nav class="bottom-nav">
   <div class="bottom-nav-inner">
+
+    <NuxtLink to="/account" class="nav-item">
+      Account
+    </NuxtLink>
+
+    <NuxtLink to="/resources" class="nav-item">
+      Explore
+    </NuxtLink>
+
+    <NuxtLink to="/" class="nav-item logo-item">
+      <img src="/images/logo.png" class="footer-logo" />
+    </NuxtLink>
 
     <NuxtLink to="/upcoming" class="nav-item">
       Events
@@ -16,18 +28,6 @@
 
     <NuxtLink to="/partners" class="nav-item">
       Partners
-    </NuxtLink>
-
-    <NuxtLink to="/" class="nav-item logo-item">
-      <img src="/images/logo.png" class="footer-logo" />
-    </NuxtLink>
-
-    <NuxtLink to="/resources" class="nav-item">
-      Explore
-    </NuxtLink>
-
-    <NuxtLink to="/account" class="nav-item">
-      Account
     </NuxtLink>
 
   </div>
