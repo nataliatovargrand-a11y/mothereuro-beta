@@ -1,7 +1,7 @@
 <template>
   <div class="explore-wrapper">
 
-    <!-- Editorial Header -->
+    <!-- Editorial Hero -->
     <div class="explore-hero">
       <h1>Explore</h1>
       <p>
@@ -17,18 +17,29 @@
       />
     </div>
 
-    <!-- Category Blocks -->
-    <div class="category-grid">
-      <NuxtLink
-        v-for="cat in categories"
-        :key="cat"
-        :to="`/resources/${cat.toLowerCase()}`"
-        class="category-card"
-      >
-        <div class="category-title">
-          {{ cat }}
-        </div>
+    <!-- Luxury Category Visual Blocks -->
+    <div class="category-visual-grid">
+
+      <NuxtLink to="/resources/beauty" class="category-visual beauty">
+        <div class="overlay"></div>
+        <span>Beauty</span>
       </NuxtLink>
+
+      <NuxtLink to="/resources/travel" class="category-visual travel">
+        <div class="overlay"></div>
+        <span>Travel</span>
+      </NuxtLink>
+
+      <NuxtLink to="/resources/food" class="category-visual food">
+        <div class="overlay"></div>
+        <span>Food</span>
+      </NuxtLink>
+
+      <NuxtLink to="/resources/wellness" class="category-visual wellness">
+        <div class="overlay"></div>
+        <span>Wellness</span>
+      </NuxtLink>
+
     </div>
 
     <!-- Divider -->
@@ -46,7 +57,6 @@
         :key="resource.id"
         class="resource-card"
       >
-
         <img
           v-if="resource.image_url"
           :src="resource.image_url"
@@ -54,7 +64,6 @@
         />
 
         <div class="resource-content">
-
           <h2>{{ resource.title }}</h2>
 
           <p class="description">
@@ -78,9 +87,7 @@
           >
             View Resource
           </a>
-
         </div>
-
       </div>
 
     </div>
@@ -95,8 +102,6 @@ import { supabase } from '~/utils/supabase'
 const resources = ref([])
 const search = ref('')
 
-const categories = ['Beauty', 'Travel', 'Food', 'Wellness']
-
 onMounted(async () => {
   const { data } = await supabase
     .from('resources')
@@ -109,7 +114,7 @@ onMounted(async () => {
 
 const filteredResources = computed(() => {
   return resources.value.filter(r =>
-    r.title.toLowerCase().includes(search.value.toLowerCase()) ||
+    r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
     r.tags?.toLowerCase().includes(search.value.toLowerCase())
   )
 })
@@ -117,6 +122,7 @@ const filteredResources = computed(() => {
 
 <style scoped>
 
+/* Layout */
 .explore-wrapper {
   padding: 140px 40px 140px;
   max-width: 1200px;
@@ -125,7 +131,7 @@ const filteredResources = computed(() => {
 
 /* Hero */
 .explore-hero {
-  max-width: 700px;
+  max-width: 720px;
   margin-bottom: 100px;
 }
 
@@ -147,32 +153,62 @@ const filteredResources = computed(() => {
   padding: 18px;
   border: 1px solid rgba(0,0,0,0.1);
   font-size: 14px;
+  background: #f6f4ef;
 }
 
-/* Categories */
-.category-grid {
+/* Luxury Category Grid */
+.category-visual-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
   margin-bottom: 120px;
 }
 
-.category-card {
-  border: 1px solid black;
-  padding: 40px;
-  text-align: center;
+.category-visual {
+  position: relative;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
-  transition: 0.3s ease;
+  overflow: hidden;
+  transition: 0.4s ease;
 }
 
-.category-card:hover {
-  background: black;
+.category-visual span {
+  position: relative;
   color: white;
+  font-size: 22px;
+  letter-spacing: 4px;
+  z-index: 2;
 }
 
-.category-title {
-  font-size: 18px;
-  letter-spacing: 2px;
+.category-visual .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  transition: 0.4s ease;
+}
+
+.category-visual:hover .overlay {
+  background: rgba(0,0,0,0.2);
+}
+
+/* Background Images */
+.beauty {
+  background: url('/images/beauty.jpg') center/cover no-repeat;
+}
+
+.travel {
+  background: url('/images/travel.jpg') center/cover no-repeat;
+}
+
+.food {
+  background: url('/images/food.jpg') center/cover no-repeat;
+}
+
+.wellness {
+  background: url('/images/wellness.jpg') center/cover no-repeat;
 }
 
 /* Divider */
@@ -247,8 +283,9 @@ const filteredResources = computed(() => {
   background: #A8985F;
 }
 
+/* Responsive */
 @media (max-width: 900px) {
-  .category-grid {
+  .category-visual-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
