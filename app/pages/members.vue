@@ -68,7 +68,6 @@ onMounted(async () => {
   const { data } = await supabase
     .from('members')
     .select('id, first_name, city, industry, avatar_url, membership_status')
-    .eq('membership_status', 'approved')
     .order('city')
 
   members.value = data || []
