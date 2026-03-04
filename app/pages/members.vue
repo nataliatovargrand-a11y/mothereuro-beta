@@ -21,53 +21,39 @@
 
       <div class="members-grid">
 
-        <NuxtLink
-          v-for="member in group"
-          :key="member.id"
-          :to="`/members/${member.id}`"
-          class="member-card"
-        >
+<NuxtLink
+  v-for="member in group"
+  :key="member.id"
+  :to="`/members/${member.id}`"
+  class="member-card"
+>
 
-          <img
-            v-if="member.avatar_url"
-            :src="member.avatar_url"
-            class="member-avatar"
-          />
+  <img
+    v-if="member.avatar_url"
+    :src="member.avatar_url"
+    class="member-avatar"
+  />
 
-          <div
-            v-else
-            class="member-avatar-placeholder"
-          ></div>
+  <div v-else class="member-avatar-placeholder"></div>
 
-          <div class="member-info">
+  <div class="member-info">
 
-            <div class="member-name">
-              {{ member.first_name }}
-            </div>
+    <div class="member-name">
+      {{ member.first_name }}
+    </div>
 
-            <div
-              v-if="member.industry"
-              class="member-industry"
-            >
-              {{ member.industry }}
-            </div>
+    <div v-if="member.industry" class="member-industry">
+      {{ member.industry }}
+    </div>
 
-            <div
-              v-if="member.city"
-              class="member-city"
-            >
-              {{ member.city }}
-            </div>
-
-          </div>
-
-        </NuxtLink>
-
-      </div>
-
+    <div v-if="member.city" class="member-city">
+      {{ member.city }}
     </div>
 
   </div>
+
+</NuxtLink>
+
 
 </template>
 
@@ -150,17 +136,21 @@ const groupedMembers = computed(() => {
 }
 
 .member-card{
+  display:block;
   background:white;
   border-radius:18px;
   padding:24px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
   transition:all .25s ease;
+  text-decoration:none;
+  color:inherit;
+  cursor:pointer;
 }
 
 .member-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  transform:translateY(-6px);
+  box-shadow:0 25px 50px rgba(0,0,0,0.08);
 }
 
 .member-avatar{
