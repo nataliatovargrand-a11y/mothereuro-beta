@@ -11,11 +11,12 @@
 
     <div class="members-grid">
 
-      <div
-        v-for="member in members"
-        :key="member.id"
-        class="member-card"
-      >
+   <NuxtLink
+  v-for="member in members"
+  :key="member.id"
+  :to="`/members/${member.id}`"
+  class="member-card"
+>
 
         <img
           v-if="member.avatar_url"
@@ -40,8 +41,7 @@
       </div>
 
     </div>
-
-  </div>
+</NuxtLink>
 
 </template>
 
@@ -93,12 +93,15 @@ onMounted(async () => {
 }
 
 .member-card{
+  display:block;
   background:white;
   border-radius:18px;
   padding:24px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
   transition:all .25s ease;
+  text-decoration:none;
+  color:inherit;
 }
 
 .member-card:hover{
