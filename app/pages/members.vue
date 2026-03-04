@@ -9,10 +9,66 @@
       </p>
     </div>
 
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+      <div class="filter-group">
+
+        <div class="filter-title">City</div>
+
+        <button
+          class="filter-pill"
+          :class="{ active: selectedCity === 'All' }"
+          @click="selectedCity = 'All'"
+        >
+          All
+        </button>
+
+        <button
+          v-for="city in cities"
+          :key="city"
+          class="filter-pill"
+          :class="{ active: selectedCity === city }"
+          @click="selectedCity = city"
+        >
+          {{ city }}
+        </button>
+
+      </div>
+
+      <div class="filter-group">
+
+        <div class="filter-title">Industry</div>
+
+        <button
+          class="filter-pill"
+          :class="{ active: selectedIndustry === 'All' }"
+          @click="selectedIndustry = 'All'"
+        >
+          All
+        </button>
+
+        <button
+          v-for="industry in industries"
+          :key="industry"
+          class="filter-pill"
+          :class="{ active: selectedIndustry === industry }"
+          @click="selectedIndustry = industry"
+        >
+          {{ industry }}
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- MEMBERS GRID -->
+
     <div class="members-grid">
 
       <div
-        v-for="member in members"
+        v-for="member in filteredMembers"
         :key="member.id"
         class="member-card"
         @click="toggleMember(member.id)"
@@ -38,7 +94,7 @@
           {{ member.city }}
         </div>
 
-        <!-- EXPANDED DETAILS -->
+        <!-- EXPANDED -->
 
         <div
           v-if="expandedMember === member.id"
@@ -72,18 +128,21 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
+
 const expandedMember = ref(null)
+
+const selectedCity = ref("All")
+const selectedIndustry = ref("All")
 
 onMounted(async () => {
 
   const { data } = await supabase
     .from('members')
     .select('*')
-    .order('first_name')
 
   members.value = data || []
 
@@ -99,8 +158,37 @@ const toggleMember = (id) => {
 
 }
 
-</script>
+const cities = computed(() => {
 
+  const unique = [...new Set(members.value.map(m => m.city).filter(Boolean))]
+  return unique.sort()
+
+})
+
+const industries = computed(() => {
+
+  const unique = [...new Set(members.value.map(m => m.industry).filter(Boolean))]
+  return unique.sort()
+
+})
+
+const filteredMembers = computed(() => {
+
+  return members.value.filter(member => {
+
+    const cityMatch =
+      selectedCity.value === "All" || member.city === selectedCity.value
+
+    const industryMatch =
+      selectedIndustry.value === "All" || member.industry === selectedIndustry.value
+
+    return cityMatch && industryMatch
+
+  })
+
+})
+
+</script>
 <style scoped>
 
 .members-wrapper{
@@ -195,6 +283,45 @@ const toggleMember = (id) => {
 
 .label{
   opacity:.6;
+}
+
+/* FILTERS */
+
+.filters{
+  margin-bottom:50px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.filter-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+.filter-title{
+  margin-right:10px;
+  font-size:12px;
+  letter-spacing:1px;
+  opacity:.6;
+}
+
+.filter-pill{
+  border:1px solid rgba(0,0,0,0.15);
+  background:white;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:1px;
+  cursor:pointer;
+}
+
+.filter-pill.active{
+  background:black;
+  color:white;
+  border-color:black;
 }
 
 </style>
