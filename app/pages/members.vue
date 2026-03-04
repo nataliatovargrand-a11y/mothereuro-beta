@@ -8,13 +8,16 @@
         Women building life and business across Europe
       </p>
     </div>
-<div class="search-bar">
-  <input
-    v-model="searchQuery"
-    placeholder="Search members..."
-    class="search-input"
-  />
-</div>
+
+    <!-- SEARCH -->
+
+    <div class="search-bar">
+      <input
+        v-model="searchQuery"
+        placeholder="Search members..."
+        class="search-input"
+      />
+    </div>
 
     <!-- FILTERS -->
 
@@ -101,7 +104,7 @@
           {{ member.city }}
         </div>
 
-        <!-- EXPANDED -->
+        <!-- EXPANDED DETAILS -->
 
         <div
           v-if="expandedMember === member.id"
@@ -139,12 +142,11 @@ import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
-
 const expandedMember = ref(null)
+
 const selectedCity = ref("All")
 const selectedIndustry = ref("All")
 const searchQuery = ref("")
-
 
 onMounted(async () => {
 
@@ -201,21 +203,8 @@ const filteredMembers = computed(() => {
 
 })
 
-  return members.value.filter(member => {
-
-    const cityMatch =
-      selectedCity.value === "All" || member.city === selectedCity.value
-
-    const industryMatch =
-      selectedIndustry.value === "All" || member.industry === selectedIndustry.value
-
-    return cityMatch && industryMatch
-
-  })
-
-})
-
 </script>
+
 <style scoped>
 
 .members-wrapper{
@@ -225,7 +214,7 @@ const filteredMembers = computed(() => {
 }
 
 .members-header{
-  margin-bottom:60px;
+  margin-bottom:40px;
 }
 
 .members-header h1{
@@ -238,78 +227,23 @@ const filteredMembers = computed(() => {
   opacity:.6;
 }
 
-.members-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:30px;
+/* SEARCH */
+
+.search-bar{
+  margin-bottom:30px;
 }
 
-.member-card{
-  background:white;
-  border-radius:20px;
-  padding:26px;
-  text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  transition:all .25s ease;
-  cursor:pointer;
+.search-input{
+  width:100%;
+  padding:12px 16px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.15);
+  font-size:14px;
 }
 
-.member-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
-}
-
-.member-avatar{
-  width:96px;
-  height:96px;
-  border-radius:50%;
-  object-fit:cover;
-  margin:0 auto 14px;
-}
-
-.member-avatar-placeholder{
-  width:96px;
-  height:96px;
-  border-radius:50%;
-  background:#eee;
-  margin:0 auto 14px;
-}
-
-.member-name{
-  font-size:16px;
-  letter-spacing:.5px;
-  font-weight:500;
-}
-
-.member-industry{
-  font-size:13px;
-  opacity:.7;
-}
-
-.member-city{
-  font-size:11px;
-  letter-spacing:1px;
-  opacity:.5;
-  text-transform:uppercase;
-}
-
-.member-details{
-  margin-top:18px;
-  padding-top:18px;
-  border-top:1px solid rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.detail-row{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-}
-
-.label{
-  opacity:.6;
+.search-input:focus{
+  outline:none;
+  border-color:black;
 }
 
 /* FILTERS */
@@ -350,39 +284,89 @@ const filteredMembers = computed(() => {
   color:white;
   border-color:black;
 }
-/* SEARCH */
 
-.search-bar{
-  margin-bottom:30px;
+/* GRID */
+
+.members-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:30px;
 }
 
-.search-input{
-  width:100%;
-  padding:12px 16px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,0.15);
-  font-size:14px;
+/* CARD */
+
+.member-card{
+  background:white;
+  border-radius:20px;
+  padding:26px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  transition:all .25s ease;
+  cursor:pointer;
 }
 
-.search-input:focus{
-  outline:none;
-  border-color:black;
-}/* SEARCH */
-
-.search-bar{
-  margin-bottom:30px;
+.member-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
-.search-input{
-  width:100%;
-  padding:12px 16px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,0.15);
-  font-size:14px;
+/* AVATAR */
+
+.member-avatar{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:0 auto 14px;
 }
 
-.search-input:focus{
-  outline:none;
-  border-color:black;
+.member-avatar-placeholder{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  background:#eee;
+  margin:0 auto 14px;
 }
+
+/* TEXT */
+
+.member-name{
+  font-size:16px;
+  letter-spacing:.5px;
+  font-weight:500;
+}
+
+.member-industry{
+  font-size:13px;
+  opacity:.7;
+}
+
+.member-city{
+  font-size:11px;
+  letter-spacing:1px;
+  opacity:.5;
+  text-transform:uppercase;
+}
+
+/* EXPANDED */
+
+.member-details{
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid rgba(0,0,0,0.08);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+}
+
+.label{
+  opacity:.6;
+}
+
 </style>
