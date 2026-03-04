@@ -34,7 +34,10 @@
     class="member-avatar"
   />
 
-  <div v-else class="member-avatar-placeholder"></div>
+  <div
+    v-else
+    class="member-avatar-placeholder"
+  ></div>
 
   <div class="member-info">
 
@@ -42,18 +45,23 @@
       {{ member.first_name }}
     </div>
 
-    <div v-if="member.industry" class="member-industry">
+    <div
+      v-if="member.industry"
+      class="member-industry"
+    >
       {{ member.industry }}
     </div>
 
-    <div v-if="member.city" class="member-city">
+    <div
+      v-if="member.city"
+      class="member-city"
+    >
       {{ member.city }}
     </div>
 
   </div>
 
 </NuxtLink>
-
 
 </template>
 
