@@ -15,9 +15,9 @@
     class="category-section"
   >
 
-    <h2 class="category-title">
-      {{ category }}
-    </h2>
+  <h2 class="category-title">
+  {{ formatCategory(category) }}
+</h2>
 
     <div class="partners-grid">
 
@@ -91,6 +91,10 @@
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
+const formatCategory = (category) => {
+  if (!category) return ''
+  return category.charAt(0).toUpperCase() + category.slice(1)
+}
 const partners = ref([])
 
 onMounted(async () => {
@@ -178,6 +182,10 @@ margin-bottom:60px;
 font-size:22px;
 margin-bottom:20px;
 letter-spacing:1px;
+letter-spacing: 2px;
+text-transform: uppercase;
+font-size: 20px;
+margin-bottom: 24px;
 }
 
 /* GRID */
