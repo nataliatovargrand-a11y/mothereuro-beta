@@ -24,7 +24,7 @@
         <NuxtLink
           v-for="member in group"
           :key="member.id"
-          :to="`/members/${member.first_name}`"
+          :to="`/members/${member.id}`"
           class="member-card"
         >
 

@@ -42,7 +42,7 @@ onMounted(async () => {
   const { data } = await supabase
     .from('members')
     .select('first_name, industry, city, avatar_url')
-    .eq('first_name', route.params.id)
+    .eq('id', route.params.id)
     .single()
 
   member.value = data
