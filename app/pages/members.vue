@@ -139,11 +139,11 @@ import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
+
 const expandedMember = ref(null)
 const selectedCity = ref("All")
 const selectedIndustry = ref("All")
 const searchQuery = ref("")
-const expandedMember = ref(null)
 
 
 onMounted(async () => {
