@@ -8,6 +8,13 @@
         Women building life and business across Europe
       </p>
     </div>
+<div class="search-bar">
+  <input
+    v-model="searchQuery"
+    placeholder="Search members..."
+    class="search-input"
+  />
+</div>
 
     <!-- FILTERS -->
 
@@ -132,7 +139,11 @@ import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
-
+const members = ref([])
+const expandedMember = ref(null)
+const selectedCity = ref("All")
+const selectedIndustry = ref("All")
+const searchQuery = ref("")
 const expandedMember = ref(null)
 
 const selectedCity = ref("All")
@@ -173,6 +184,25 @@ const industries = computed(() => {
 })
 
 const filteredMembers = computed(() => {
+
+  return members.value.filter(member => {
+
+    const cityMatch =
+      selectedCity.value === "All" || member.city === selectedCity.value
+
+    const industryMatch =
+      selectedIndustry.value === "All" || member.industry === selectedIndustry.value
+
+    const searchMatch =
+      member.first_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      member.city?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      member.industry?.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    return cityMatch && industryMatch && searchMatch
+
+  })
+
+})
 
   return members.value.filter(member => {
 
@@ -323,5 +353,39 @@ const filteredMembers = computed(() => {
   color:white;
   border-color:black;
 }
+/* SEARCH */
 
+.search-bar{
+  margin-bottom:30px;
+}
+
+.search-input{
+  width:100%;
+  padding:12px 16px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.15);
+  font-size:14px;
+}
+
+.search-input:focus{
+  outline:none;
+  border-color:black;
+}/* SEARCH */
+
+.search-bar{
+  margin-bottom:30px;
+}
+
+.search-input{
+  width:100%;
+  padding:12px 16px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.15);
+  font-size:14px;
+}
+
+.search-input:focus{
+  outline:none;
+  border-color:black;
+}
 </style>
