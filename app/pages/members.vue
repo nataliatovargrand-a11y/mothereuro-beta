@@ -21,12 +21,12 @@
 
       <div class="members-grid">
 
-     <NuxtLink
-  v-for="member in group"
-  :key="member.id"
-  :to="`/members/${member.first_name}`"
-  class="member-card"
->
+        <NuxtLink
+          v-for="member in group"
+          :key="member.id"
+          :to="`/members/${member.first_name}`"
+          class="member-card"
+        >
 
           <img
             v-if="member.avatar_url"
@@ -57,11 +57,11 @@
               class="member-city"
             >
               {{ member.city }}
-       </NuxtLink>
+            </div>
 
           </div>
 
-        </div>
+        </NuxtLink>
 
       </div>
 
@@ -143,15 +143,11 @@ const groupedMembers = computed(() => {
   letter-spacing:1px;
 }
 
-/* GRID */
-
 .members-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
   gap:30px;
 }
-
-/* CARD */
 
 .member-card{
   background:white;
@@ -166,8 +162,6 @@ const groupedMembers = computed(() => {
   transform:translateY(-4px);
   box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
-
-/* AVATAR */
 
 .member-avatar{
   width:96px;
@@ -184,8 +178,6 @@ const groupedMembers = computed(() => {
   background:#eee;
   margin:0 auto 14px;
 }
-
-/* INFO */
 
 .member-info{
   display:flex;
