@@ -37,12 +37,13 @@
             {{ event.description }}
           </p>
 
-          <button
-            class="register-btn"
-            @click="reserveEvent(event)"
-          >
-            REGISTER
-          </button>
+  <button
+  class="register-btn"
+  :disabled="!access.hasTier('global')"
+  @click="reserveEvent(event)"
+>
+  {{ access.hasTier('global') ? 'REGISTER' : 'MEMBERS ONLY' }}
+</button>
 
         </div>
 
@@ -57,9 +58,13 @@
 import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
+import { useAccess } from '~/composables/useAccess'
 
 const router = useRouter()
 const events = ref([])
+
+const access = useAccess()
+await access.loadAccess()
 
 onMounted(async () => {
 
@@ -100,7 +105,6 @@ const formatDate = (date) => {
   })
 }
 </script>
-const loading = ref(true)
 
 <style scoped>
 
