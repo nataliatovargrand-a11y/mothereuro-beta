@@ -9,15 +9,30 @@
     </p>
   </div>
 
+  <!-- LOGO WALL -->
+
+  <div class="logo-wall">
+
+    <img
+      v-for="partner in partners"
+      :key="partner.id"
+      :src="partner.logo_url"
+      class="logo-wall-item"
+    />
+
+  </div>
+
+  <!-- CATEGORY SECTIONS -->
+
   <div
     v-for="(group, category) in groupedPartners"
     :key="category"
     class="category-section"
   >
 
-  <h2 class="category-title">
-  {{ formatCategory(category) }}
-</h2>
+    <h2 class="category-title">
+      {{ formatCategory(category) }}
+    </h2>
 
     <div class="partners-grid">
 
@@ -151,7 +166,27 @@ const redeemPartner = async (partner) => {
 </script>
 
 <style scoped>
+/* LOGO WALL */
 
+.logo-wall{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+gap:30px;
+margin-bottom:80px;
+align-items:center;
+}
+
+.logo-wall-item{
+max-width:120px;
+margin:auto;
+opacity:.7;
+transition:.25s ease;
+}
+
+.logo-wall-item:hover{
+opacity:1;
+transform:scale(1.05);
+}
 .partners-wrapper{
 padding:120px 40px 140px;
 max-width:1100px;
