@@ -1,18 +1,28 @@
 <template>
 
-  <div class="partners-wrapper">
+<div class="partners-wrapper">
 
-    <div class="partners-header">
-      <h1>Partner Benefits</h1>
-      <p class="partners-subtitle">
-        Exclusive benefits from brands we love.
-      </p>
-    </div>
+  <div class="partners-header">
+    <h1>Partner Benefits</h1>
+    <p class="partners-subtitle">
+      Exclusive benefits from brands we love.
+    </p>
+  </div>
+
+  <div
+    v-for="(group, category) in groupedPartners"
+    :key="category"
+    class="category-section"
+  >
+
+    <h2 class="category-title">
+      {{ category }}
+    </h2>
 
     <div class="partners-grid">
 
       <div
-        v-for="partner in partners"
+        v-for="partner in group"
         :key="partner.id"
         class="partner-card"
       >
@@ -25,10 +35,6 @@
 
         <div class="partner-name">
           {{ partner.name }}
-        </div>
-
-        <div class="partner-category">
-          {{ partner.category }}
         </div>
 
         <p class="partner-description">
@@ -55,7 +61,7 @@
 
           <button
             class="copy-btn"
-            @click="copyCode(partner.discount_code)"
+            @click="redeemPartner(partner)"
           >
             Copy Code
           </button>
@@ -76,11 +82,13 @@
 
   </div>
 
+</div>
+
 </template>
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const partners = ref([])
@@ -95,9 +103,43 @@ onMounted(async () => {
 
 })
 
-const copyCode = (code) => {
+const groupedPartners = computed(() => {
 
-  navigator.clipboard.writeText(code)
+  const groups = {}
+
+  partners.value.forEach(partner => {
+
+    const category = partner.category || "Other"
+
+    if (!groups[category]) {
+      groups[category] = []
+    }
+
+    groups[category].push(partner)
+
+  })
+
+  return groups
+
+})
+
+const redeemPartner = async (partner) => {
+
+  navigator.clipboard.writeText(partner.discount_code)
+
+  const { data } = await supabase.auth.getUser()
+
+  if(data.user){
+
+    await supabase
+      .from('partner_redemptions')
+      .insert({
+        partner_id: partner.id,
+        user_email: data.user.email
+      })
+
+  }
+
   alert("Discount code copied")
 
 }
@@ -107,131 +149,129 @@ const copyCode = (code) => {
 <style scoped>
 
 .partners-wrapper{
-  padding:120px 40px 140px;
-  max-width:1100px;
-  margin:0 auto;
+padding:120px 40px 140px;
+max-width:1100px;
+margin:0 auto;
 }
 
 .partners-header{
-  margin-bottom:60px;
+margin-bottom:60px;
 }
 
 .partners-header h1{
-  font-size:40px;
-  letter-spacing:2px;
-  margin-bottom:10px;
+font-size:40px;
+letter-spacing:2px;
+margin-bottom:10px;
 }
 
 .partners-subtitle{
-  opacity:.6;
+opacity:.6;
+}
+
+/* CATEGORY */
+
+.category-section{
+margin-bottom:60px;
+}
+
+.category-title{
+font-size:22px;
+margin-bottom:20px;
+letter-spacing:1px;
 }
 
 /* GRID */
 
 .partners-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:30px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:30px;
 }
 
 /* CARD */
 
 .partner-card{
-  background:white;
-  border-radius:20px;
-  padding:28px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  transition:all .25s ease;
+background:white;
+border-radius:20px;
+padding:28px;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+transition:.25s ease;
 }
 
 .partner-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+transform:translateY(-4px);
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
-
-/* LOGO */
 
 .partner-logo{
-  width:100px;
-  margin-bottom:16px;
+width:100px;
+margin-bottom:16px;
 }
-
-/* TEXT */
 
 .partner-name{
-  font-size:18px;
-  font-weight:500;
-  margin-bottom:4px;
-}
-
-.partner-category{
-  font-size:12px;
-  letter-spacing:1px;
-  opacity:.5;
-  text-transform:uppercase;
-  margin-bottom:12px;
+font-size:18px;
+font-weight:500;
+margin-bottom:8px;
 }
 
 .partner-description{
-  font-size:14px;
-  margin-bottom:20px;
+font-size:14px;
+margin-bottom:20px;
 }
 
 /* BENEFIT */
 
 .benefit-box{
-  background:#f6f6f6;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:16px;
+background:#f6f6f6;
+padding:14px;
+border-radius:12px;
+margin-bottom:16px;
 }
 
 .benefit-title{
-  font-size:11px;
-  letter-spacing:1px;
-  opacity:.6;
-  margin-bottom:4px;
+font-size:11px;
+letter-spacing:1px;
+opacity:.6;
+margin-bottom:4px;
 }
 
 .benefit-text{
-  font-size:14px;
+font-size:14px;
 }
 
 /* CODE */
 
 .code-section{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
 }
 
 .discount-code{
-  font-family:monospace;
-  font-size:14px;
-  letter-spacing:1px;
+font-family:monospace;
+font-size:14px;
+letter-spacing:1px;
 }
 
 .copy-btn{
-  border:1px solid black;
-  background:white;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:12px;
+border:1px solid black;
+background:white;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
 }
 
 .copy-btn:hover{
-  background:black;
-  color:white;
+background:black;
+color:white;
 }
 
-/* VISIT */
-
 .visit-btn{
-  text-decoration:none;
-  font-size:13px;
-  letter-spacing:1px;
+text-decoration:none;
+font-size:13px;
+letter-spacing:1px;
 }
 
 </style>
