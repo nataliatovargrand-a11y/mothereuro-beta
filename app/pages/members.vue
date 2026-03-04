@@ -11,11 +11,11 @@
 
     <div class="members-grid">
 
-      <NuxtLink
+      <div
         v-for="member in members"
         :key="member.id"
-        :to="`/members/${member.id}`"
         class="member-card"
+        @click="toggleMember(member.id)"
       >
 
         <img
@@ -38,7 +38,31 @@
           {{ member.city }}
         </div>
 
-      </NuxtLink>
+        <!-- EXPANDED DETAILS -->
+
+        <div
+          v-if="expandedMember === member.id"
+          class="member-details"
+        >
+
+          <div class="detail-row">
+            <span class="label">Industry</span>
+            <span>{{ member.industry || '—' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">City</span>
+            <span>{{ member.city || '—' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Membership</span>
+            <span>{{ member.membership_tier || 'Member' }}</span>
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
 
@@ -52,16 +76,28 @@ import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
+const expandedMember = ref(null)
 
 onMounted(async () => {
 
   const { data } = await supabase
     .from('members')
-    .select('id, first_name, city, industry, avatar_url')
+    .select('*')
+    .order('first_name')
 
   members.value = data || []
 
 })
+
+const toggleMember = (id) => {
+
+  if (expandedMember.value === id) {
+    expandedMember.value = null
+  } else {
+    expandedMember.value = id
+  }
+
+}
 
 </script>
 
@@ -94,15 +130,13 @@ onMounted(async () => {
 }
 
 .member-card{
-  display:block;
   background:white;
-  border-radius:18px;
-  padding:24px;
+  border-radius:20px;
+  padding:26px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
   transition:all .25s ease;
-  text-decoration:none;
-  color:inherit;
+  cursor:pointer;
 }
 
 .member-card:hover{
@@ -142,6 +176,25 @@ onMounted(async () => {
   letter-spacing:1px;
   opacity:.5;
   text-transform:uppercase;
+}
+
+.member-details{
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid rgba(0,0,0,0.08);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+}
+
+.label{
+  opacity:.6;
 }
 
 </style>
