@@ -21,11 +21,12 @@
 
       <div class="members-grid">
 
-        <div
-          v-for="member in group"
-          :key="member.id"
-          class="member-card"
-        >
+     <NuxtLink
+  v-for="member in group"
+  :key="member.id"
+  :to="`/members/${member.first_name}`"
+  class="member-card"
+>
 
           <img
             v-if="member.avatar_url"
@@ -56,7 +57,7 @@
               class="member-city"
             >
               {{ member.city }}
-            </div>
+       </NuxtLink>
 
           </div>
 
