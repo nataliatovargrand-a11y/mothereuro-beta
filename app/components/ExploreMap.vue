@@ -25,7 +25,7 @@ onMounted(async () => {
   const map = new mapboxgl.Map({
     container: mapContainer.value,
     style: 'mapbox://styles/mapbox/light-v11',
-    center: [10, 48],
+    center: [10,48],
     zoom: 3
   })
 
@@ -36,39 +36,92 @@ onMounted(async () => {
     .select('*')
     .eq('active', true)
 
-  if (!data) return
+  const features = data
+    ?.filter(r => r.latitude && r.longitude)
+    .filter(r => !props.category || r.category === props.category)
+    .map(r => ({
+      type: "Feature",
+      properties: {
+        title: r.title,
+        city: r.city
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [r.longitude, r.latitude]
+      }
+    }))
 
-  data.forEach(resource => {
+  map.on('load', () => {
 
-    if (!resource.latitude || !resource.longitude) return
+    map.addSource('resources', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
+    })
 
-    if (props.category && resource.category !== props.category) return
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'resources',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#A8985F',
+        'circle-radius': 20
+      }
+    })
 
-    const marker = new mapboxgl.Marker({ color: "#A8985F" })
-      .setLngLat([resource.longitude, resource.latitude])
-      .addTo(map)
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'resources',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-size': 12
+      }
+    })
 
-    marker.getElement().addEventListener('click', () => {
-      emit('citySelected', resource.city)
+    map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'resources',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#000',
+        'circle-radius': 6
+      }
+    })
+
+    map.on('click','unclustered-point',(e)=>{
+
+      const city = e.features[0].properties.city
+      emit('citySelected',city)
+
     })
 
   })
 
 })
-
 </script>
 
 <style scoped>
 
 .map-wrapper{
-  width:100%;
-  margin-bottom:140px;
+width:100%;
+margin-bottom:160px;
+position:relative;
 }
 
 .map{
-  width:100%;
-  height:420px;
-  border-radius:20px;
+width:100%;
+height:460px;
+border-radius:24px;
+box-shadow:0 40px 90px rgba(0,0,0,0.08);
 }
 
 </style>

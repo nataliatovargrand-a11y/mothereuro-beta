@@ -60,6 +60,10 @@
 
     </div>
 
+<div class="explore-map-header">
+Discover Europe
+</div>
+
 <ExploreMap
   :category="selectedCategory"
   @citySelected="selectedCity = $event"
@@ -398,6 +402,13 @@ const filteredResources = computed(() => {
 
 .resource-btn:hover {
   background: #A8985F;
+}
+.explore-map-header{
+font-size:14px;
+letter-spacing:6px;
+text-transform:uppercase;
+margin-bottom:30px;
+opacity:.6;
 }
 
 /* Responsive */
