@@ -6,11 +6,11 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
-import mapboxgl from 'mapbox-gl'
-import { supabase } from '~/utils/supabase'
+import { ref, onMounted } from "vue"
+import mapboxgl from "mapbox-gl"
+import { supabase } from "~/utils/supabase"
 
-const emit = defineEmits(['citySelected'])
+const emit = defineEmits(["citySelected"])
 const props = defineProps({
   category: String
 })
@@ -24,26 +24,28 @@ onMounted(async () => {
 
   const map = new mapboxgl.Map({
     container: mapContainer.value,
-    style: 'mapbox://styles/mapbox/light-v11',
-    center: [10,48],
+    style: "mapbox://styles/mapbox/light-v11",
+    center: [10, 48],
     zoom: 3
   })
 
   map.addControl(new mapboxgl.NavigationControl())
 
   const { data } = await supabase
-    .from('resources')
-    .select('*')
-    .eq('active', true)
+    .from("resources")
+    .select("*")
+    .eq("active", true)
+
+  if (!data) return
 
   const features = data
-    ?.filter(r => r.latitude && r.longitude)
+    .filter(r => r.latitude && r.longitude)
     .filter(r => !props.category || r.category === props.category)
     .map(r => ({
       type: "Feature",
       properties: {
-        title: r.title,
-        city: r.city
+        city: r.city,
+        title: r.title
       },
       geometry: {
         type: "Point",
@@ -51,62 +53,65 @@ onMounted(async () => {
       }
     }))
 
-  map.on('load', () => {
+  map.on("load", () => {
 
-    map.addSource('resources', {
-      type: 'geojson',
+    map.addSource("resources", {
+      type: "geojson",
       data: {
-        type: 'FeatureCollection',
+        type: "FeatureCollection",
         features
       },
       cluster: true,
       clusterMaxZoom: 14,
-      clusterRadius: 50
+      clusterRadius: 40
     })
 
     map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'resources',
-      filter: ['has', 'point_count'],
+      id: "clusters",
+      type: "circle",
+      source: "resources",
+      filter: ["has", "point_count"],
       paint: {
-        'circle-color': '#A8985F',
-        'circle-radius': 20
+        "circle-color": "#A8985F",
+        "circle-radius": 20
       }
     })
 
     map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'resources',
-      filter: ['has', 'point_count'],
+      id: "cluster-count",
+      type: "symbol",
+      source: "resources",
+      filter: ["has", "point_count"],
       layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-size': 12
+        "text-field": "{point_count_abbreviated}",
+        "text-size": 12
       }
     })
 
     map.addLayer({
-      id: 'unclustered-point',
-      type: 'circle',
-      source: 'resources',
-      filter: ['!', ['has', 'point_count']],
+      id: "unclustered-point",
+      type: "circle",
+      source: "resources",
+      filter: ["!", ["has", "point_count"]],
       paint: {
-        'circle-color': '#000',
-        'circle-radius': 6
+        "circle-color": "#A8985F",
+        "circle-radius": 7,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#fff"
       }
     })
 
-    map.on('click','unclustered-point',(e)=>{
+    map.on("click", "unclustered-point", (e) => {
 
       const city = e.features[0].properties.city
-      emit('citySelected',city)
+      emit("citySelected", city)
 
     })
 
   })
 
 })
+
 </script>
 
 <style scoped>
@@ -114,7 +119,6 @@ onMounted(async () => {
 .map-wrapper{
 width:100%;
 margin-bottom:160px;
-position:relative;
 }
 
 .map{
