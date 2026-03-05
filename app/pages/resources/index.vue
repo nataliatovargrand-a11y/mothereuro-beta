@@ -17,25 +17,29 @@
         class="search-input"
       />
     </div>
-<div class="map-category-filters">
 
-  <button
-    :class="{ active: selectedCategory === null }"
-    @click="selectedCategory = null"
-  >
-    All
-  </button>
 
-  <button
-    v-for="category in categories"
-    :key="category"
-    :class="{ active: selectedCategory === category }"
-    @click="selectedCategory = category"
-  >
-    {{ category }}
-  </button>
+    <!-- Category Filters -->
+    <div class="explore-categories">
 
-</div>
+      <button
+        :class="{ active: selectedCategory === null }"
+        @click="selectedCategory = null"
+      >
+        All
+      </button>
+
+      <button
+        v-for="category in categories"
+        :key="category"
+        :class="{ active: selectedCategory === category }"
+        @click="selectedCategory = category"
+      >
+        {{ category }}
+      </button>
+
+    </div>
+
 
     <!-- Featured Resource -->
     <div v-if="featured" class="featured-resource">
@@ -47,7 +51,10 @@
 
       <div class="featured-content">
         <h2>{{ featured.title }}</h2>
-        <p>{{ featured.description }}</p>
+
+        <p>
+          {{ featured.description }}
+        </p>
 
         <a
           :href="featured.link_url"
@@ -60,16 +67,21 @@
 
     </div>
 
-<div class="explore-map-header">
-Discover Europe
-</div>
 
-<ExploreMap
-  :category="selectedCategory"
-  @citySelected="selectedCity = $event"
-/>
+    <!-- Map Header -->
+    <div class="explore-map-header">
+      Discover Europe
+    </div>
 
-    <!-- Luxury Category Visual Blocks -->
+
+    <!-- Interactive Map -->
+    <ExploreMap
+      :category="selectedCategory"
+      @citySelected="selectedCity = $event"
+    />
+
+
+    <!-- Luxury Category Blocks -->
     <div class="category-visual-grid">
 
       <NuxtLink to="/resources/beauty" class="category-visual beauty">
@@ -94,17 +106,21 @@ Discover Europe
 
     </div>
 
+
     <!-- Divider -->
     <div class="divider"></div>
 
-    <!-- Section Header -->
+
+    <!-- Resources Section -->
     <div class="section-header">
       Featured Resources
     </div>
 
-<div v-if="selectedCity" class="map-filter">
-  Showing resources in {{ selectedCity }}
-</div>
+
+    <div v-if="selectedCity" class="map-filter">
+      Showing resources in {{ selectedCity }}
+    </div>
+
 
     <!-- Resources Grid -->
     <div class="resources-grid">
@@ -114,6 +130,7 @@ Discover Europe
         :key="resource.id"
         class="resource-card"
       >
+
         <img
           v-if="resource.image_url"
           :src="resource.image_url"
@@ -129,6 +146,7 @@ Discover Europe
           </p>
 
           <div class="tag-row">
+
             <span
               v-for="tag in resource.tags?.split(',')"
               :key="tag"
@@ -136,6 +154,7 @@ Discover Europe
             >
               {{ tag.trim() }}
             </span>
+
           </div>
 
           <a
@@ -147,6 +166,7 @@ Discover Europe
           </a>
 
         </div>
+
       </div>
 
     </div>
@@ -154,7 +174,9 @@ Discover Europe
   </div>
 </template>
 
+
 <script setup>
+
 import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import ExploreMap from '~/components/ExploreMap.vue'
@@ -162,15 +184,17 @@ import ExploreMap from '~/components/ExploreMap.vue'
 const resources = ref([])
 const search = ref('')
 const featured = ref(null)
+
 const selectedCity = ref(null)
 const selectedCategory = ref(null)
 
 const categories = [
-  "beauty",
-  "travel",
-  "food",
-  "wellness"
+  "Beauty",
+  "Travel",
+  "Food",
+  "Wellness"
 ]
+
 
 onMounted(async () => {
 
@@ -181,228 +205,160 @@ onMounted(async () => {
     .eq('access_level', 'public')
 
   resources.value = data || []
-  featured.value = resources.value.find(r => r.featured === true)
+
+  featured.value = resources.value.find(
+    r => r.featured === true
+  )
+
 })
+
 
 const filteredResources = computed(() => {
 
-  return resources.value.filter(r => {
+  return resources.value.filter(resource => {
 
     const searchMatch =
-      r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
-      r.tags?.toLowerCase().includes(search.value.toLowerCase())
+      resource.title?.toLowerCase().includes(search.value.toLowerCase()) ||
+      resource.tags?.toLowerCase().includes(search.value.toLowerCase())
 
     const cityMatch =
-      !selectedCity.value || r.city === selectedCity.value
+      !selectedCity.value || resource.city === selectedCity.value
 
     const categoryMatch =
-      !selectedCategory.value || r.category === selectedCategory.value
+      !selectedCategory.value ||
+      resource.category?.toLowerCase() === selectedCategory.value.toLowerCase()
 
     return searchMatch && cityMatch && categoryMatch
 
   })
 
 })
+
 </script>
+
+
 
 <style scoped>
 
 /* Layout */
-.explore-wrapper {
-  padding: 160px 40px 140px;
-  max-width: 1200px;
-  margin: 0 auto;
+
+.explore-wrapper{
+padding:160px 40px 140px;
+max-width:1200px;
+margin:0 auto;
 }
 
-/* Editorial Hero */
-.explore-hero {
-  max-width: 760px;
-  margin-bottom: 140px;
+
+
+/* Hero */
+
+.explore-hero{
+max-width:760px;
+margin-bottom:100px;
 }
 
-.explore-hero h1 {
-  font-size: 68px;
-  font-weight: 300;
-  letter-spacing: -1px;
-  margin-bottom: 30px;
+.explore-hero h1{
+font-size:68px;
+font-weight:300;
+letter-spacing:-1px;
+margin-bottom:30px;
 }
 
-.hero-subline {
-  font-size: 20px;
-  line-height: 1.8;
-  opacity: 0.7;
-  margin-bottom: 50px;
-  max-width: 620px;
+.hero-subline{
+font-size:20px;
+line-height:1.8;
+opacity:.7;
+margin-bottom:50px;
+max-width:620px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 20px;
-  border: none;
-  border-bottom: 1px solid rgba(0,0,0,0.2);
-  background: transparent;
-  font-size: 15px;
-  letter-spacing: 1px;
+.search-input{
+width:100%;
+padding:20px;
+border:none;
+border-bottom:1px solid rgba(0,0,0,0.2);
+background:transparent;
+font-size:15px;
+letter-spacing:1px;
 }
 
-/* Featured Section */
-.featured-resource {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 80px;
-  align-items: center;
-  margin-bottom: 160px;
+
+
+/* Category Filters */
+
+.explore-categories{
+display:flex;
+gap:28px;
+margin:30px 0 70px 0;
+flex-wrap:wrap;
 }
 
-.featured-image {
-  width: 100%;
-  height: 460px;
-  object-fit: cover;
+.explore-categories button{
+background:none;
+border:none;
+font-size:13px;
+letter-spacing:3px;
+text-transform:uppercase;
+opacity:.5;
+cursor:pointer;
+padding:0;
+transition:.25s;
 }
 
-.featured-content h2 {
-  font-size: 36px;
-  font-weight: 400;
-  margin-bottom: 24px;
+.explore-categories button:hover{
+opacity:.9;
 }
 
-.featured-content p {
-  font-size: 18px;
-  line-height: 1.8;
-  margin-bottom: 30px;
-  opacity: 0.85;
+.explore-categories button.active{
+opacity:1;
+position:relative;
 }
 
-/* Category Visual Grid */
-.category-visual-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  margin-bottom: 160px;
+.explore-categories button.active::after{
+content:"";
+position:absolute;
+left:0;
+bottom:-8px;
+width:100%;
+height:1px;
+background:black;
 }
 
-.category-visual {
-  position: relative;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  overflow: hidden;
-  transition: 0.4s ease;
+
+
+/* Featured */
+
+.featured-resource{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:80px;
+align-items:center;
+margin-bottom:160px;
 }
 
-.category-visual span {
-  position: relative;
-  color: white;
-  font-size: 26px;
-  font-weight: 300;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  z-index: 2;
+.featured-image{
+width:100%;
+height:460px;
+object-fit:cover;
 }
 
-.category-visual .overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.6),
-    rgba(0,0,0,0.15)
-  );
-  transition: 0.4s ease;
+.featured-content h2{
+font-size:36px;
+font-weight:400;
+margin-bottom:24px;
 }
 
-.category-visual:hover .overlay {
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.45),
-    rgba(0,0,0,0.05)
-  );
+.featured-content p{
+font-size:18px;
+line-height:1.8;
+margin-bottom:30px;
+opacity:.85;
 }
 
-/* Background Images */
-.beauty {
-  background: url('/images/beauty.jpg') center/cover no-repeat;
-}
 
-.travel {
-  background: url('/images/travel.jpg') center/cover no-repeat;
-}
 
-.food {
-  background: url('/images/food.jpg') center/cover no-repeat;
-}
+/* Map */
 
-.wellness {
-  background: url('/images/wellness.jpg') center/cover no-repeat;
-}
-
-/* Divider */
-.divider {
-  height: 1px;
-  background: rgba(0,0,0,0.08);
-  margin-bottom: 100px;
-}
-
-/* Section Header */
-.section-header {
-  font-size: 14px;
-  letter-spacing: 4px;
-  margin-bottom: 80px;
-  opacity: 0.6;
-}
-
-/* Resources Grid */
-.resources-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 80px;
-}
-
-.resource-card:hover {
-  transform: translateY(-4px);
-}
-
-.resource-image {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-  margin-bottom: 40px;
-}
-
-.resource-content h2 {
-  font-size: 26px;
-  font-weight: 400;
-  margin-bottom: 16px;
-}
-
-.description {
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 24px;
-  opacity: 0.75;
-}
-
-.tag {
-  font-size: 11px;
-  margin-right: 10px;
-  opacity: 0.5;
-}
-
-.resource-btn {
-  padding: 16px 30px;
-  background: black;
-  color: white;
-  text-decoration: none;
-  font-size: 12px;
-  letter-spacing: 3px;
-  transition: 0.3s ease;
-}
-
-.resource-btn:hover {
-  background: #A8985F;
-}
 .explore-map-header{
 font-size:14px;
 letter-spacing:6px;
@@ -411,20 +367,164 @@ margin-bottom:30px;
 opacity:.6;
 }
 
+
+
+/* Category Visual Blocks */
+
+.category-visual-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+margin:120px 0;
+}
+
+.category-visual{
+position:relative;
+height:300px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+overflow:hidden;
+}
+
+.category-visual span{
+position:relative;
+color:white;
+font-size:26px;
+font-weight:300;
+letter-spacing:6px;
+text-transform:uppercase;
+z-index:2;
+}
+
+.overlay{
+position:absolute;
+inset:0;
+background:linear-gradient(
+to top,
+rgba(0,0,0,0.6),
+rgba(0,0,0,0.15)
+);
+}
+
+
+
+/* Backgrounds */
+
+.beauty{
+background:url('/images/beauty.jpg') center/cover no-repeat;
+}
+
+.travel{
+background:url('/images/travel.jpg') center/cover no-repeat;
+}
+
+.food{
+background:url('/images/food.jpg') center/cover no-repeat;
+}
+
+.wellness{
+background:url('/images/wellness.jpg') center/cover no-repeat;
+}
+
+
+
+/* Divider */
+
+.divider{
+height:1px;
+background:rgba(0,0,0,0.08);
+margin-bottom:100px;
+}
+
+
+
+/* Section Header */
+
+.section-header{
+font-size:14px;
+letter-spacing:4px;
+margin-bottom:80px;
+opacity:.6;
+}
+
+
+
+/* Resources Grid */
+
+.resources-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+gap:80px;
+}
+
+.resource-image{
+width:100%;
+height:340px;
+object-fit:cover;
+margin-bottom:40px;
+}
+
+.resource-content h2{
+font-size:26px;
+font-weight:400;
+margin-bottom:16px;
+}
+
+.description{
+font-size:16px;
+line-height:1.8;
+margin-bottom:24px;
+opacity:.75;
+}
+
+.tag{
+font-size:11px;
+margin-right:10px;
+opacity:.5;
+}
+
+
+
+/* Buttons */
+
+.resource-btn{
+padding:16px 30px;
+background:black;
+color:white;
+text-decoration:none;
+font-size:12px;
+letter-spacing:3px;
+transition:.3s;
+}
+
+.resource-btn:hover{
+background:#A8985F;
+}
+
+
+
 /* Responsive */
-@media (max-width: 900px) {
-  .category-visual-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  .featured-resource {
-    grid-template-columns: 1fr;
-  }
+@media (max-width:900px){
+
+.category-visual-grid{
+grid-template-columns:repeat(2,1fr);
 }
 
-@media (max-width: 768px) {
-  .explore-wrapper {
-    padding: 120px 20px 140px;
-  }
+.featured-resource{
+grid-template-columns:1fr;
 }
+
+}
+
+@media (max-width:768px){
+
+.explore-wrapper{
+padding:120px 20px 140px;
+}
+
+}
+
 </style>
