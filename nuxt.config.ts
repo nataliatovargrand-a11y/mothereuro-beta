@@ -9,7 +9,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-02-24',
 
   css: [
-    '@/assets/css/main.css'
+    '@/assets/css/main.css',
+    'mapbox-gl/dist/mapbox-gl.css'
   ],
 
   app: {
@@ -21,14 +22,10 @@ export default defineNuxtConfig({
         { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         { name: 'apple-mobile-web-app-title', content: 'Mother Euro' }
       ],
-     link: [
-  { rel: 'manifest', href: '/manifest.json' },
-  { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
-]
-css: [
-  '@/assets/css/main.css',
-  'mapbox-gl/dist/mapbox-gl.css'
-]
+      link: [
+        { rel: 'manifest', href: '/manifest.json' },
+        { rel: 'apple-touch-icon', href: '/icon-192.png' }
+      ]
     }
   }
 
