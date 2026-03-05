@@ -5,16 +5,17 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import { supabase } from '~/utils/supabase'
 
 const mapContainer = ref(null)
+const config = useRuntimeConfig()
 
 onMounted(async () => {
 
-const config = useRuntimeConfig()
-mapboxgl.accessToken = config.public.mapboxToken
+  mapboxgl.accessToken = config.public.mapboxToken
 
   const map = new mapboxgl.Map({
     container: mapContainer.value,
@@ -23,30 +24,33 @@ mapboxgl.accessToken = config.public.mapboxToken
     zoom: 3
   })
 
+  map.addControl(new mapboxgl.NavigationControl())
+
   const { data } = await supabase
     .from('resources')
     .select('*')
     .eq('active', true)
 
-  data?.forEach(resource => {
+  if (!data) return
 
-    if(resource.latitude && resource.longitude){
+  data.forEach(resource => {
 
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <strong>${resource.title}</strong><br/>
-        ${resource.city || ""}
-      `)
+    if (!resource.latitude || !resource.longitude) return
 
-      new mapboxgl.Marker({ color: "#A8985F" })
-        .setLngLat([resource.longitude, resource.latitude])
-        .setPopup(popup)
-        .addTo(map)
+    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+      <strong>${resource.title}</strong><br/>
+      ${resource.city || ''}
+    `)
 
-    }
+    new mapboxgl.Marker({ color: "#A8985F" })
+      .setLngLat([resource.longitude, resource.latitude])
+      .setPopup(popup)
+      .addTo(map)
 
   })
 
 })
+
 </script>
 
 <style scoped>
