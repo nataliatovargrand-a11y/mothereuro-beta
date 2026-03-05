@@ -1,48 +1,26 @@
 <template>
-
-<div ref="mapContainer" class="map"></div>
-
+  <div ref="mapContainer" class="explore-map"></div>
 </template>
 
 <script setup>
 
 import { ref, onMounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
-import { supabase } from '~/utils/supabase'
 
 const mapContainer = ref(null)
 
-mapboxgl.accessToken = useRuntimeConfig().public.mapboxToken
+const config = useRuntimeConfig()
 
-onMounted(async () => {
+onMounted(() => {
 
-const map = new mapboxgl.Map({
-container: mapContainer.value,
-style: 'mapbox://styles/mapbox/light-v11',
-center: [2.3522,48.8566],
-zoom: 4
-})
+  mapboxgl.accessToken = config.public.mapboxToken
 
-const { data } = await supabase
-.from('resources')
-.select('*')
-
-data.forEach(resource => {
-
-if(resource.latitude && resource.longitude){
-
-new mapboxgl.Marker()
-.setLngLat([resource.longitude, resource.latitude])
-.setPopup(
-new mapboxgl.Popup().setHTML(
-`<strong>${resource.title}</strong><br>${resource.city}`
-)
-)
-.addTo(map)
-
-}
-
-})
+  const map = new mapboxgl.Map({
+    container: mapContainer.value,
+    style: 'mapbox://styles/mapbox/light-v11',
+    center: [10, 48],
+    zoom: 3.5
+  })
 
 })
 
@@ -50,11 +28,11 @@ new mapboxgl.Popup().setHTML(
 
 <style scoped>
 
-.map{
+.explore-map{
 width:100%;
-height:500px;
+height:420px;
 border-radius:20px;
-margin-bottom:60px;
+margin-bottom:140px;
 }
 
 </style>

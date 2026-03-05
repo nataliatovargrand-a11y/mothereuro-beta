@@ -40,6 +40,7 @@
       </div>
 
     </div>
+
 <ExploreMap />
 
     <!-- Luxury Category Visual Blocks -->
