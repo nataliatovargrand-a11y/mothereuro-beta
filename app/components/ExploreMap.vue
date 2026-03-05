@@ -11,6 +11,9 @@ import mapboxgl from 'mapbox-gl'
 import { supabase } from '~/utils/supabase'
 
 const emit = defineEmits(['citySelected'])
+const props = defineProps({
+  category: String
+})
 
 const mapContainer = ref(null)
 const config = useRuntimeConfig()
@@ -33,25 +36,22 @@ onMounted(async () => {
     .select('*')
     .eq('active', true)
 
-data?.forEach(resource => {
+  if (!data) return
 
-  if (!resource.latitude || !resource.longitude) return
+  data.forEach(resource => {
 
-  if (props.category && resource.category !== props.category) return
+    if (!resource.latitude || !resource.longitude) return
 
-  const marker = new mapboxgl.Marker({ color: "#A8985F" })
-    .setLngLat([resource.longitude, resource.latitude])
-    .addTo(map)
+    if (props.category && resource.category !== props.category) return
 
-  marker.getElement().addEventListener('click', () => {
-    emit('citySelected', resource.city)
-  })
+    const marker = new mapboxgl.Marker({ color: "#A8985F" })
+      .setLngLat([resource.longitude, resource.latitude])
+      .addTo(map)
 
-})
+    marker.getElement().addEventListener('click', () => {
+      emit('citySelected', resource.city)
+    })
 
-const props = defineProps({
-  category: String
-})
   })
 
 })
@@ -69,28 +69,6 @@ const props = defineProps({
   width:100%;
   height:420px;
   border-radius:20px;
-}
-.map-category-filters{
-display:flex;
-gap:12px;
-margin-top:30px;
-flex-wrap:wrap;
-}
-
-.map-category-filters button{
-border:1px solid rgba(0,0,0,0.15);
-background:white;
-padding:8px 18px;
-border-radius:20px;
-font-size:12px;
-letter-spacing:1px;
-cursor:pointer;
-}
-
-.map-category-filters button.active{
-background:black;
-color:white;
-border-color:black;
 }
 
 </style>
