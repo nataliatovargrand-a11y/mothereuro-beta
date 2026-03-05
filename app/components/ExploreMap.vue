@@ -12,7 +12,7 @@ import { supabase } from '~/utils/supabase'
 
 const mapContainer = ref(null)
 
-mapboxgl.accessToken = 'YOUR_MAPBOX_PUBLIC_KEY'
+mapboxgl.accessToken = useRuntimeConfig().public.mapboxToken
 
 onMounted(async () => {
 

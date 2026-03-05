@@ -13,6 +13,12 @@ export default defineNuxtConfig({
     'mapbox-gl/dist/mapbox-gl.css'
   ],
 
+runtimeConfig: {
+  public: {
+    mapboxToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN
+  }
+},
+
   app: {
     head: {
       title: 'Mother Euro',
