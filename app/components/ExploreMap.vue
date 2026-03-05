@@ -10,6 +10,8 @@ import { ref, onMounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import { supabase } from '~/utils/supabase'
 
+const emit = defineEmits(['citySelected'])
+
 const mapContainer = ref(null)
 const config = useRuntimeConfig()
 
@@ -31,21 +33,17 @@ onMounted(async () => {
     .select('*')
     .eq('active', true)
 
-  if (!data) return
-
-  data.forEach(resource => {
+  data?.forEach(resource => {
 
     if (!resource.latitude || !resource.longitude) return
 
-    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-      <strong>${resource.title}</strong><br/>
-      ${resource.city || ''}
-    `)
-
-    new mapboxgl.Marker({ color: "#A8985F" })
+    const marker = new mapboxgl.Marker({ color: "#A8985F" })
       .setLngLat([resource.longitude, resource.latitude])
-      .setPopup(popup)
       .addTo(map)
+
+    marker.getElement().addEventListener('click', () => {
+      emit('citySelected', resource.city)
+    })
 
   })
 

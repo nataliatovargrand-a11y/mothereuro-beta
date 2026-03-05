@@ -41,7 +41,7 @@
 
     </div>
 
-<ExploreMap />
+<ExploreMap @citySelected="selectedCity = $event" />
 
     <!-- Luxury Category Visual Blocks -->
     <div class="category-visual-grid">
@@ -75,6 +75,10 @@
     <div class="section-header">
       Featured Resources
     </div>
+
+<div v-if="selectedCity" class="map-filter">
+  Showing resources in {{ selectedCity }}
+</div>
 
     <!-- Resources Grid -->
     <div class="resources-grid">
@@ -132,6 +136,7 @@ import ExploreMap from '~/components/ExploreMap.vue'
 const resources = ref([])
 const search = ref('')
 const featured = ref(null)
+const selectedCity = ref(null)
 
 onMounted(async () => {
 
@@ -146,10 +151,20 @@ onMounted(async () => {
 })
 
 const filteredResources = computed(() => {
-  return resources.value.filter(r =>
-    r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
-    r.tags?.toLowerCase().includes(search.value.toLowerCase())
-  )
+
+  return resources.value.filter(r => {
+
+    const searchMatch =
+      r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
+      r.tags?.toLowerCase().includes(search.value.toLowerCase())
+
+    const cityMatch =
+      !selectedCity.value || r.city === selectedCity.value
+
+    return searchMatch && cityMatch
+
+  })
+
 })
 </script>
 
