@@ -40,6 +40,7 @@
       </div>
 
     </div>
+<ExploreMap />
 
     <!-- Luxury Category Visual Blocks -->
     <div class="category-visual-grid">
@@ -125,6 +126,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
+import ExploreMap from '~/components/ExploreMap.vue'
 
 const resources = ref([])
 const search = ref('')

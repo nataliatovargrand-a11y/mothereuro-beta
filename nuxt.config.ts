@@ -25,6 +25,10 @@ export default defineNuxtConfig({
   { rel: 'manifest', href: '/manifest.json' },
   { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
 ]
+css: [
+  '@/assets/css/main.css',
+  'mapbox-gl/dist/mapbox-gl.css'
+]
     }
   }
 
