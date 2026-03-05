@@ -17,6 +17,25 @@
         class="search-input"
       />
     </div>
+<div class="map-category-filters">
+
+  <button
+    :class="{ active: selectedCategory === null }"
+    @click="selectedCategory = null"
+  >
+    All
+  </button>
+
+  <button
+    v-for="category in categories"
+    :key="category"
+    :class="{ active: selectedCategory === category }"
+    @click="selectedCategory = category"
+  >
+    {{ category }}
+  </button>
+
+</div>
 
     <!-- Featured Resource -->
     <div v-if="featured" class="featured-resource">
@@ -41,7 +60,10 @@
 
     </div>
 
-<ExploreMap @citySelected="selectedCity = $event" />
+<ExploreMap
+  :category="selectedCategory"
+  @citySelected="selectedCity = $event"
+/>
 
     <!-- Luxury Category Visual Blocks -->
     <div class="category-visual-grid">
@@ -137,6 +159,14 @@ const resources = ref([])
 const search = ref('')
 const featured = ref(null)
 const selectedCity = ref(null)
+const selectedCategory = ref(null)
+
+const categories = [
+  "beauty",
+  "travel",
+  "food",
+  "wellness"
+]
 
 onMounted(async () => {
 
@@ -161,7 +191,10 @@ const filteredResources = computed(() => {
     const cityMatch =
       !selectedCity.value || r.city === selectedCity.value
 
-    return searchMatch && cityMatch
+    const categoryMatch =
+      !selectedCategory.value || r.category === selectedCategory.value
+
+    return searchMatch && cityMatch && categoryMatch
 
   })
 
