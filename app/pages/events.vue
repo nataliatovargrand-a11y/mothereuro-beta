@@ -147,12 +147,23 @@ userEmail.value = data.user.email
 
 /* LOAD EVENTS */
 
+onMounted(async () => {
+
+const { data } = await supabase.auth.getUser()
+
+if (!data.user) return
+
+userEmail.value = data.user.email
+
 const { data: eventsData } = await supabase
 .from("events")
 .select("*")
 .order("event_date",{ ascending:true })
 
 events.value = eventsData || []
+
+})
+
 
 
 /* USER BOOKINGS */
@@ -173,10 +184,10 @@ userBookings.value = bookings || []
 const heroEvent = computed(() => {
 
 const upcoming = events.value
-.filter(e => new Date(e.event_date) >= new Date())
+.filter(e => new Date(e.event_date) >= new Date(Date.now() - 86400000))
 .sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
 
-return upcoming[0] || null
+return upcoming.length ? upcoming[0] : null
 
 })
 
@@ -185,13 +196,13 @@ return upcoming[0] || null
 
 const upcomingEvents = computed(()=>{
 
-return events.value.filter(e =>
-new Date(e.event_date) >= new Date()
-)
+return events.value
+.filter(e => new Date(e.event_date) >= new Date(Date.now() - 86400000))
+.sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
 
 })
 
-
+console.log("Events loaded:", eventsData)
 
 /* REGISTER */
 
