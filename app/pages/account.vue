@@ -21,6 +21,7 @@ Log Out
 </div>
 
 
+
 <!-- PROFILE -->
 
 <div class="section">
@@ -64,7 +65,7 @@ class="file-input"
 
 
 
-<!-- MEMBERSHIP STATUS -->
+<!-- MEMBERSHIP -->
 
 <div class="section">
 
@@ -76,12 +77,16 @@ class="file-input"
 
 <div class="membership-item">
 <div class="label">Tier</div>
-<div class="value">{{ member?.membership_tier }}</div>
+<div class="value">
+{{ member?.membership_tier }}
+</div>
 </div>
 
 <div class="membership-item">
 <div class="label">Renewal</div>
-<div class="value">{{ member?.renewal_date || '—' }}</div>
+<div class="value">
+{{ member?.renewal_date || '—' }}
+</div>
 </div>
 
 <div
@@ -184,15 +189,14 @@ class="event-card"
 
 <div v-if="member?.membership_tier === 'global'">
 • Exclusive member dinners<br>
-• Private partner privileges<br>
 • Global network access<br>
+• Partner privileges<br>
 • Up to 4 events per year
 </div>
 
 </div>
 
 </div>
-
 
 </div>
 
@@ -204,29 +208,47 @@ class="event-card"
 
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const member = ref(null)
 const bookings = ref([])
+const user = ref(null)
+
+
 
 onMounted(async () => {
 
 const { data: userData } = await supabase.auth.getUser()
 
-if(!userData.user) return
+if(!userData.user){
+router.push('/account')
+return
+}
 
-const { data } = await supabase
+user.value = userData.user
+
+
+/* MEMBER PROFILE */
+
+const { data: memberData } = await supabase
 .from('members')
 .select('*')
-.eq('email', userData.user.email)
+.eq('email', user.value.email)
 .single()
 
-member.value = data
+member.value = memberData
+
+
+
+/* BOOKINGS */
 
 const { data: bookingData } = await supabase
 .from('bookings')
 .select('*')
-.eq('user_email', userData.user.email)
-.order('event_date')
+.eq('user_email', user.value.email)
+.order('event_date', { ascending:true })
 
 bookings.value = bookingData || []
 
@@ -234,7 +256,7 @@ bookings.value = bookingData || []
 
 
 
-/* EVENT FILTERING */
+/* UPCOMING EVENTS */
 
 const upcomingEvents = computed(() => {
 
@@ -246,6 +268,9 @@ new Date(event.event_date) >= today
 
 })
 
+
+
+/* PAST EVENTS */
 
 const pastEvents = computed(() => {
 
@@ -259,19 +284,15 @@ new Date(event.event_date) < today
 
 
 
-/* GLOBAL MEMBER EVENT LIMIT */
+/* GLOBAL EVENT LIMIT */
 
 const eventsThisYear = computed(() => {
 
 const year = new Date().getFullYear()
 
-return bookings.value.filter(event => {
-
-const eventYear = new Date(event.event_date).getFullYear()
-
-return eventYear === year
-
-})
+return bookings.value.filter(event =>
+new Date(event.event_date).getFullYear() === year
+)
 
 })
 
@@ -321,7 +342,7 @@ const logout = async () => {
 
 await supabase.auth.signOut()
 
-location.reload()
+router.push('/account')
 
 }
 
@@ -331,10 +352,10 @@ location.reload()
 
 const formatDate = (date) => {
 
-return new Date(date).toLocaleDateString('en-US', {
-month: 'long',
-day: 'numeric',
-year: 'numeric'
+return new Date(date).toLocaleDateString('en-US',{
+month:'long',
+day:'numeric',
+year:'numeric'
 })
 
 }
@@ -377,6 +398,7 @@ letter-spacing:2px;
 .section{
 margin-bottom:70px;
 }
+
 
 
 /* PROFILE */
