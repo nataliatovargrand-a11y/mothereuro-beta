@@ -2,12 +2,12 @@
 
 <div class="events-wrapper">
 
+<h1 class="page-title">Events</h1>
+
+
 <!-- HERO EVENT -->
 
-<div
-v-if="heroEvent"
-class="hero-event"
->
+<div v-if="heroEvent" class="hero-event">
 
 <img
 :src="heroEvent.image_url"
@@ -23,7 +23,7 @@ NEXT EVENT
 <h2>{{ heroEvent.title }}</h2>
 
 <div class="hero-meta">
-{{ formatDate(heroEvent.event_date) }} · {{ heroEvent.city }}
+{{ formatDate(heroEvent.event_date) }} · {{ heroEvent.location }}
 </div>
 
 <button
@@ -38,15 +38,14 @@ Reserve Your Seat
 </div>
 
 
-
-<!-- UPCOMING EVENTS -->
+<!-- UPCOMING -->
 
 <div class="section-header">
 Upcoming Events
 </div>
 
-<div v-if="upcomingEvents.length === 0" class="empty-state">
-New events will be announced soon.
+<div v-if="upcomingEvents.length === 0" class="empty">
+No upcoming events
 </div>
 
 <div v-else class="events-grid">
@@ -65,7 +64,7 @@ class="event-image"
 <div class="event-content">
 
 <div class="event-date">
-{{ formatDate(event.event_date) }} · {{ event.city }}
+{{ formatDate(event.event_date) }} · {{ event.location }}
 </div>
 
 <h2 class="event-title">
@@ -86,14 +85,13 @@ Register
 </div>
 
 
-
-<!-- REGISTERED EVENTS -->
+<!-- REGISTERED -->
 
 <div class="section-header">
 Your Registered Events
 </div>
 
-<div v-if="userBookings.length === 0" class="empty-state">
+<div v-if="userBookings.length === 0" class="empty">
 You haven't registered for any events yet.
 </div>
 
@@ -128,7 +126,7 @@ class="event-card"
 
 <script setup>
 
-import { ref, onMounted, computed } from "vue"
+import { ref, computed, onMounted } from "vue"
 import { supabase } from "~/utils/supabase"
 
 const events = ref([])
@@ -145,15 +143,7 @@ if (!data.user) return
 userEmail.value = data.user.email
 
 
-/* LOAD EVENTS */
-
-onMounted(async () => {
-
-const { data } = await supabase.auth.getUser()
-
-if (!data.user) return
-
-userEmail.value = data.user.email
+/* EVENTS */
 
 const { data: eventsData } = await supabase
 .from("events")
@@ -162,11 +152,8 @@ const { data: eventsData } = await supabase
 
 events.value = eventsData || []
 
-})
 
-
-
-/* USER BOOKINGS */
+/* BOOKINGS */
 
 const { data: bookings } = await supabase
 .from("bookings")
@@ -183,11 +170,11 @@ userBookings.value = bookings || []
 
 const heroEvent = computed(() => {
 
-const upcoming = events.value
-.filter(e => new Date(e.event_date) >= new Date(Date.now() - 86400000))
+const future = events.value
+.filter(e => new Date(e.event_date) >= new Date())
 .sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
 
-return upcoming.length ? upcoming[0] : null
+return future.length ? future[0] : null
 
 })
 
@@ -197,12 +184,12 @@ return upcoming.length ? upcoming[0] : null
 const upcomingEvents = computed(()=>{
 
 return events.value
-.filter(e => new Date(e.event_date) >= new Date(Date.now() - 86400000))
+.filter(e => new Date(e.event_date) >= new Date())
 .sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
 
 })
 
-console.log("Events loaded:", eventsData)
+
 
 /* REGISTER */
 
@@ -223,7 +210,7 @@ window.open(event.luma_url,"_blank")
 
 
 
-/* DATE FORMAT */
+/* DATE */
 
 const formatDate=(date)=>{
 
@@ -242,11 +229,15 @@ year:"numeric"
 <style scoped>
 
 .events-wrapper{
-padding:140px 40px 120px;
+padding:120px 40px 120px;
 max-width:1100px;
 margin:0 auto;
 }
 
+.page-title{
+font-size:40px;
+margin-bottom:60px;
+}
 
 
 /* HERO */
@@ -295,10 +286,6 @@ letter-spacing:2px;
 cursor:pointer;
 }
 
-.hero-btn:hover{
-background:#A8985F;
-}
-
 
 
 /* GRID */
@@ -307,7 +294,7 @@ background:#A8985F;
 font-size:12px;
 letter-spacing:4px;
 text-transform:uppercase;
-margin-top:80px;
+margin-top:60px;
 margin-bottom:30px;
 opacity:.6;
 }
@@ -318,37 +305,32 @@ grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
 gap:36px;
 }
 
-
-
-/* CARD */
-
 .event-card{
 background:white;
-border-radius:20px;
+border-radius:18px;
 overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
 
 .event-image{
 width:100%;
-height:220px;
+height:200px;
 object-fit:cover;
 }
 
 .event-content{
-padding:26px;
+padding:24px;
 }
 
 .event-date{
 font-size:12px;
-letter-spacing:2px;
 opacity:.6;
 margin-bottom:10px;
 }
 
 .event-title{
 font-size:20px;
-margin-bottom:12px;
+margin-bottom:14px;
 }
 
 .event-btn{
@@ -361,18 +343,9 @@ letter-spacing:2px;
 cursor:pointer;
 }
 
-.event-btn:hover{
-background:#A8985F;
-}
-
-
-
-/* EMPTY */
-
-.empty-state{
-font-size:14px;
-opacity:.5;
-padding:40px 0;
+.empty{
+opacity:.6;
+padding:20px 0;
 }
 
 </style>
