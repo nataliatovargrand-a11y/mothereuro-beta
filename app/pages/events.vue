@@ -1,18 +1,11 @@
 <template>
 
-<div class="events-wrapper">
-
-<h1 class="page-title">Events</h1>
-
-
-<!-- UPCOMING EVENTS -->
-
-<div class="section-header">Upcoming Events</div>
+<div class="section-header">Events</div>
 
 <div class="events-grid">
 
 <div
-v-for="event in upcomingEvents"
+v-for="event in events"
 :key="event.id"
 class="event-card"
 >
@@ -35,7 +28,6 @@ class="event-image"
 <button
 class="event-btn"
 @click="registerEvent(event)"
-:disabled="!canRegister"
 >
 RSVP
 </button>
@@ -125,155 +117,79 @@ class="event-card"
 
 <script setup>
 
-import { ref, computed, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import { supabase } from "~/utils/supabase"
 
 const events = ref([])
 const bookings = ref([])
-const memberTier = ref(null)
 const userEmail = ref(null)
-
+const membershipTier = ref(null)
 
 onMounted(async () => {
 
-const { data: userData } = await supabase.auth.getUser()
+  // Get logged in user
+  const { data: userData } = await supabase.auth.getUser()
 
-if (!userData.user) return
+  if (!userData?.user) {
+    console.log("No logged in user")
+    return
+  }
 
-userEmail.value = userData.user.email
+  userEmail.value = userData.user.email
 
+  // Get membership tier
+  const { data: member } = await supabase
+    .from("members")
+    .select("membership_tier")
+    .eq("email", userEmail.value)
+    .single()
 
-/* MEMBER TIER */
-
-const { data: member } = await supabase
-.from("members")
-.select("membership_tier")
-.eq("email", userEmail.value)
-.single()
-
-memberTier.value = member?.membership_tier || "aspiring"
-
-
-/* LOAD EVENTS */
-
-const { data: eventData } = await supabase
-.from("events")
-.select("*")
-.order("event_date",{ ascending:true })
-
-events.value = eventData || []
+  membershipTier.value = member?.membership_tier || "aspiring"
 
 
-/* LOAD BOOKINGS */
+  // Load events
+  const { data: eventsData, error } = await supabase
+    .from("events")
+    .select("*")
 
-const { data: bookingData } = await supabase
-.from("bookings")
-.select("*")
-.eq("user_email", userEmail.value)
+  if (error) {
+    console.error("EVENT LOAD ERROR:", error)
+  }
 
-bookings.value = bookingData || []
+  console.log("EVENTS LOADED:", eventsData)
 
-})
-
+  events.value = eventsData || []
 
 
-/* UPCOMING EVENTS */
+  // Load bookings
+  const { data: bookingData } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("user_email", userEmail.value)
 
-const upcomingEvents = computed(()=>{
-
-return events.value.filter(e =>
-new Date(e.event_date) >= new Date()
-)
+  bookings.value = bookingData || []
 
 })
 
+const registerEvent = async(event) => {
 
+  await supabase.from("bookings").insert({
+    event_id: event.id,
+    event_title: event.title,
+    event_date: event.event_date,
+    user_email: userEmail.value
+  })
 
-/* REGISTERED EVENTS */
-
-const registeredEvents = computed(()=>{
-
-return bookings.value.filter(b =>
-new Date(b.event_date) >= new Date()
-)
-
-})
-
-
-
-/* PAST EVENTS */
-
-const pastEvents = computed(()=>{
-
-return bookings.value.filter(b =>
-new Date(b.event_date) < new Date()
-)
-
-})
-
-
-
-/* MEMBERSHIP GATE */
-
-const canRegister = computed(()=>{
-
-if(memberTier.value === "aspiring") return true
-if(memberTier.value === "resident") return true
-
-if(memberTier.value === "global"){
-
-const thisYear = new Date().getFullYear()
-
-const count = bookings.value.filter(b =>
-new Date(b.event_date).getFullYear() === thisYear
-).length
-
-return count < 4
+  window.open(event.luma_url, "_blank")
 
 }
 
-return true
-
-})
-
-
-
-/* REGISTER */
-
-const registerEvent = async(event)=>{
-
-if(!canRegister.value){
-
-alert("Global members may attend up to 4 events per year.")
-return
-
-}
-
-await supabase.from("bookings").insert({
-
-event_id:event.id,
-event_title:event.title,
-event_date:event.event_date,
-user_email:userEmail.value
-
-})
-
-window.open(event.luma_url,"_blank")
-
-}
-
-
-
-/* DATE */
-
-const formatDate=(date)=>{
-
-return new Date(date).toLocaleDateString("en-US",{
-month:"long",
-day:"numeric",
-year:"numeric"
-})
-
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  })
 }
 
 </script>
