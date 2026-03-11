@@ -5,50 +5,11 @@
 <h1 class="page-title">Events</h1>
 
 
-<!-- HERO EVENT -->
+<!-- UPCOMING EVENTS -->
 
-<div v-if="heroEvent" class="hero-event">
+<div class="section-header">Upcoming Events</div>
 
-<img
-:src="heroEvent.image_url"
-class="hero-image"
-/>
-
-<div class="hero-content">
-
-<div class="hero-label">
-NEXT EVENT
-</div>
-
-<h2>{{ heroEvent.title }}</h2>
-
-<div class="hero-meta">
-{{ formatDate(heroEvent.event_date) }} · {{ heroEvent.location }}
-</div>
-
-<button
-class="hero-btn"
-@click="registerEvent(heroEvent)"
->
-Reserve Your Seat
-</button>
-
-</div>
-
-</div>
-
-
-<!-- UPCOMING -->
-
-<div class="section-header">
-Upcoming Events
-</div>
-
-<div v-if="upcomingEvents.length === 0" class="empty">
-No upcoming events
-</div>
-
-<div v-else class="events-grid">
+<div class="events-grid">
 
 <div
 v-for="event in upcomingEvents"
@@ -74,8 +35,9 @@ class="event-image"
 <button
 class="event-btn"
 @click="registerEvent(event)"
+:disabled="!canRegister"
 >
-Register
+RSVP
 </button>
 
 </div>
@@ -85,32 +47,69 @@ Register
 </div>
 
 
-<!-- REGISTERED -->
+
+<!-- REGISTERED EVENTS -->
 
 <div class="section-header">
 Your Registered Events
 </div>
 
-<div v-if="userBookings.length === 0" class="empty">
+<div v-if="registeredEvents.length === 0" class="empty">
 You haven't registered for any events yet.
 </div>
 
 <div class="events-grid">
 
 <div
-v-for="booking in userBookings"
-:key="booking.id"
+v-for="event in registeredEvents"
+:key="event.id"
 class="event-card"
 >
 
 <div class="event-content">
 
 <div class="event-date">
-{{ formatDate(booking.event_date) }}
+{{ formatDate(event.event_date) }}
 </div>
 
 <h2 class="event-title">
-{{ booking.event_title }}
+{{ event.event_title }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- PAST EVENTS -->
+
+<div class="section-header">
+Past Events Attended
+</div>
+
+<div v-if="pastEvents.length === 0" class="empty">
+No past events yet.
+</div>
+
+<div class="events-grid">
+
+<div
+v-for="event in pastEvents"
+:key="event.id"
+class="event-card"
+>
+
+<div class="event-content">
+
+<div class="event-date">
+{{ formatDate(event.event_date) }}
+</div>
+
+<h2 class="event-title">
+{{ event.event_title }}
 </h2>
 
 </div>
@@ -130,62 +129,110 @@ import { ref, computed, onMounted } from "vue"
 import { supabase } from "~/utils/supabase"
 
 const events = ref([])
-const userBookings = ref([])
+const bookings = ref([])
+const memberTier = ref(null)
 const userEmail = ref(null)
 
 
 onMounted(async () => {
 
-const { data } = await supabase.auth.getUser()
+const { data: userData } = await supabase.auth.getUser()
 
-if (!data.user) return
+if (!userData.user) return
 
-userEmail.value = data.user.email
+userEmail.value = userData.user.email
 
 
-/* EVENTS */
+/* MEMBER TIER */
 
-const { data: eventsData } = await supabase
+const { data: member } = await supabase
+.from("members")
+.select("membership_tier")
+.eq("email", userEmail.value)
+.single()
+
+memberTier.value = member?.membership_tier || "aspiring"
+
+
+/* LOAD EVENTS */
+
+const { data: eventData } = await supabase
 .from("events")
 .select("*")
 .order("event_date",{ ascending:true })
 
-events.value = eventsData || []
+events.value = eventData || []
 
 
-/* BOOKINGS */
+/* LOAD BOOKINGS */
 
-const { data: bookings } = await supabase
+const { data: bookingData } = await supabase
 .from("bookings")
 .select("*")
 .eq("user_email", userEmail.value)
 
-userBookings.value = bookings || []
+bookings.value = bookingData || []
 
 })
 
 
 
-/* HERO EVENT */
-
-const heroEvent = computed(() => {
-
-const future = events.value
-.filter(e => new Date(e.event_date) >= new Date())
-.sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
-
-return future.length ? future[0] : null
-
-})
-
-
-/* UPCOMING */
+/* UPCOMING EVENTS */
 
 const upcomingEvents = computed(()=>{
 
-return events.value
-.filter(e => new Date(e.event_date) >= new Date())
-.sort((a,b)=> new Date(a.event_date) - new Date(b.event_date))
+return events.value.filter(e =>
+new Date(e.event_date) >= new Date()
+)
+
+})
+
+
+
+/* REGISTERED EVENTS */
+
+const registeredEvents = computed(()=>{
+
+return bookings.value.filter(b =>
+new Date(b.event_date) >= new Date()
+)
+
+})
+
+
+
+/* PAST EVENTS */
+
+const pastEvents = computed(()=>{
+
+return bookings.value.filter(b =>
+new Date(b.event_date) < new Date()
+)
+
+})
+
+
+
+/* MEMBERSHIP GATE */
+
+const canRegister = computed(()=>{
+
+if(memberTier.value === "aspiring") return true
+if(memberTier.value === "resident") return true
+
+if(memberTier.value === "global"){
+
+const thisYear = new Date().getFullYear()
+
+const count = bookings.value.filter(b =>
+new Date(b.event_date).getFullYear() === thisYear
+).length
+
+return count < 4
+
+}
+
+return true
 
 })
 
@@ -195,12 +242,19 @@ return events.value
 
 const registerEvent = async(event)=>{
 
+if(!canRegister.value){
+
+alert("Global members may attend up to 4 events per year.")
+return
+
+}
+
 await supabase.from("bookings").insert({
 
-user_email: userEmail.value,
-event_id: event.id,
-event_title: event.title,
-event_date: event.event_date
+event_id:event.id,
+event_title:event.title,
+event_date:event.event_date,
+user_email:userEmail.value
 
 })
 
@@ -231,7 +285,7 @@ year:"numeric"
 .events-wrapper{
 padding:120px 40px 120px;
 max-width:1100px;
-margin:0 auto;
+margin:auto;
 }
 
 .page-title{
@@ -239,77 +293,25 @@ font-size:40px;
 margin-bottom:60px;
 }
 
-
-/* HERO */
-
-.hero-event{
-display:grid;
-grid-template-columns:1.2fr 1fr;
-gap:60px;
-align-items:center;
-margin-bottom:100px;
-}
-
-.hero-image{
-width:100%;
-height:420px;
-object-fit:cover;
-border-radius:6px;
-}
-
-.hero-label{
-font-size:11px;
-letter-spacing:4px;
-opacity:.6;
-margin-bottom:16px;
-}
-
-.hero-content h2{
-font-size:34px;
-margin-bottom:12px;
-}
-
-.hero-meta{
-font-size:13px;
-letter-spacing:2px;
-opacity:.6;
-margin-bottom:20px;
-}
-
-.hero-btn{
-background:black;
-color:white;
-border:none;
-padding:14px 26px;
-font-size:11px;
-letter-spacing:2px;
-cursor:pointer;
-}
-
-
-
-/* GRID */
-
 .section-header{
 font-size:12px;
 letter-spacing:4px;
-text-transform:uppercase;
 margin-top:60px;
-margin-bottom:30px;
+margin-bottom:20px;
 opacity:.6;
 }
 
 .events-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:36px;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:30px;
 }
 
 .event-card{
 background:white;
 border-radius:18px;
 overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,0.05);
+box-shadow:0 10px 30px rgba(0,0,0,.05);
 }
 
 .event-image{
@@ -341,6 +343,10 @@ padding:12px 22px;
 font-size:11px;
 letter-spacing:2px;
 cursor:pointer;
+}
+
+.event-btn:hover{
+background:#A8985F;
 }
 
 .empty{
