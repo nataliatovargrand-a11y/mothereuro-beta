@@ -18,8 +18,7 @@ Explore
 </NuxtLink>
 
 <div class="nav-logo">
-<img src="/logo-icon.svg" />
-</div>
+<img src="/images/logo.png" class="footer-logo">
 
 <NuxtLink to="/events" class="nav-item">
 Events
