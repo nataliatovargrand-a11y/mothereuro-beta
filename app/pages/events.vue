@@ -2,15 +2,52 @@
 
 <div class="events-wrapper">
 
-<h1 class="page-title">Events</h1>
+<!-- HERO EVENT -->
 
-<div class="events-subtitle">
-Intimate gatherings, cultural salons, and curated dinners
-across Europe for the Mother Euro community.
+<div class="hero-event">
+
+<img
+src="https://images.lumacdn.com/cdn-cgi/image/quality=75,width=1200,height=800,fit=cover/..."
+class="hero-image"
+/>
+
+<div class="hero-content">
+
+<div class="hero-label">
+FEATURED EVENT
+</div>
+
+<h2>
+Mother Euro Lisbon Dinner
+</h2>
+
+<div class="hero-description">
+A private gathering of founders, creatives, and women building life
+across Europe. Hosted in Lisbon.
+</div>
+
+<a
+href="https://luma.com/ME_EVAOMETZ"
+target="_blank"
+class="hero-btn"
+>
+Reserve Your Seat
+</a>
+
+</div>
+
 </div>
 
 
-<!-- LUMA EMBED -->
+
+<!-- UPCOMING EVENTS -->
+
+<div class="section-header">
+Upcoming Events
+</div>
+
+
+<!-- LUMA CALENDAR -->
 
 <div class="luma-embed">
 
@@ -27,32 +64,85 @@ allowfullscreen
 </template>
 
 
+
 <style scoped>
 
 .events-wrapper{
-padding:120px 40px 140px;
+padding:140px 40px 140px;
 max-width:1100px;
 margin:auto;
 }
 
-.page-title{
-font-size:42px;
-margin-bottom:20px;
+
+
+/* HERO */
+
+.hero-event{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:60px;
+align-items:center;
+margin-bottom:100px;
 }
 
-.events-subtitle{
-opacity:.7;
-margin-bottom:60px;
-line-height:1.6;
-max-width:600px;
+.hero-image{
+width:100%;
+height:420px;
+object-fit:cover;
+border-radius:8px;
 }
+
+.hero-label{
+font-size:11px;
+letter-spacing:4px;
+opacity:.6;
+margin-bottom:16px;
+}
+
+.hero-content h2{
+font-size:34px;
+margin-bottom:16px;
+}
+
+.hero-description{
+line-height:1.6;
+opacity:.8;
+margin-bottom:24px;
+}
+
+.hero-btn{
+background:black;
+color:white;
+padding:14px 26px;
+font-size:11px;
+letter-spacing:2px;
+text-decoration:none;
+display:inline-block;
+}
+
+.hero-btn:hover{
+background:#A8985F;
+}
+
+
+
+/* SECTION */
+
+.section-header{
+font-size:12px;
+letter-spacing:4px;
+text-transform:uppercase;
+margin-bottom:30px;
+opacity:.6;
+}
+
 
 
 /* LUMA EMBED */
 
 .luma-embed{
 width:100%;
-border-radius:16px;
+border-radius:18px;
 overflow:hidden;
 box-shadow:0 20px 40px rgba(0,0,0,.08);
 }
@@ -61,7 +151,22 @@ box-shadow:0 20px 40px rgba(0,0,0,.08);
 width:100%;
 height:700px;
 border:none;
-background:white;
+}
+
+
+
+/* MOBILE */
+
+@media (max-width:900px){
+
+.hero-event{
+grid-template-columns:1fr;
+}
+
+.hero-image{
+height:300px;
+}
+
 }
 
 </style>
