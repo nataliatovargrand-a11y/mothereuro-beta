@@ -212,48 +212,45 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const user = ref(null)
 const member = ref(null)
 const bookings = ref([])
+const user = ref(null)
+
+
 
 onMounted(async () => {
 
-  /* GET LOGGED IN USER */
+const { data: userData } = await supabase.auth.getUser()
 
-  const { data: { user: authUser } } = await supabase.auth.getUser()
+if(!userData.user){
+router.push('/account')
+return
+}
 
-  if(!authUser){
-    router.push('/login')
-    return
-  }
-
-  user.value = authUser
+user.value = userData.user
 
 
-  /* LOAD MEMBER PROFILE */
+/* MEMBER PROFILE */
 
-  const { data: memberData, error } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', authUser.id)   // IMPORTANT FIX
-    .single()
+const { data: memberData } = await supabase
+.from('members')
+.select('*')
+.eq('email', user.value.email)
+.single()
 
-  if(error){
-    console.log('Member fetch error:', error)
-  }
-
-  member.value = memberData
+member.value = memberData
 
 
-  /* LOAD EVENT BOOKINGS */
 
-  const { data: bookingData } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('user_id', authUser.id)   // IMPORTANT FIX
-    .order('event_date', { ascending:true })
+/* BOOKINGS */
 
-  bookings.value = bookingData || []
+const { data: bookingData } = await supabase
+.from('bookings')
+.select('*')
+.eq('user_email', user.value.email)
+.order('event_date', { ascending:true })
+
+bookings.value = bookingData || []
 
 })
 
@@ -263,24 +260,25 @@ onMounted(async () => {
 
 const upcomingEvents = computed(() => {
 
-  const today = new Date()
+const today = new Date()
 
-  return bookings.value.filter(event =>
-    new Date(event.event_date) >= today
-  )
+return bookings.value.filter(event =>
+new Date(event.event_date) >= today
+)
 
 })
+
 
 
 /* PAST EVENTS */
 
 const pastEvents = computed(() => {
 
-  const today = new Date()
+const today = new Date()
 
-  return bookings.value.filter(event =>
-    new Date(event.event_date) < today
-  )
+return bookings.value.filter(event =>
+new Date(event.event_date) < today
+)
 
 })
 
@@ -290,21 +288,51 @@ const pastEvents = computed(() => {
 
 const eventsThisYear = computed(() => {
 
-  const year = new Date().getFullYear()
+const year = new Date().getFullYear()
 
-  return bookings.value.filter(event =>
-    new Date(event.event_date).getFullYear() === year
-  )
+return bookings.value.filter(event =>
+new Date(event.event_date).getFullYear() === year
+)
 
 })
 
 const remainingEvents = computed(() => {
 
-  if(member.value?.membership_tier !== 'global') return null
+if(member.value?.membership_tier !== 'global') return null
 
-  return 4 - eventsThisYear.value.length
+return 4 - eventsThisYear.value.length
 
 })
+
+
+
+/* AVATAR UPLOAD */
+
+const uploadAvatar = async (event) => {
+
+const file = event.target.files[0]
+
+if(!file || !member.value) return
+
+const filePath = `${member.value.id}-${Date.now()}`
+
+await supabase.storage
+.from('avatars')
+.upload(filePath, file)
+
+const { data } = supabase
+.storage
+.from('avatars')
+.getPublicUrl(filePath)
+
+await supabase
+.from('members')
+.update({ avatar_url: data.publicUrl })
+.eq('id', member.value.id)
+
+member.value.avatar_url = data.publicUrl
+
+}
 
 
 
@@ -312,10 +340,168 @@ const remainingEvents = computed(() => {
 
 const logout = async () => {
 
-  await supabase.auth.signOut()
+await supabase.auth.signOut()
 
-  router.push('/login')
+router.push('/account')
+
+}
+
+
+
+/* DATE FORMAT */
+
+const formatDate = (date) => {
+
+return new Date(date).toLocaleDateString('en-US',{
+month:'long',
+day:'numeric',
+year:'numeric'
+})
 
 }
 
 </script>
+
+
+
+<style scoped>
+
+.account-wrapper{
+padding:140px 40px;
+max-width:900px;
+margin:auto;
+}
+
+.account-header{
+margin-bottom:60px;
+}
+
+.greeting{
+font-size:40px;
+margin-bottom:6px;
+}
+
+.welcome{
+opacity:.6;
+margin-bottom:20px;
+}
+
+.logout-btn{
+border:1px solid black;
+background:white;
+padding:10px 16px;
+cursor:pointer;
+font-size:12px;
+letter-spacing:2px;
+}
+
+.section{
+margin-bottom:70px;
+}
+
+
+
+/* PROFILE */
+
+.profile-card{
+display:flex;
+gap:40px;
+align-items:center;
+}
+
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.avatar-placeholder{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#eee;
+}
+
+.file-input{
+margin-top:10px;
+}
+
+.profile-info{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+
+
+/* MEMBERSHIP CARD */
+
+.membership-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:28px;
+border-radius:10px;
+background:white;
+}
+
+.membership-row{
+display:flex;
+gap:60px;
+flex-wrap:wrap;
+}
+
+.membership-item{
+display:flex;
+flex-direction:column;
+}
+
+.label{
+font-size:11px;
+letter-spacing:2px;
+opacity:.6;
+margin-bottom:6px;
+text-transform:uppercase;
+}
+
+.value{
+font-size:18px;
+}
+
+
+
+/* EVENTS */
+
+.event-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:16px;
+margin-bottom:12px;
+border-radius:8px;
+}
+
+.event-title{
+font-weight:500;
+margin-bottom:4px;
+}
+
+.event-date{
+opacity:.6;
+font-size:13px;
+}
+
+
+
+/* BENEFITS */
+
+.benefits-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:20px;
+border-radius:8px;
+line-height:1.7;
+}
+
+.empty{
+opacity:.5;
+font-size:14px;
+}
+
+</style>
