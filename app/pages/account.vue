@@ -337,12 +337,11 @@ member.value.avatar_url = data.publicUrl
 
 
 /* LOGOUT */
-
 const logout = async () => {
 
-await supabase.auth.signOut()
+  await supabase.auth.signOut()
 
-router.push('/account')
+  window.location.href = "/account"
 
 }
 
