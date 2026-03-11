@@ -1,149 +1,171 @@
 <template>
-  <div class="events-wrapper">
 
-    <h1 class="page-title">Events</h1>
+<div class="events-wrapper">
 
-    <!-- Featured Event -->
+<h1 class="page-title">
+Events
+</h1>
 
-    <div class="hero-event">
-
-      <img
-        src="https://images.lumacdn.com/cdn-cgi/image/quality=75,width=1200/https://images.unsplash.com/photo-1504674900247-0877df9cc836"
-        class="hero-image"
-      />
-
-      <div class="hero-content">
-
-        <div class="hero-label">
-          FEATURED EVENT
-        </div>
-
-        <h2>Mother Euro Lisbon Dinner</h2>
-
-        <p class="hero-description">
-          A private gathering of founders, creatives, and women
-          building life across Europe.
-        </p>
-
-        <a
-          href="https://luma.com/ME_EVAOMETZ"
-          target="_blank"
-          class="hero-btn"
-        >
-          Reserve Your Seat
-        </a>
-
-      </div>
-
-    </div>
+<div class="events-subtitle">
+Private gatherings, cultural salons, and curated dinners
+for the Mother Euro community.
+</div>
 
 
-    <!-- Upcoming Events -->
+<!-- FEATURED EVENT -->
 
-    <div class="section-header">
-      Upcoming Events
-    </div>
+<div class="featured-event">
 
-    <div class="luma-embed">
+<img
+src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+class="featured-image"
+/>
 
-      <iframe
-        src="https://luma.com/embed/calendar/cal-Hv0aqpqNkf2UIKs/events"
-        frameborder="0"
-        allowfullscreen
-      ></iframe>
+<div class="featured-content">
 
-    </div>
+<div class="featured-label">
+FEATURED EVENT
+</div>
 
-  </div>
+<h2>
+Mother Euro Lisbon Dinner
+</h2>
+
+<p>
+An intimate dinner bringing together founders,
+creatives, and women building life across Europe.
+</p>
+
+<a
+href="https://luma.com/ME_EVAOMETZ"
+target="_blank"
+class="featured-btn"
+>
+Reserve Your Seat
+</a>
+
+</div>
+
+</div>
+
+
+<!-- UPCOMING EVENTS -->
+
+<div class="section-label">
+Upcoming Events
+</div>
+
+
+<div class="luma-wrapper">
+
+<iframe
+src="https://luma.com/embed/calendar/cal-Hv0aqpqNkf2UIKs/events"
+frameborder="0"
+allowfullscreen
+></iframe>
+
+</div>
+
+
+</div>
+
 </template>
+
 
 
 <style scoped>
 
 .events-wrapper{
-  padding:140px 40px 140px;
-  max-width:1100px;
-  margin:auto;
+padding:140px 40px 140px;
+max-width:1100px;
+margin:auto;
 }
 
 .page-title{
-  font-size:46px;
-  margin-bottom:60px;
+font-size:48px;
+margin-bottom:20px;
+}
+
+.events-subtitle{
+opacity:.7;
+margin-bottom:80px;
+max-width:520px;
+line-height:1.6;
 }
 
 
-/* HERO */
+/* FEATURED EVENT */
 
-.hero-event{
-  display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:60px;
-  align-items:center;
-  margin-bottom:100px;
+.featured-event{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:60px;
+align-items:center;
+margin-bottom:120px;
 }
 
-.hero-image{
-  width:100%;
-  height:420px;
-  object-fit:cover;
-  border-radius:10px;
+.featured-image{
+width:100%;
+height:420px;
+object-fit:cover;
+border-radius:10px;
 }
 
-.hero-label{
-  font-size:11px;
-  letter-spacing:4px;
-  opacity:.6;
-  margin-bottom:16px;
+.featured-label{
+font-size:11px;
+letter-spacing:4px;
+opacity:.6;
+margin-bottom:16px;
 }
 
-.hero-content h2{
-  font-size:34px;
-  margin-bottom:14px;
+.featured-content h2{
+font-size:34px;
+margin-bottom:12px;
 }
 
-.hero-description{
-  line-height:1.6;
-  opacity:.8;
-  margin-bottom:24px;
+.featured-content p{
+opacity:.8;
+margin-bottom:24px;
+line-height:1.6;
 }
 
-.hero-btn{
-  background:black;
-  color:white;
-  padding:14px 26px;
-  font-size:11px;
-  letter-spacing:2px;
-  text-decoration:none;
+.featured-btn{
+background:black;
+color:white;
+padding:14px 26px;
+text-decoration:none;
+font-size:11px;
+letter-spacing:2px;
 }
 
-.hero-btn:hover{
-  background:#A8985F;
+.featured-btn:hover{
+background:#A8985F;
 }
 
 
-/* SECTION */
+/* SECTION LABEL */
 
-.section-header{
-  font-size:12px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  margin-bottom:30px;
-  opacity:.6;
+.section-label{
+font-size:12px;
+letter-spacing:4px;
+text-transform:uppercase;
+opacity:.6;
+margin-bottom:30px;
 }
 
 
 /* LUMA EMBED */
 
-.luma-embed{
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 20px 40px rgba(0,0,0,.08);
+.luma-wrapper{
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 25px 50px rgba(0,0,0,.08);
 }
 
-.luma-embed iframe{
-  width:100%;
-  height:700px;
-  border:none;
+.luma-wrapper iframe{
+width:100%;
+height:720px;
+border:none;
 }
 
 
@@ -151,13 +173,13 @@
 
 @media (max-width:900px){
 
-  .hero-event{
-    grid-template-columns:1fr;
-  }
+.featured-event{
+grid-template-columns:1fr;
+}
 
-  .hero-image{
-    height:280px;
-  }
+.featured-image{
+height:280px;
+}
 
 }
 
