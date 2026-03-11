@@ -1,6 +1,8 @@
 <template>
 
-<div class="section-header">Events</div>
+<div class="events-wrapper">
+
+<h1 class="page-title">Events</h1>
 
 <div class="events-grid">
 
@@ -38,82 +40,9 @@ RSVP
 
 </div>
 
-
-
-<!-- REGISTERED EVENTS -->
-
-<div class="section-header">
-Your Registered Events
-</div>
-
-<div v-if="registeredEvents.length === 0" class="empty">
-You haven't registered for any events yet.
-</div>
-
-<div class="events-grid">
-
-<div
-v-for="event in registeredEvents"
-:key="event.id"
-class="event-card"
->
-
-<div class="event-content">
-
-<div class="event-date">
-{{ formatDate(event.event_date) }}
-</div>
-
-<h2 class="event-title">
-{{ event.event_title }}
-</h2>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<!-- PAST EVENTS -->
-
-<div class="section-header">
-Past Events Attended
-</div>
-
-<div v-if="pastEvents.length === 0" class="empty">
-No past events yet.
-</div>
-
-<div class="events-grid">
-
-<div
-v-for="event in pastEvents"
-:key="event.id"
-class="event-card"
->
-
-<div class="event-content">
-
-<div class="event-date">
-{{ formatDate(event.event_date) }}
-</div>
-
-<h2 class="event-title">
-{{ event.event_title }}
-</h2>
-
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </template>
-
 
 <script setup>
 
@@ -121,100 +50,64 @@ import { ref, onMounted } from "vue"
 import { supabase } from "~/utils/supabase"
 
 const events = ref([])
-const bookings = ref([])
 const userEmail = ref(null)
-const membershipTier = ref(null)
 
 onMounted(async () => {
 
-  // Get logged in user
-  const { data: userData } = await supabase.auth.getUser()
+const { data: userData } = await supabase.auth.getUser()
 
-  if (!userData?.user) {
-    console.log("No logged in user")
-    return
-  }
+if (!userData?.user) return
 
-  userEmail.value = userData.user.email
+userEmail.value = userData.user.email
 
-  // Get membership tier
-  const { data: member } = await supabase
-    .from("members")
-    .select("membership_tier")
-    .eq("email", userEmail.value)
-    .single()
+const { data: eventsData, error } = await supabase
+.from("events")
+.select("*")
 
-  membershipTier.value = member?.membership_tier || "aspiring"
+if(error){
+console.error("EVENT LOAD ERROR:", error)
+}
 
-
-  // Load events
-  const { data: eventsData, error } = await supabase
-    .from("events")
-    .select("*")
-
-  if (error) {
-    console.error("EVENT LOAD ERROR:", error)
-  }
-
-  console.log("EVENTS LOADED:", eventsData)
-
-  events.value = eventsData || []
-
-
-  // Load bookings
-  const { data: bookingData } = await supabase
-    .from("bookings")
-    .select("*")
-    .eq("user_email", userEmail.value)
-
-  bookings.value = bookingData || []
+events.value = eventsData || []
 
 })
 
-const registerEvent = async(event) => {
+const registerEvent = async(event)=>{
 
-  await supabase.from("bookings").insert({
-    event_id: event.id,
-    event_title: event.title,
-    event_date: event.event_date,
-    user_email: userEmail.value
-  })
+await supabase.from("bookings").insert({
+event_id:event.id,
+event_title:event.title,
+event_date:event.event_date,
+user_email:userEmail.value
+})
 
-  window.open(event.luma_url, "_blank")
+window.open(event.luma_url,"_blank")
 
 }
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  })
+const formatDate=(date)=>{
+
+return new Date(date).toLocaleDateString("en-US",{
+month:"long",
+day:"numeric",
+year:"numeric"
+})
+
 }
 
 </script>
 
-
-
 <style scoped>
 
 .events-wrapper{
-padding:120px 40px 120px;
+padding:120px 40px;
 max-width:1100px;
 margin:auto;
 }
 
 .page-title{
 font-size:40px;
-margin-bottom:60px;
-}
-
-.section-header{
-font-size:12px;
-letter-spacing:4px;
-margin-top:60px;
-margin-bottom:20px;
-opacity:.6;
+margin-bottom:50px;
 }
 
 .events-grid{
@@ -263,11 +156,6 @@ cursor:pointer;
 
 .event-btn:hover{
 background:#A8985F;
-}
-
-.empty{
-opacity:.6;
-padding:20px 0;
 }
 
 </style>
