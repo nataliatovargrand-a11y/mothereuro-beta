@@ -2,12 +2,18 @@
 
 <div class="events-wrapper">
 
+<h1 class="page-title">
+Events
+</h1>
+
+<div class="hero-event">
+
 <!-- HERO EVENT -->
 
 <div class="hero-event">
 
 <img
-src="https://images.lumacdn.com/cdn-cgi/image/quality=75,width=1200,height=800,fit=cover/..."
+src="https://images.lumacdn.com/cdn-cgi/image/format=auto,quality=75,width=1200,height=800,fit=cover/..."
 class="hero-image"
 />
 
@@ -73,7 +79,11 @@ max-width:1100px;
 margin:auto;
 }
 
-
+.page-title{
+font-size:48px;
+margin-bottom:50px;
+font-weight:400;
+}
 
 /* HERO */
 

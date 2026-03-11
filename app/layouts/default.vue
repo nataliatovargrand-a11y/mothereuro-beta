@@ -7,30 +7,28 @@
     </div>
 
     <!-- Bottom Glass Navigation -->
-   <nav class="bottom-nav">
-  <div class="bottom-nav-inner">
+<nav class="bottom-nav">
 
-    <NuxtLink to="/account" class="nav-item">
-      Account
-    </NuxtLink>
-
-    <NuxtLink to="/resources" class="nav-item">
-      Explore
-    </NuxtLink>
-
-    <NuxtLink to="/" class="nav-item logo-item">
-      <img src="/images/logo.png" class="footer-logo" />
-    </NuxtLink>
-
-   <NuxtLink to="/events" class="nav-link">
-  Events
+<NuxtLink to="/account" class="nav-item">
+Account
 </NuxtLink>
 
-    <NuxtLink to="/partners" class="nav-item">
-      Partners
-    </NuxtLink>
+<NuxtLink to="/explore" class="nav-item">
+Explore
+</NuxtLink>
 
-  </div>
+<div class="nav-logo">
+<img src="/logo-icon.svg" />
+</div>
+
+<NuxtLink to="/events" class="nav-item">
+Events
+</NuxtLink>
+
+<NuxtLink to="/partners" class="nav-item">
+Partners
+</NuxtLink>
+
 </nav>
 
   </div>
@@ -50,54 +48,34 @@
 }
 
 /* Glass Bar */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-top: 1px solid rgba(0,0,0,0.05);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:70px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:space-around;
+border-top:1px solid rgba(0,0,0,.08);
 }
 
-.bottom-nav-inner {
-  width: 100%;
-  max-width: 900px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  align-items: center;
-  text-align: center;
-}
-
-.nav-item {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: black;
-  opacity: 0.7;
-}
-
-.logo-item {
-  display: flex;
-  justify-content: center;
-}
-
-.footer-logo {
-  width: 34px;
-}
-.nav-link{
+.nav-item{
+font-size:12px;
+letter-spacing:2px;
 text-decoration:none;
-color:#7d7466;
+color:#444;
 }
 
-.nav-link.router-link-active{
+.router-link-active{
 color:black;
 font-weight:500;
+}
+
+.nav-logo img{
+width:32px;
+height:32px;
 }
 
 </style>
