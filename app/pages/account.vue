@@ -7,7 +7,7 @@
 <div class="account-header">
 
 <h1 class="greeting">
-Hi, {{ member?.first_name }}
+Hi, {{ member?.name }}
 </h1>
 
 <div class="welcome">
@@ -50,7 +50,7 @@ class="file-input"
 
 <div class="profile-info">
 
-<div><strong>Name:</strong> {{ member?.first_name }}</div>
+<div><strong>Name:</strong> {{ member?.name }}</div>
 <div><strong>Email:</strong> {{ member?.email }}</div>
 <div><strong>Membership:</strong> {{ member?.membership_tier }}</div>
 <div><strong>Renewal date:</strong> {{ member?.renewal_date || '—' }}</div>
@@ -220,14 +220,12 @@ const user = ref(null)
 
 onMounted(async () => {
 
-const { data: userData } = await supabase.auth.getUser()
+const { data } = await supabase.auth.getUser()
 
-if(!userData.user){
-router.push('/account')
-return
-}
+user.value = data.user
 
-user.value = userData.user
+if (!user.value) return
+
 
 
 /* MEMBER PROFILE */
@@ -306,15 +304,27 @@ return 4 - eventsThisYear.value.length
 
 
 
+/* LOGOUT */
+
+const logout = async () => {
+
+await supabase.auth.signOut()
+
+router.push('/account')
+
+}
+
+
+
 /* AVATAR UPLOAD */
 
 const uploadAvatar = async (event) => {
 
 const file = event.target.files[0]
 
-if(!file || !member.value) return
+if(!file) return
 
-const filePath = `${member.value.id}-${Date.now()}`
+const filePath = `${user.value.id}-${Date.now()}`
 
 await supabase.storage
 .from('avatars')
@@ -328,20 +338,9 @@ const { data } = supabase
 await supabase
 .from('members')
 .update({ avatar_url: data.publicUrl })
-.eq('id', member.value.id)
+.eq('email', user.value.email)
 
 member.value.avatar_url = data.publicUrl
-
-}
-
-
-
-/* LOGOUT */
-const logout = async () => {
-
-  await supabase.auth.signOut()
-
-  window.location.href = "/account"
 
 }
 
@@ -398,10 +397,6 @@ letter-spacing:2px;
 margin-bottom:70px;
 }
 
-
-
-/* PROFILE */
-
 .profile-card{
 display:flex;
 gap:40px;
@@ -431,10 +426,6 @@ display:flex;
 flex-direction:column;
 gap:8px;
 }
-
-
-
-/* MEMBERSHIP CARD */
 
 .membership-card{
 border:1px solid rgba(0,0,0,0.08);
@@ -466,10 +457,6 @@ text-transform:uppercase;
 font-size:18px;
 }
 
-
-
-/* EVENTS */
-
 .event-card{
 border:1px solid rgba(0,0,0,0.08);
 padding:16px;
@@ -486,10 +473,6 @@ margin-bottom:4px;
 opacity:.6;
 font-size:13px;
 }
-
-
-
-/* BENEFITS */
 
 .benefits-card{
 border:1px solid rgba(0,0,0,0.08);
