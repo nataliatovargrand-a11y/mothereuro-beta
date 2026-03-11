@@ -6,9 +6,9 @@
 
 <div class="account-header">
 
-<div class="greeting">
+<h1 class="greeting">
 Hi, {{ member?.first_name }}
-</div>
+</h1>
 
 <div class="welcome">
 Welcome back to Mother Euro
@@ -39,22 +39,21 @@ class="avatar"
 
 <div v-else class="avatar-placeholder"></div>
 
-<input type="file" @change="uploadAvatar" class="file-input"/>
+<input
+type="file"
+class="file-input"
+@change="uploadAvatar"
+/>
 
 </div>
 
 <div class="profile-info">
 
 <div><strong>Name:</strong> {{ member?.first_name }}</div>
-
 <div><strong>Email:</strong> {{ member?.email }}</div>
-
 <div><strong>Membership:</strong> {{ member?.membership_tier }}</div>
-
 <div><strong>Renewal date:</strong> {{ member?.renewal_date || '—' }}</div>
-
 <div><strong>Industry:</strong> {{ member?.industry || '—' }}</div>
-
 <div><strong>City:</strong> {{ member?.city || '—' }}</div>
 
 </div>
@@ -62,6 +61,45 @@ class="avatar"
 </div>
 
 </div>
+
+
+
+<!-- MEMBERSHIP STATUS -->
+
+<div class="section">
+
+<h2>Your Membership</h2>
+
+<div class="membership-card">
+
+<div class="membership-row">
+
+<div class="membership-item">
+<div class="label">Tier</div>
+<div class="value">{{ member?.membership_tier }}</div>
+</div>
+
+<div class="membership-item">
+<div class="label">Renewal</div>
+<div class="value">{{ member?.renewal_date || '—' }}</div>
+</div>
+
+<div
+v-if="member?.membership_tier === 'global'"
+class="membership-item"
+>
+<div class="label">Events Remaining</div>
+<div class="value">
+{{ remainingEvents }} / 4
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 
 <!-- UPCOMING EVENTS -->
@@ -93,6 +131,7 @@ class="event-card"
 </div>
 
 
+
 <!-- PAST EVENTS -->
 
 <div class="section">
@@ -122,7 +161,8 @@ class="event-card"
 </div>
 
 
-<!-- MEMBERSHIP BENEFITS -->
+
+<!-- BENEFITS -->
 
 <div class="section">
 
@@ -131,27 +171,28 @@ class="event-card"
 <div class="benefits-card">
 
 <div v-if="member?.membership_tier === 'aspiring'">
-• Access to relocation resources  
-• Community events  
-• Member network
+• Community events<br>
+• Relocation resources<br>
+• Member introductions
 </div>
 
 <div v-if="member?.membership_tier === 'resident'">
-• Full resource library  
-• Unlimited events  
-• Private partner benefits
+• Full resource library<br>
+• Unlimited events<br>
+• Partner benefits
 </div>
 
 <div v-if="member?.membership_tier === 'global'">
-• Global member network  
-• Exclusive dinners  
-• Partner privileges  
+• Exclusive member dinners<br>
+• Private partner privileges<br>
+• Global network access<br>
 • Up to 4 events per year
 </div>
 
 </div>
 
 </div>
+
 
 </div>
 
@@ -192,6 +233,9 @@ bookings.value = bookingData || []
 })
 
 
+
+/* EVENT FILTERING */
+
 const upcomingEvents = computed(() => {
 
 const today = new Date()
@@ -201,6 +245,7 @@ new Date(event.event_date) >= today
 )
 
 })
+
 
 const pastEvents = computed(() => {
 
@@ -212,6 +257,35 @@ new Date(event.event_date) < today
 
 })
 
+
+
+/* GLOBAL MEMBER EVENT LIMIT */
+
+const eventsThisYear = computed(() => {
+
+const year = new Date().getFullYear()
+
+return bookings.value.filter(event => {
+
+const eventYear = new Date(event.event_date).getFullYear()
+
+return eventYear === year
+
+})
+
+})
+
+const remainingEvents = computed(() => {
+
+if(member.value?.membership_tier !== 'global') return null
+
+return 4 - eventsThisYear.value.length
+
+})
+
+
+
+/* AVATAR UPLOAD */
 
 const uploadAvatar = async (event) => {
 
@@ -240,13 +314,20 @@ member.value.avatar_url = data.publicUrl
 }
 
 
+
+/* LOGOUT */
+
 const logout = async () => {
 
 await supabase.auth.signOut()
+
 location.reload()
 
 }
 
+
+
+/* DATE FORMAT */
 
 const formatDate = (date) => {
 
@@ -275,7 +356,7 @@ margin-bottom:60px;
 }
 
 .greeting{
-font-size:36px;
+font-size:40px;
 margin-bottom:6px;
 }
 
@@ -296,6 +377,9 @@ letter-spacing:2px;
 .section{
 margin-bottom:70px;
 }
+
+
+/* PROFILE */
 
 .profile-card{
 display:flex;
@@ -327,6 +411,44 @@ flex-direction:column;
 gap:8px;
 }
 
+
+
+/* MEMBERSHIP CARD */
+
+.membership-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:28px;
+border-radius:10px;
+background:white;
+}
+
+.membership-row{
+display:flex;
+gap:60px;
+flex-wrap:wrap;
+}
+
+.membership-item{
+display:flex;
+flex-direction:column;
+}
+
+.label{
+font-size:11px;
+letter-spacing:2px;
+opacity:.6;
+margin-bottom:6px;
+text-transform:uppercase;
+}
+
+.value{
+font-size:18px;
+}
+
+
+
+/* EVENTS */
+
 .event-card{
 border:1px solid rgba(0,0,0,0.08);
 padding:16px;
@@ -343,6 +465,10 @@ margin-bottom:4px;
 opacity:.6;
 font-size:13px;
 }
+
+
+
+/* BENEFITS */
 
 .benefits-card{
 border:1px solid rgba(0,0,0,0.08);
