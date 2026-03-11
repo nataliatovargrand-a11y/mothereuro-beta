@@ -1,203 +1,226 @@
 <template>
-  <div class="events-wrapper">
 
-    <div class="events-header">
-      <h1>Events</h1>
-    </div>
+<div class="events-wrapper">
 
-    <div class="events-grid">
+  <!-- HERO -->
 
-      <div
-        v-for="event in events"
-        :key="event.id"
-        class="event-card"
-      >
+  <div class="events-hero">
 
-        <img
-          v-if="event.image_url"
-          :src="event.image_url"
-          class="event-image"
-        />
+    <h1>Events</h1>
 
-        <div class="event-content">
+    <p class="hero-subline">
+      Intimate gatherings, cultural salons, and curated dinners
+      across Europe for the Mother Euro community.
+    </p>
 
-          <div class="event-date">
-            {{ formatDate(event.event_date) }}
-          </div>
+  </div>
 
-          <h2 class="event-title">
-            {{ event.title }}
-          </h2>
 
-          <div class="event-location">
-            {{ event.location }}
-          </div>
+  <!-- FEATURED EVENT -->
 
-          <p class="event-description">
-            {{ event.description }}
-          </p>
+  <div class="featured-event">
 
-  <button
-  class="register-btn"
-  :disabled="!access.hasTier('global')"
-  @click="reserveEvent(event)"
->
-  {{ access.hasTier('global') ? 'REGISTER' : 'MEMBERS ONLY' }}
-</button>
+    <img
+      src="/images/event-featured.jpg"
+      class="featured-image"
+    />
 
-        </div>
+    <div class="featured-content">
 
+      <div class="featured-label">
+        FEATURED EVENT
       </div>
+
+      <h2>Mother Euro Lisbon Dinner</h2>
+
+      <p>
+        A private gathering of founders, creatives, and women
+        building life across Europe. Hosted in Lisbon.
+      </p>
+
+      <a
+        href="https://luma.com"
+        target="_blank"
+        class="event-btn"
+      >
+        Reserve Your Seat
+      </a>
 
     </div>
 
   </div>
+
+
+  <!-- EVENTS CALENDAR -->
+
+  <div class="calendar-header">
+    Upcoming Events
+  </div>
+
+  <div class="events-calendar">
+
+    <iframe
+      src="https://luma.com/embed/calendar/cal-Hv0aqpqNkf2UIKs/events"
+      width="100%"
+      height="720"
+      frameborder="0"
+      style="border:0"
+      allowfullscreen
+    ></iframe>
+
+  </div>
+
+</div>
+
 </template>
 
+
+
 <script setup>
-import { ref, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-import { useRouter } from 'vue-router'
-import { useAccess } from '~/composables/useAccess'
 
-const router = useRouter()
-const events = ref([])
+/*
+Events powered by Luma
+No backend needed
+*/
 
-const access = useAccess()
-await access.loadAccess()
-
-onMounted(async () => {
-
-  const { data: eventsData } = await supabase
-    .from('events')
-    .select('*')
-    .order('event_date', { ascending: true })
-
-  if (eventsData) {
-    events.value = eventsData
-  }
-
-})
-
-const reserveEvent = async (event) => {
-
-  const { data } = await supabase.auth.getUser()
-  if (!data.user) return
-
-  await supabase.from('bookings').insert({
-    user_email: data.user.email,
-    event_id: event.id,
-    event_title: event.title,
-    event_date: event.event_date
-  })
-
-  alert("Booking confirmed. Redirecting to event.")
-
-  if (event.luma_url) {
-    window.open(event.luma_url, '_blank')
-  }
-}
-
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric'
-  })
-}
 </script>
+
+
 
 <style scoped>
 
-.events-wrapper {
-  padding: 120px 40px 140px 40px;
-  max-width: 1100px;
-  margin: 0 auto;
+/* PAGE LAYOUT */
+
+.events-wrapper{
+padding:160px 40px 140px;
+max-width:1100px;
+margin:0 auto;
 }
 
-.events-header {
-  margin-bottom: 50px;
+
+
+/* HERO */
+
+.events-hero{
+max-width:640px;
+margin-bottom:100px;
 }
 
-.events-header h1 {
-  font-size: 40px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 500;
+.events-hero h1{
+font-size:68px;
+font-weight:300;
+letter-spacing:-1px;
+margin-bottom:28px;
 }
 
-.events-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 40px;
+.hero-subline{
+font-size:20px;
+line-height:1.8;
+opacity:.75;
 }
 
-.event-card {
-  background: white;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
+
+
+/* FEATURED EVENT */
+
+.featured-event{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:70px;
+align-items:center;
+margin-bottom:140px;
 }
 
-.event-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
-} 
-
-.event-image {
-  width: 100%;
-  height: 240px;
-  object-fit: cover;
+.featured-image{
+width:100%;
+height:420px;
+object-fit:cover;
+border-radius:6px;
 }
 
-.event-content {
-  padding: 30px;
+.featured-content{
+max-width:420px;
 }
 
-.event-date {
-  font-size: 13px;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
-  opacity: 0.7;
+.featured-label{
+font-size:12px;
+letter-spacing:4px;
+margin-bottom:18px;
+opacity:.6;
 }
 
-.event-title {
-  font-size: 22px;
-  margin-bottom: 12px;
-  font-weight: 500;
+.featured-content h2{
+font-size:36px;
+font-weight:400;
+margin-bottom:20px;
 }
 
-.event-location {
-  font-size: 14px;
-  margin-bottom: 16px;
-  opacity: 0.7;
+.featured-content p{
+font-size:16px;
+line-height:1.8;
+opacity:.75;
+margin-bottom:30px;
 }
 
-.event-description {
-  font-size: 14px;
-  margin-bottom: 25px;
-  line-height: 1.6;
+
+
+/* BUTTON */
+
+.event-btn{
+padding:16px 32px;
+background:black;
+color:white;
+text-decoration:none;
+font-size:12px;
+letter-spacing:3px;
+transition:.3s ease;
 }
 
-.register-btn {
-  background: black;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  letter-spacing: 2px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.3s ease;
+.event-btn:hover{
+background:#A8985F;
 }
 
-.register-btn:hover {
-  background: #A8985F;
+
+
+/* CALENDAR */
+
+.calendar-header{
+font-size:14px;
+letter-spacing:5px;
+text-transform:uppercase;
+margin-bottom:30px;
+opacity:.6;
 }
 
-@media (max-width: 768px) {
-  .events-wrapper {
-    padding: 100px 20px 140px 20px;
-  }
+.events-calendar{
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 20px 60px rgba(0,0,0,0.08);
+}
+
+
+
+/* MOBILE */
+
+@media (max-width:900px){
+
+.featured-event{
+grid-template-columns:1fr;
+}
+
+.events-hero h1{
+font-size:48px;
+}
+
+}
+
+
+@media (max-width:768px){
+
+.events-wrapper{
+padding:120px 20px 140px;
+}
+
 }
 
 </style>
