@@ -1,80 +1,92 @@
 <template>
-  <div class="app-wrapper">
+  <div>
 
     <!-- Page Content -->
     <div class="page-content">
-      <slot />
+      <NuxtPage />
     </div>
 
-    <!-- Bottom Glass Navigation -->
-<nav class="bottom-nav">
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <div class="bottom-nav-inner">
 
-<NuxtLink to="/account" class="nav-item">
-Account
-</NuxtLink>
+        <NuxtLink to="/account" class="nav-item">
+          Account
+        </NuxtLink>
 
-<NuxtLink to="/explore" class="nav-item">
-Explore
-</NuxtLink>
+        <NuxtLink to="/explore" class="nav-item">
+          Explore
+        </NuxtLink>
 
-<div class="nav-logo">
-<img src="/images/logo.png" class="footer-logo">
+        <div class="logo-center">
+          <NuxtLink to="/">
+            <img src="/images/logo.png" class="footer-logo" />
+          </NuxtLink>
+        </div>
 
-<NuxtLink to="/events" class="nav-item">
-Events
-</NuxtLink>
+        <NuxtLink to="/events" class="nav-item">
+          Events
+        </NuxtLink>
 
-<NuxtLink to="/partners" class="nav-item">
-Partners
-</NuxtLink>
+        <NuxtLink to="/partners" class="nav-item">
+          Partners
+        </NuxtLink>
 
-</nav>
+      </div>
+    </nav>
 
   </div>
 </template>
 
 <style scoped>
 
-.app-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .page-content {
-  flex: 1;
-  padding-bottom: 100px; /* space for nav */
+  padding-bottom: 90px;
 }
 
-/* Glass Bar */
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:70px;
-background:white;
-display:flex;
-align-items:center;
-justify-content:space-around;
-border-top:1px solid rgba(0,0,0,.08);
+/* NAV BAR */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.nav-item{
-font-size:12px;
-letter-spacing:2px;
-text-decoration:none;
-color:#444;
+.bottom-nav-inner {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  position: relative;
 }
 
-.router-link-active{
-color:black;
-font-weight:500;
+.nav-item {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  color: black;
+  opacity: 0.6;
 }
 
-.nav-logo img{
-width:32px;
-height:32px;
+.logo-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.footer-logo {
+  width: 36px;
+  height: auto;
 }
 
 </style>
