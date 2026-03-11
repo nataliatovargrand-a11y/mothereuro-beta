@@ -2,9 +2,7 @@
 
 <div class="events-wrapper">
 
-<h1 class="page-title">
-Events
-</h1>
+<h1 class="page-title">Events</h1>
 
 <div class="events-subtitle">
 Private gatherings, cultural salons, and curated dinners
@@ -14,30 +12,29 @@ for the Mother Euro community.
 
 <!-- FEATURED EVENT -->
 
-<div class="featured-event">
+<div v-if="nextEvent" class="featured-event">
 
 <img
-src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+:src="nextEvent.cover_url"
 class="featured-image"
 />
 
 <div class="featured-content">
 
 <div class="featured-label">
-FEATURED EVENT
+NEXT EVENT
 </div>
 
 <h2>
-Mother Euro Lisbon Dinner
+{{ nextEvent.name }}
 </h2>
 
 <p>
-An intimate dinner bringing together founders,
-creatives, and women building life across Europe.
+{{ nextEvent.description }}
 </p>
 
 <a
-href="https://luma.com/ME_EVAOMETZ"
+:href="nextEvent.url"
 target="_blank"
 class="featured-btn"
 >
@@ -49,12 +46,11 @@ Reserve Your Seat
 </div>
 
 
-<!-- UPCOMING EVENTS -->
+<!-- LUMA CALENDAR -->
 
 <div class="section-label">
 Upcoming Events
 </div>
-
 
 <div class="luma-wrapper">
 
@@ -66,11 +62,34 @@ allowfullscreen
 
 </div>
 
-
 </div>
 
 </template>
 
+
+<script setup>
+
+import { ref, onMounted } from 'vue'
+
+const nextEvent = ref(null)
+
+onMounted(async () => {
+
+const response = await fetch(
+'https://api.luma.com/calendar/cal-Hv0aqpqNkf2UIKs/events'
+)
+
+const data = await response.json()
+
+if(data.entries && data.entries.length){
+
+nextEvent.value = data.entries[0]
+
+}
+
+})
+
+</script>
 
 
 <style scoped>
@@ -108,7 +127,7 @@ margin-bottom:120px;
 width:100%;
 height:420px;
 object-fit:cover;
-border-radius:10px;
+border-radius:12px;
 }
 
 .featured-label{
@@ -143,7 +162,7 @@ background:#A8985F;
 }
 
 
-/* SECTION LABEL */
+/* CALENDAR */
 
 .section-label{
 font-size:12px;
@@ -152,9 +171,6 @@ text-transform:uppercase;
 opacity:.6;
 margin-bottom:30px;
 }
-
-
-/* LUMA EMBED */
 
 .luma-wrapper{
 border-radius:18px;
