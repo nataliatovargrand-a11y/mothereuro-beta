@@ -1,294 +1,359 @@
 <template>
-  <div class="account-wrapper">
 
-    <!-- Greeting -->
-    <div v-if="user" class="dashboard-header">
-      <div>
-        <h1>Hi, {{ firstName }}</h1>
-        <p class="subtext">
-          Welcome back to your private member portal.
-        </p>
-      </div>
+<div class="account-wrapper">
 
-      <button class="logout-btn" @click="logout">
-        Logout
-      </button>
-    </div>
+<!-- HEADER -->
 
-    <!-- Login Block -->
-    <div v-if="!user" class="login-block">
-      <h2>Member Access</h2>
+<div class="account-header">
 
-      <input v-model="email" type="email" placeholder="Email" class="input" />
-      <input v-model="password" type="password" placeholder="Password" class="input" />
+<div class="greeting">
+Hi, {{ member?.first_name }}
+</div>
 
-      <button @click="login" class="primary-btn">
-        Login
-      </button>
-    </div>
+<div class="welcome">
+Welcome back to Mother Euro
+</div>
 
-    <!-- Logged In Content -->
-    <div v-else>
+<button class="logout-btn" @click="logout">
+Log Out
+</button>
 
-      <!-- PROFILE -->
-      <div class="section">
-        <h2>Profile</h2>
+</div>
 
-        <div class="card profile-card">
 
-          <div class="avatar-block">
-            <img v-if="avatarUrl" :src="avatarUrl" class="avatar-img" />
-            <div v-else class="avatar-placeholder"></div>
-            <input type="file" @change="uploadAvatar" class="file-input" />
-          </div>
+<!-- PROFILE -->
 
-          <div class="profile-info">
-            <div><strong>Name:</strong> {{ firstName }}</div>
-            <div><strong>Email:</strong> {{ user.email }}</div>
-            <div class="membership-badge">
-              {{ membershipStatus }}
-            </div>
-          </div>
+<div class="section">
 
-        </div>
-      </div>
+<h2>Profile</h2>
 
-      <!-- UPCOMING EVENTS -->
-      <div class="section">
-        <h2>Your Upcoming Events</h2>
+<div class="profile-card">
 
-        <div v-if="bookings.length === 0" class="empty">
-          No bookings yet.
-        </div>
+<div class="avatar-block">
 
-        <div
-          v-for="booking in bookings"
-          :key="booking.id"
-          class="card booking-card"
-        >
-          <div class="booking-title">
-            {{ booking.event_title }}
-          </div>
-          <div class="booking-date">
-            {{ formatDate(booking.event_date) }}
-          </div>
-        </div>
-      </div>
+<img
+v-if="member?.avatar_url"
+:src="member.avatar_url"
+class="avatar"
+/>
 
-      <!-- MEMBERSHIP -->
-      <div class="section">
-        <h2>Your Membership</h2>
+<div v-else class="avatar-placeholder"></div>
 
-        <div class="card membership-card">
-          <p>
-            Mother Euro is a curated private membership supporting women
-            building life, business, and belonging abroad.
-          </p>
+<input type="file" @change="uploadAvatar" class="file-input"/>
 
-          <ul>
-            <li>• Access to private curated events</li>
-            <li>• Strategic relocation network</li>
-            <li>• Trusted local partners</li>
-            <li>• Community-led growth circles</li>
-          </ul>
-        </div>
-      </div>
+</div>
 
-    </div>
-  </div>
+<div class="profile-info">
+
+<div><strong>Name:</strong> {{ member?.first_name }}</div>
+
+<div><strong>Email:</strong> {{ member?.email }}</div>
+
+<div><strong>Membership:</strong> {{ member?.membership_tier }}</div>
+
+<div><strong>Renewal date:</strong> {{ member?.renewal_date || '—' }}</div>
+
+<div><strong>Industry:</strong> {{ member?.industry || '—' }}</div>
+
+<div><strong>City:</strong> {{ member?.city || '—' }}</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- UPCOMING EVENTS -->
+
+<div class="section">
+
+<h2>Your Upcoming Events</h2>
+
+<div v-if="upcomingEvents.length === 0" class="empty">
+No upcoming events yet.
+</div>
+
+<div
+v-for="event in upcomingEvents"
+:key="event.id"
+class="event-card"
+>
+
+<div class="event-title">
+{{ event.event_title }}
+</div>
+
+<div class="event-date">
+{{ formatDate(event.event_date) }}
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PAST EVENTS -->
+
+<div class="section">
+
+<h2>Your Past Events</h2>
+
+<div v-if="pastEvents.length === 0" class="empty">
+No past events yet.
+</div>
+
+<div
+v-for="event in pastEvents"
+:key="event.id"
+class="event-card"
+>
+
+<div class="event-title">
+{{ event.event_title }}
+</div>
+
+<div class="event-date">
+{{ formatDate(event.event_date) }}
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MEMBERSHIP BENEFITS -->
+
+<div class="section">
+
+<h2>Your Membership Benefits</h2>
+
+<div class="benefits-card">
+
+<div v-if="member?.membership_tier === 'aspiring'">
+• Access to relocation resources  
+• Community events  
+• Member network
+</div>
+
+<div v-if="member?.membership_tier === 'resident'">
+• Full resource library  
+• Unlimited events  
+• Private partner benefits
+</div>
+
+<div v-if="member?.membership_tier === 'global'">
+• Global member network  
+• Exclusive dinners  
+• Partner privileges  
+• Up to 4 events per year
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </template>
 
+
+
 <script setup>
-import { ref, onMounted } from 'vue'
+
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
-const user = ref(null)
-const firstName = ref('')
-const membershipStatus = ref('pending')
+const member = ref(null)
 const bookings = ref([])
-const avatarUrl = ref(null)
-
-const email = ref('')
-const password = ref('')
 
 onMounted(async () => {
-  const { data } = await supabase.auth.getUser()
-  if (!data.user) return
 
-  user.value = data.user
+const { data: userData } = await supabase.auth.getUser()
 
-  const { data: member } = await supabase
-    .from('members')
-    .select('*')
-    .eq('email', data.user.email)
-    .single()
+if(!userData.user) return
 
-  firstName.value = member?.first_name || ''
-  membershipStatus.value = member?.membership_status || 'pending'
-  avatarUrl.value = member?.avatar_url || null
+const { data } = await supabase
+.from('members')
+.select('*')
+.eq('email', userData.user.email)
+.single()
 
-  const { data: bookingData } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('user_email', data.user.email)
-    .order('event_date', { ascending: true })
+member.value = data
 
-  bookings.value = bookingData || []
+const { data: bookingData } = await supabase
+.from('bookings')
+.select('*')
+.eq('user_email', userData.user.email)
+.order('event_date')
+
+bookings.value = bookingData || []
+
 })
 
-const login = async () => {
-  await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
-  })
-  location.reload()
-}
 
-const logout = async () => {
-  await supabase.auth.signOut()
-  location.reload()
-}
+const upcomingEvents = computed(() => {
+
+const today = new Date()
+
+return bookings.value.filter(event =>
+new Date(event.event_date) >= today
+)
+
+})
+
+const pastEvents = computed(() => {
+
+const today = new Date()
+
+return bookings.value.filter(event =>
+new Date(event.event_date) < today
+)
+
+})
+
 
 const uploadAvatar = async (event) => {
-  const file = event.target.files[0]
-  if (!file || !user.value) return
 
-  const filePath = `${user.value.id}-${Date.now()}`
+const file = event.target.files[0]
 
-  await supabase.storage.from('avatars').upload(filePath, file)
+if(!file || !member.value) return
 
-  const { data } = supabase.storage
-    .from('avatars')
-    .getPublicUrl(filePath)
+const filePath = `${member.value.id}-${Date.now()}`
 
-  avatarUrl.value = data.publicUrl
+await supabase.storage
+.from('avatars')
+.upload(filePath, file)
 
-  await supabase
-    .from('members')
-    .update({ avatar_url: data.publicUrl })
-    .eq('email', user.value.email)
+const { data } = supabase
+.storage
+.from('avatars')
+.getPublicUrl(filePath)
+
+await supabase
+.from('members')
+.update({ avatar_url: data.publicUrl })
+.eq('id', member.value.id)
+
+member.value.avatar_url = data.publicUrl
+
 }
+
+
+const logout = async () => {
+
+await supabase.auth.signOut()
+location.reload()
+
+}
+
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric'
-  })
+
+return new Date(date).toLocaleDateString('en-US', {
+month: 'long',
+day: 'numeric',
+year: 'numeric'
+})
+
 }
+
 </script>
+
+
 
 <style scoped>
 
-.account-wrapper {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 120px 40px 140px;
+.account-wrapper{
+padding:140px 40px;
+max-width:900px;
+margin:auto;
 }
 
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 60px;
+.account-header{
+margin-bottom:60px;
 }
 
-.dashboard-header h1 {
-  font-size: 32px;
+.greeting{
+font-size:36px;
+margin-bottom:6px;
 }
 
-.subtext {
-  opacity: 0.6;
-  margin-top: 5px;
+.welcome{
+opacity:.6;
+margin-bottom:20px;
 }
 
-.section {
-  margin-bottom: 80px;
+.logout-btn{
+border:1px solid black;
+background:white;
+padding:10px 16px;
+cursor:pointer;
+font-size:12px;
+letter-spacing:2px;
 }
 
-.section h2 {
-  font-size: 28px;
-  margin-bottom: 30px;
+.section{
+margin-bottom:70px;
 }
 
-.card {
-  background: white;
-  padding: 40px;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+.profile-card{
+display:flex;
+gap:40px;
+align-items:center;
 }
 
-.profile-card {
-  display: flex;
-  gap: 40px;
-  align-items: center;
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
 }
 
-.avatar-img,
-.avatar-placeholder {
-  width: 120px;
-  height: 120px;
-  border-radius: 100%;
-  object-fit: cover;
-  background: #eee;
+.avatar-placeholder{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#eee;
 }
 
-.file-input {
-  margin-top: 15px;
+.file-input{
+margin-top:10px;
 }
 
-.membership-badge {
-  margin-top: 10px;
-  font-size: 12px;
-  letter-spacing: 2px;
-  opacity: 0.6;
+.profile-info{
+display:flex;
+flex-direction:column;
+gap:8px;
 }
 
-.booking-card {
-  margin-bottom: 20px;
+.event-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:16px;
+margin-bottom:12px;
+border-radius:8px;
 }
 
-.booking-title {
-  font-size: 16px;
-  margin-bottom: 6px;
+.event-title{
+font-weight:500;
+margin-bottom:4px;
 }
 
-.booking-date {
-  font-size: 13px;
-  opacity: 0.6;
+.event-date{
+opacity:.6;
+font-size:13px;
 }
 
-.membership-card ul {
-  margin-top: 20px;
-  line-height: 1.8;
+.benefits-card{
+border:1px solid rgba(0,0,0,0.08);
+padding:20px;
+border-radius:8px;
+line-height:1.7;
 }
 
-.login-block {
-  max-width: 400px;
-  margin: 0 auto;
-  padding-top: 80px;
-}
-
-.input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-}
-
-.primary-btn {
-  width: 100%;
-  padding: 14px;
-  background: #A8985F;
-  color: white;
-  border: none;
-  letter-spacing: 2px;
-}
-
-.logout-btn {
-  background: transparent;
-  border: 1px solid black;
-  padding: 8px 16px;
-  cursor: pointer;
+.empty{
+opacity:.5;
+font-size:14px;
 }
 
 </style>
