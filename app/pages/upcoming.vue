@@ -20,10 +20,7 @@
 
   <div class="featured-event">
 
-    <img
-      src="/images/event-featured.jpg"
-      class="featured-image"
-    />
+    <div class="featured-image-placeholder"></div>
 
     <div class="featured-content">
 
@@ -219,6 +216,12 @@ font-size:48px;
 
 .events-wrapper{
 padding:120px 20px 140px;
+}
+.featured-image-placeholder{
+width:100%;
+height:420px;
+background:#f5f5f5;
+border-radius:6px;
 }
 
 }
