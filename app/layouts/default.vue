@@ -22,9 +22,7 @@
       <img src="/images/logo.png" class="footer-logo" />
     </NuxtLink>
 
-    <NuxtLink to="/upcoming" class="nav-item">
-      Events
-    </NuxtLink>
+   <NuxtLink to="/events">Events</NuxtLink>
 
     <NuxtLink to="/partners" class="nav-item">
       Partners
