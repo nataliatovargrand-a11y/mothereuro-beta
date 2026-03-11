@@ -22,7 +22,9 @@
       <img src="/images/logo.png" class="footer-logo" />
     </NuxtLink>
 
-   <NuxtLink to="/events">Events</NuxtLink>
+   <NuxtLink to="/events" class="nav-link">
+  Events
+</NuxtLink>
 
     <NuxtLink to="/partners" class="nav-item">
       Partners
@@ -87,6 +89,15 @@
 
 .footer-logo {
   width: 34px;
+}
+.nav-link{
+text-decoration:none;
+color:#7d7466;
+}
+
+.nav-link.router-link-active{
+color:black;
+font-weight:500;
 }
 
 </style>

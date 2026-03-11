@@ -53,18 +53,22 @@
 Upcoming Events
 </div>
 
-<div class="events-grid">
+<div v-if="upcomingEvents.length === 0" class="empty-state">
+New events will be announced soon.
+</div>
+
+<div v-else class="events-grid">
 
 <div
-  v-for="event in upcomingEvents"
-  :key="event.id"
-  class="event-card"
+v-for="event in upcomingEvents"
+:key="event.id"
+class="event-card"
 >
 
 <img
-  v-if="event.image_url"
-  :src="event.image_url"
-  class="event-image"
+v-if="event.image_url"
+:src="event.image_url"
+class="event-image"
 />
 
 <div class="event-content">
@@ -83,10 +87,9 @@ Upcoming Events
 
 <button
 class="event-btn"
-:disabled="!canRegister"
 @click="registerEvent(event)"
 >
-{{ canRegister ? "Register" : "Limit Reached" }}
+Register
 </button>
 
 </div>
@@ -94,7 +97,6 @@ class="event-btn"
 </div>
 
 </div>
-
 
 
 <!-- YOUR EVENTS -->
@@ -460,6 +462,20 @@ opacity:.6;
 .empty-state{
 opacity:.6;
 font-size:15px;
+}
+
+.section-header{
+font-size:13px;
+letter-spacing:4px;
+margin-top:120px;
+margin-bottom:30px;
+opacity:.6;
+}
+
+.empty-state{
+padding:60px 0;
+font-size:15px;
+opacity:.5;
 }
 
 </style>
