@@ -205,161 +205,47 @@ class="event-card"
 
 
 <script setup>
-
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const member = ref(null)
-const bookings = ref([])
 const user = ref(null)
-
-
 
 onMounted(async () => {
 
-const { data } = await supabase.auth.getUser()
+  // Get logged in user
+  const { data: authData } = await supabase.auth.getUser()
 
-user.value = data.user
+  user.value = authData.user
 
-if (!user.value) return
+  if (!user.value) {
+    router.push('/login')
+    return
+  }
 
+  // Load member profile
+  const { data, error } = await supabase
+    .from('members')
+    .select('*')
+    .eq('id', user.value.id)
+    .single()
 
+  if (error) {
+    console.error('Member fetch error:', error)
+  }
 
-/* MEMBER PROFILE */
-
-const { data: memberData } = await supabase
-.from('members')
-.select('*')
-.eq('id', user.value.id)
-.single()
-
-member.value = memberData
-
-
-
-/* BOOKINGS */
-
-const { data: bookingData } = await supabase
-.from('bookings')
-.select('*')
-.eq('user_email', user.value.email)
-.order('event_date', { ascending:true })
-
-bookings.value = bookingData || []
+  member.value = data
 
 })
-
-
-
-/* UPCOMING EVENTS */
-
-const upcomingEvents = computed(() => {
-
-const today = new Date()
-
-return bookings.value.filter(event =>
-new Date(event.event_date) >= today
-)
-
-})
-
-
-
-/* PAST EVENTS */
-
-const pastEvents = computed(() => {
-
-const today = new Date()
-
-return bookings.value.filter(event =>
-new Date(event.event_date) < today
-)
-
-})
-
-
-
-/* GLOBAL EVENT LIMIT */
-
-const eventsThisYear = computed(() => {
-
-const year = new Date().getFullYear()
-
-return bookings.value.filter(event =>
-new Date(event.event_date).getFullYear() === year
-)
-
-})
-
-const remainingEvents = computed(() => {
-
-if(member.value?.membership_tier !== 'global') return null
-
-return 4 - eventsThisYear.value.length
-
-})
-
-
-
-/* LOGOUT */
 
 const logout = async () => {
-
-await supabase.auth.signOut()
-
-router.push('/account')
-
+  await supabase.auth.signOut()
+  router.push('/')
 }
-
-
-
-/* AVATAR UPLOAD */
-
-const uploadAvatar = async (event) => {
-
-const file = event.target.files[0]
-
-if(!file) return
-
-const filePath = `${user.value.id}-${Date.now()}`
-
-await supabase.storage
-.from('avatars')
-.upload(filePath, file)
-
-const { data } = supabase
-.storage
-.from('avatars')
-.getPublicUrl(filePath)
-
-await supabase
-.from('members')
-.update({ avatar_url: data.publicUrl })
-.eq('email', user.value.email)
-
-member.value.avatar_url = data.publicUrl
-
-}
-
-
-
-/* DATE FORMAT */
-
-const formatDate = (date) => {
-
-return new Date(date).toLocaleDateString('en-US',{
-month:'long',
-day:'numeric',
-year:'numeric'
-})
-
-}
-
 </script>
-
 
 
 <style scoped>
