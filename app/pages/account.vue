@@ -233,7 +233,7 @@ if (!user.value) return
 const { data: memberData } = await supabase
 .from('members')
 .select('*')
-.eq('email', user.value.email)
+.eq('id', user.value.id)
 .single()
 
 member.value = memberData
