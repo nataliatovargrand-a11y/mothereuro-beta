@@ -69,7 +69,7 @@ hidden
 
 <div class="profile-info">
 
-<!-- VIEW -->
+<!-- VIEW MODE -->
 
 <div v-if="!editing" class="profile-grid">
 
@@ -105,7 +105,7 @@ hidden
 
 </div>
 
-<!-- EDIT -->
+<!-- EDIT MODE -->
 
 <div v-else class="edit-form">
 
@@ -160,22 +160,46 @@ Cancel
 
 </div>
 
-<div v-if="member?.membership_tier === 'aspiring'" class="card">
 
-<h2>Relocation Resources</h2>
+<!-- RELOCATION FEATURE -->
+
+<div
+v-if="member?.membership_tier === 'aspiring'"
+class="card relocation-feature"
+>
+
+<div class="relocation-content">
+
+<div class="relocation-text">
+
+<div class="relocation-label">
+Aspiring Member Benefit
+</div>
+
+<h2>
+Relocation Library
+</h2>
 
 <p>
-Explore the relocation guides designed to help you plan your move to Europe.
+Expert relocation guides designed to help you confidently plan your move to Europe.
 </p>
 
 <NuxtLink
 to="/resources/relocation"
-class="resource-btn"
+class="relocation-btn"
 >
-Open Relocation Library
+Explore the Library
 </NuxtLink>
 
 </div>
+
+<div class="relocation-image"></div>
+
+</div>
+
+</div>
+
+
 <!-- SAVED RESOURCES -->
 
 <div class="card">
@@ -196,6 +220,8 @@ class="resource-card"
 {{ resource.title }}
 </div>
 
+<div class="resource-actions">
+
 <a
 :href="resource.link_url"
 target="_blank"
@@ -210,6 +236,8 @@ class="remove-btn"
 >
 Remove
 </button>
+
+</div>
 
 </div>
 
@@ -282,9 +310,10 @@ Partner privileges
 </template>
 
 
+
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
 
@@ -302,6 +331,7 @@ const industry = ref('')
 
 const savedResources = ref([])
 const upcomingEvents = ref([])
+
 const firstName = computed(() => {
   if (!member.value?.name) return 'Member'
   return member.value.name.split(' ')[0]
@@ -318,8 +348,6 @@ return
 
 user.value = session.user
 
-/* member */
-
 const { data } = await supabase
 .from('members')
 .select('*')
@@ -332,8 +360,6 @@ name.value = data?.name
 city.value = data?.city
 industry.value = data?.industry
 
-
-/* saved resources */
 
 const { data: saved } = await supabase
 .from('saved_resources')
@@ -420,24 +446,14 @@ return new Date(d).toLocaleDateString()
 </script>
 
 
-<style scoped>
 
-/* PAGE */
+<style scoped>
 
 .account-wrapper{
 padding:140px 40px;
 max-width:900px;
 margin:auto;
 }
-body{
-background:linear-gradient(
-180deg,
-#f5efe7,
-#f2ebe2
-);
-}
-
-/* HEADER */
 
 .account-header{
 display:flex;
@@ -451,32 +467,21 @@ font-size:42px;
 font-weight:500;
 }
 
-/* GLASS CARD */
-
 .card{
 background: rgba(255,255,255,0.35);
 backdrop-filter: blur(18px);
--webkit-backdrop-filter: blur(18px);
-
 border: 1px solid rgba(255,255,255,0.55);
-
 border-radius:18px;
-
 padding:36px;
-
 margin-bottom:40px;
-
 box-shadow:
 0 8px 24px rgba(0,0,0,0.06),
 inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* PROFILE */
-
 .profile-card{
 display:flex;
 gap:40px;
-align-items:flex-start;
 }
 
 .avatar{
@@ -485,16 +490,6 @@ height:120px;
 border-radius:50%;
 object-fit:cover;
 }
-
-.avatar-placeholder{
-background:linear-gradient(
-135deg,
-rgba(255,255,255,0.6),
-rgba(255,255,255,0.2)
-);
-}
-
-/* GRID */
 
 .profile-grid{
 display:grid;
@@ -506,150 +501,14 @@ label{
 font-size:11px;
 letter-spacing:2px;
 opacity:.6;
-display:block;
 text-transform:uppercase;
-margin-bottom:3px;
 }
-
-span{
-font-size:15px;
-}
-
-/* BUTTONS */
-
-.logout-btn,
-.edit-btn,
-.save-btn,
-.cancel-btn{
-
-border-radius:10px;
-
-padding:10px 18px;
-
-font-size:12px;
-
-letter-spacing:.5px;
-
-cursor:pointer;
-
-transition:all .25s ease;
-
-backdrop-filter:blur(6px);
-
-}
-
-/* secondary */
-
-.logout-btn,
-.edit-btn,
-.cancel-btn{
-
-background:rgba(255,255,255,0.5);
-
-border:1px solid rgba(0,0,0,0.08);
-
-}
-
-/* hover */
-
-.logout-btn:hover,
-.edit-btn:hover,
-.cancel-btn:hover{
-
-background:rgba(255,255,255,0.8);
-
-transform:translateY(-1px);
-
-}
-
-/* primary */
-
-.save-btn{
-
-background:black;
-
-color:white;
-
-border:none;
-
-}
-
-.save-btn:hover{
-
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
-
-transform:translateY(-1px);
-
-}
-/* FILE INPUT */
-
-.file-input{
-
-margin-top:12px;
-
-font-size:12px;
-
-padding:6px 10px;
-
-border-radius:8px;
-
-background:rgba(255,255,255,0.45);
-
-border:1px solid rgba(0,0,0,0.05);
-
-}
-
-/* EDIT FORM */
-
-.edit-form input{
-display:block;
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid rgba(0,0,0,0.1);
-background:white;
-}
-
-/* MEMBERSHIP */
-
-.membership-row{
-display:flex;
-gap:60px;
-}
-
-.membership-item label{
-opacity:.6;
-}
-
-.membership-item span{
-font-size:18px;
-}
-
-/* EVENTS */
-
-.event-card{
-border-top:1px solid rgba(0,0,0,0.05);
-padding:18px 0;
-}
-
-.event-title{
-font-weight:500;
-}
-
-.event-date{
-font-size:13px;
-opacity:.6;
-}
-
-/* RESOURCES */
 
 .resource-card{
 border-top:1px solid rgba(0,0,0,0.05);
 padding:18px 0;
 display:flex;
 justify-content:space-between;
-align-items:center;
 }
 
 .view-btn{
@@ -668,58 +527,46 @@ color:#c33;
 cursor:pointer;
 }
 
-/* BENEFITS */
+/* RELOCATION FEATURE */
 
-.benefits{
-line-height:1.7;
-}
-
-.empty{
-opacity:.5;
-}
-
-.header-left{
+.relocation-content{
 display:flex;
-flex-direction:column;
-gap:6px;
-}
-
-.welcome{
-font-size:16px;
-opacity:.6;
-}
-.card-header{
-display:flex;
-justify-content:space-between;
 align-items:center;
-margin-bottom:20px;
+justify-content:space-between;
+gap:40px;
 }
 
-.upload-btn{
-
-margin-top:12px;
-
-padding:8px 14px;
-
-border-radius:10px;
-
-background:rgba(255,255,255,0.6);
-
-border:1px solid rgba(0,0,0,0.1);
-
-font-size:12px;
-
-cursor:pointer;
-
-transition:all .25s ease;
-
+.relocation-label{
+font-size:11px;
+letter-spacing:2px;
+text-transform:uppercase;
+opacity:.6;
+margin-bottom:8px;
 }
 
-.upload-btn:hover{
-
-background:white;
-
-transform:translateY(-1px);
-
+.relocation-btn{
+display:inline-block;
+padding:12px 24px;
+border-radius:30px;
+background:#A8985F;
+color:white;
+text-decoration:none;
+font-size:13px;
+transition:.25s;
 }
+
+.relocation-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 24px rgba(0,0,0,0.15);
+}
+
+.relocation-image{
+width:220px;
+height:130px;
+border-radius:14px;
+background-image:url('/images/relocation.jpg');
+background-size:cover;
+background-position:center;
+}
+
 </style>
