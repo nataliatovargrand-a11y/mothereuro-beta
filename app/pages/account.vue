@@ -39,7 +39,11 @@ Log Out
 
 <h2>Profile</h2>
 
-<button v-if="!editing" @click="startEdit" class="edit-btn">
+<button
+v-if="!editing"
+@click="startEdit"
+class="upload-btn"
+>
 Edit Profile
 </button>
 
@@ -126,33 +130,6 @@ Cancel
 </div>
 
 </div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- MEMBERSHIP -->
-
-<div class="card">
-
-<h2>Your Membership</h2>
-
-<div class="membership-row">
-
-<div class="membership-item">
-
-<label>Tier</label>
-<span>{{ member?.membership_tier }}</span>
-
-</div>
-
-<div class="membership-item">
-
-<label>Renewal</label>
-<span>{{ member?.renewal_date }}</span>
 
 </div>
 
@@ -310,6 +287,7 @@ Partner privileges
 </template>
 
 
+
 <script setup>
 
 import { ref, computed, onMounted } from 'vue'
@@ -441,6 +419,7 @@ return new Date(d).toLocaleDateString()
 </script>
 
 
+
 <style scoped>
 
 .account-wrapper{
@@ -466,8 +445,6 @@ font-size:16px;
 opacity:.6;
 }
 
-/* GLASS CARD */
-
 .card{
 background: rgba(255,255,255,0.35);
 backdrop-filter: blur(18px);
@@ -480,7 +457,12 @@ box-shadow:
 inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* PROFILE */
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:24px;
+}
 
 .profile-card{
 display:flex;
@@ -493,8 +475,6 @@ height:120px;
 border-radius:50%;
 object-fit:cover;
 }
-
-/* GRID */
 
 .profile-grid{
 display:grid;
@@ -515,84 +495,30 @@ margin-top:4px;
 font-size:15px;
 }
 
-/* BUTTONS */
-
-.logout-btn,
-.edit-btn,
-.cancel-btn{
+.logout-btn{
 
 background:rgba(255,255,255,0.55);
-
 border:1px solid rgba(0,0,0,0.08);
-
 padding:10px 18px;
-
 border-radius:12px;
-
 font-size:12px;
-
-letter-spacing:.5px;
-
 cursor:pointer;
-
-transition:all .25s ease;
-
-backdrop-filter:blur(6px);
+transition:.25s;
 
 }
 
-.logout-btn:hover,
-.edit-btn:hover,
-.cancel-btn:hover{
-
-background:rgba(255,255,255,0.85);
-
+.logout-btn:hover{
+background:white;
 transform:translateY(-1px);
-
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-
 }
-
-.save-btn{
-
-background:black;
-
-color:white;
-
-border:none;
-
-padding:10px 18px;
-
-border-radius:12px;
-
-cursor:pointer;
-
-}
-
-.save-btn:hover{
-
-transform:translateY(-1px);
-
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
-
-}
-
-/* FILE UPLOAD */
 
 .upload-btn{
 
-margin-top:12px;
-
-padding:8px 14px;
-
-border-radius:10px;
-
+padding:10px 18px;
+border-radius:12px;
 background:rgba(255,255,255,0.6);
-
-border:1px solid rgba(0,0,0,0.1);
-
+border:1px solid rgba(0,0,0,0.08);
 font-size:12px;
-
 cursor:pointer;
 
 }
@@ -601,7 +527,18 @@ cursor:pointer;
 background:white;
 }
 
-/* SAVED RESOURCES */
+.save-btn{
+background:black;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:12px;
+cursor:pointer;
+}
+
+.cancel-btn{
+margin-left:10px;
+}
 
 .resource-card{
 border-top:1px solid rgba(0,0,0,0.05);
@@ -626,21 +563,11 @@ color:#c33;
 cursor:pointer;
 }
 
-/* RELOCATION */
-
 .relocation-content{
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:40px;
-}
-
-.relocation-label{
-font-size:11px;
-letter-spacing:2px;
-text-transform:uppercase;
-opacity:.6;
-margin-bottom:8px;
 }
 
 .relocation-btn{
@@ -650,12 +577,6 @@ border-radius:30px;
 background:#A8985F;
 color:white;
 text-decoration:none;
-font-size:13px;
-}
-
-.relocation-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 10px 24px rgba(0,0,0,0.15);
 }
 
 .relocation-image{
