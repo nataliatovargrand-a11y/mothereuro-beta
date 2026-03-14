@@ -2,12 +2,20 @@
 
 <div class="account-wrapper">
 
+<!-- LOADING STATE -->
+
+<div v-if="loading" class="loading">
+Loading your account...
+</div>
+
+<div v-else>
+
 <!-- HEADER -->
 
 <div class="account-header">
 
 <h1 class="greeting">
-Hi, {{ member?.name }}
+Hi, {{ member?.name || 'Member' }}
 </h1>
 
 <div class="welcome">
@@ -200,10 +208,14 @@ class="event-card"
 
 </div>
 
+</div>
+
 </template>
 
 
+
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '~/utils/supabase'
@@ -212,11 +224,17 @@ const router = useRouter()
 
 const member = ref(null)
 const user = ref(null)
+const loading = ref(true)
+
 const upcomingEvents = ref([])
 const pastEvents = ref([])
-const remainingEvents = ref(0)
+const remainingEvents = ref(4)
+
+
 
 onMounted(async () => {
+
+  // Check auth session
 
   const { data: { session } } = await supabase.auth.getSession()
 
@@ -227,6 +245,8 @@ onMounted(async () => {
 
   user.value = session.user
 
+  // Load member profile
+
   const { data: memberData, error } = await supabase
     .from('members')
     .select('*')
@@ -234,18 +254,71 @@ onMounted(async () => {
     .single()
 
   if (error) {
-    console.error("Member fetch error:", error)
+    console.error('Member fetch error:', error)
   }
 
   member.value = memberData
 
+  loading.value = false
+
 })
 
+
+
 const logout = async () => {
+
   await supabase.auth.signOut()
+
   router.push('/login')
+
 }
+
+
+
+const formatDate = (date) => {
+
+  if (!date) return ''
+
+  return new Date(date).toLocaleDateString()
+
+}
+
+
+
+const uploadAvatar = async (event) => {
+
+  const file = event.target.files[0]
+
+  if (!file) return
+
+  const filePath = `${user.value.id}/${file.name}`
+
+  const { error } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true })
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  const { data } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(filePath)
+
+  const avatarUrl = data.publicUrl
+
+  await supabase
+    .from('members')
+    .update({ avatar_url: avatarUrl })
+    .eq('id', user.value.id)
+
+  member.value.avatar_url = avatarUrl
+
+}
+
 </script>
+
 
 
 <style scoped>
@@ -254,6 +327,11 @@ const logout = async () => {
 padding:140px 40px;
 max-width:900px;
 margin:auto;
+}
+
+.loading{
+font-size:16px;
+opacity:.6;
 }
 
 .account-header{
