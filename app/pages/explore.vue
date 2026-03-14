@@ -4,12 +4,12 @@
 
 <!-- HERO -->
 
-<div class="explore-header">
+<div class="explore-hero">
 
 <h1>Explore</h1>
 
-<p class="subtitle">
-Curated beauty, travel, gastronomy, wellness and education discoveries across Europe.
+<p class="hero-subtitle">
+Curated beauty, travel, gastronomy, wellness and education discoveries across Europe for women building abroad.
 </p>
 
 <input
@@ -28,9 +28,9 @@ class="search-input"
 
 <div class="map-section">
 
-<div class="map-title">
+<h3 class="section-title">
 Discover Europe
-</div>
+</h3>
 
 <ExploreMap
 :resources="resources"
@@ -41,28 +41,36 @@ Discover Europe
 
 
 
-<!-- CATEGORY BUTTONS -->
+<!-- CATEGORY CARDS -->
 
-<div class="category-grid">
+<div class="category-section">
 
-<NuxtLink to="/resources/beauty" class="category-btn">
-Beauty
+<NuxtLink to="/resources/beauty" class="category-card beauty">
+<span>Beauty</span>
 </NuxtLink>
 
-<NuxtLink to="/resources/travel" class="category-btn">
-Travel
+<NuxtLink to="/resources/travel" class="category-card travel">
+<span>Travel</span>
 </NuxtLink>
 
-<NuxtLink to="/resources/gastronomy" class="category-btn">
-Gastronomy
+<NuxtLink to="/resources/gastronomy" class="category-card gastronomy">
+<span>Gastronomy</span>
 </NuxtLink>
 
-<NuxtLink to="/resources/wellness" class="category-btn">
-Wellness
+<NuxtLink to="/resources/wellness" class="category-card wellness">
+<span>Wellness</span>
 </NuxtLink>
 
-<NuxtLink to="/resources/education" class="category-btn">
-Education
+<NuxtLink to="/resources/education" class="category-card education">
+<span>Education</span>
+</NuxtLink>
+
+<NuxtLink
+v-if="member?.membership_tier === 'aspiring'"
+to="/resources/relocation"
+class="category-card relocation"
+>
+<span>Relocation</span>
 </NuxtLink>
 
 </div>
@@ -93,7 +101,75 @@ class="search-card"
 
 
 
-<!-- RESOURCES -->
+<!-- EDITOR PICKS -->
+
+<div class="featured-section">
+
+<h2>Editor's Picks</h2>
+
+<div class="featured-grid">
+
+<div
+v-for="resource in featuredResources"
+:key="resource.id"
+class="featured-card"
+>
+
+<img
+:src="resource.image_url"
+class="featured-image"
+/>
+
+<div class="featured-info">
+
+<h3>{{ resource.title }}</h3>
+
+<p>{{ resource.description }}</p>
+
+<a
+:href="resource.link_url"
+target="_blank"
+class="resource-btn"
+>
+View Resource
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- TRENDING CITIES -->
+
+<div class="trending-section">
+
+<h2>Trending Cities</h2>
+
+<div class="city-row">
+
+<div
+v-for="city in cities"
+:key="city"
+class="city-pill"
+@click="selectedCity = city"
+>
+
+{{ city }}
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RESOURCE GRID -->
 
 <div class="resources-grid">
 
@@ -145,6 +221,7 @@ const resources = ref([])
 const search = ref('')
 const searchResults = ref([])
 const selectedCity = ref(null)
+const member = ref(null)
 
 
 
@@ -156,6 +233,21 @@ const { data } = await supabase
 .eq('active', true)
 
 resources.value = data || []
+
+})
+
+
+
+const featuredResources = computed(() =>
+resources.value.filter(r => r.is_featured)
+)
+
+
+
+const cities = computed(() => {
+
+const unique = [...new Set(resources.value.map(r => r.city))]
+return unique.slice(0,6)
 
 })
 
@@ -226,13 +318,18 @@ margin:auto;
 
 
 
-.explore-header{
-margin-bottom:50px;
+/* HERO */
+
+.explore-hero{
+margin-bottom:80px;
+max-width:700px;
 }
 
-.subtitle{
-margin-bottom:20px;
+.hero-subtitle{
+font-size:18px;
 opacity:.7;
+line-height:1.6;
+margin-bottom:30px;
 }
 
 .search-input{
@@ -243,44 +340,130 @@ border:1px solid #ddd;
 
 
 
+/* MAP */
+
 .map-section{
 margin:80px 0;
 }
 
-.map-title{
+.section-title{
 letter-spacing:6px;
 font-size:12px;
+text-transform:uppercase;
 margin-bottom:20px;
 opacity:.6;
 }
 
 
 
-.category-grid{
+/* CATEGORY CARDS */
+
+.category-section{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:20px;
-margin-bottom:60px;
+gap:24px;
+margin:80px 0;
 }
 
-.category-btn{
-border:1px solid black;
-padding:26px;
-text-align:center;
-letter-spacing:4px;
+.category-card{
+position:relative;
+height:260px;
+display:flex;
+align-items:center;
+justify-content:center;
 text-decoration:none;
-font-size:13px;
+color:white;
+font-size:24px;
+letter-spacing:4px;
+background-size:cover;
+background-position:center;
+}
+
+.category-card::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.25);
+}
+
+.category-card span{
+z-index:2;
+}
+
+.beauty{background-image:url('/images/beauty.jpg')}
+.travel{background-image:url('/images/travel.jpg')}
+.gastronomy{background-image:url('/images/food.jpg')}
+.wellness{background-image:url('/images/wellness.jpg')}
+.education{background-image:url('/images/travel.jpg')}
+.relocation{background-image:url('/images/travel.jpg')}
+
+
+
+/* FEATURED */
+
+.featured-section{
+margin-bottom:100px;
+}
+
+.featured-section h2{
+font-size:28px;
+margin-bottom:30px;
+}
+
+.featured-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:30px;
+}
+
+.featured-card{
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 20px 40px rgba(0,0,0,0.06);
+}
+
+.featured-image{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.featured-info{
+padding:24px;
 }
 
 
+
+/* TRENDING CITIES */
+
+.trending-section{
+margin-bottom:80px;
+}
+
+.city-row{
+display:flex;
+gap:16px;
+flex-wrap:wrap;
+}
+
+.city-pill{
+border:1px solid black;
+padding:10px 18px;
+cursor:pointer;
+font-size:12px;
+letter-spacing:2px;
+}
+
+
+
+/* RESOURCES */
 
 .resources-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:40px;
 }
-
-
 
 .resource-card{
 background:white;
@@ -289,21 +472,15 @@ overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,0.06);
 }
 
-
-
 .resource-image{
 width:100%;
 height:200px;
 object-fit:cover;
 }
 
-
-
 .resource-content{
 padding:20px;
 }
-
-
 
 .resource-btn{
 display:inline-block;
@@ -318,11 +495,11 @@ letter-spacing:2px;
 
 
 
+/* SEARCH */
+
 .search-results{
 margin-bottom:80px;
 }
-
-
 
 .search-card{
 padding:16px;
