@@ -12,9 +12,17 @@ Loading your account...
 
 <div class="account-header">
 
+<div class="header-left">
+
 <h1 class="greeting">
-Hi, {{ member?.name || 'Member' }}
+Hi, {{ member?.name ? member.name : 'Member' }}
 </h1>
+
+<p class="welcome">
+Welcome back to Mother Euro
+</p>
+
+</div>
 
 <button class="logout-btn" @click="logout">
 Log Out
@@ -593,6 +601,17 @@ line-height:1.7;
 
 .empty{
 opacity:.5;
+}
+
+.header-left{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.welcome{
+font-size:16px;
+opacity:.6;
 }
 
 </style>
