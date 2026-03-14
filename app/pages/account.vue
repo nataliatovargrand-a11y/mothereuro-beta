@@ -203,16 +203,18 @@ class="event-card"
 </template>
 
 
-
 <script setup>
 import { ref, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
 import { useRouter } from 'vue-router'
+import { supabase } from '~/utils/supabase'
 
 const router = useRouter()
 
 const member = ref(null)
 const user = ref(null)
+const upcomingEvents = ref([])
+const pastEvents = ref([])
+const remainingEvents = ref(0)
 
 onMounted(async () => {
 
@@ -241,7 +243,7 @@ onMounted(async () => {
 
 const logout = async () => {
   await supabase.auth.signOut()
-  router.push('/')
+  router.push('/login')
 }
 </script>
 
