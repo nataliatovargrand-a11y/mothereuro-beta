@@ -1,6 +1,8 @@
 <template>
   <div class="explore-wrapper">
 
+    <!-- HEADER -->
+
     <div class="explore-header">
       <h1>Explore</h1>
 
@@ -11,6 +13,9 @@
         class="search-input"
       />
     </div>
+
+
+    <!-- CATEGORY PILLS -->
 
     <div class="category-row">
       <NuxtLink
@@ -23,6 +28,28 @@
       </NuxtLink>
     </div>
 
+
+    <!-- EXPLORE MAP -->
+
+    <div class="map-section">
+
+      <div class="map-header">
+        Discover Europe
+      </div>
+
+      <ExploreMap
+        @citySelected="selectedCity = $event"
+      />
+
+      <div v-if="selectedCity" class="map-filter">
+        Showing resources in {{ selectedCity }}
+      </div>
+
+    </div>
+
+
+    <!-- RESOURCES GRID -->
+
     <div class="resources-grid">
 
       <div
@@ -30,6 +57,7 @@
         :key="resource.id"
         class="resource-card"
       >
+
         <img
           v-if="resource.image_url"
           :src="resource.image_url"
@@ -37,8 +65,12 @@
         />
 
         <div class="resource-content">
+
           <h2>{{ resource.title }}</h2>
-          <p>{{ resource.description }}</p>
+
+          <p class="description">
+            {{ resource.description }}
+          </p>
 
           <div class="tag-row">
             <span
@@ -57,6 +89,7 @@
           >
             View Resource
           </a>
+
         </div>
 
       </div>
@@ -66,16 +99,26 @@
   </div>
 </template>
 
+
 <script setup>
+
 import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
+import ExploreMap from '~/components/ExploreMap.vue'
 
 const resources = ref([])
 const search = ref('')
+const selectedCity = ref(null)
 
-const categories = ['Beauty', 'Travel', 'Food', 'Wellness']
+const categories = [
+  'Beauty',
+  'Travel',
+  'Food',
+  'Wellness'
+]
 
 onMounted(async () => {
+
   const { data } = await supabase
     .from('resources')
     .select('*')
@@ -83,103 +126,166 @@ onMounted(async () => {
     .eq('access_level', 'public')
 
   resources.value = data || []
+
 })
 
+
 const filteredResources = computed(() => {
-  return resources.value.filter(r =>
-    r.title.toLowerCase().includes(search.value.toLowerCase()) ||
-    r.tags?.join(' ').toLowerCase().includes(search.value.toLowerCase())
-  )
+
+  return resources.value.filter(r => {
+
+    const searchMatch =
+      r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
+      r.tags?.join(' ').toLowerCase().includes(search.value.toLowerCase())
+
+    const cityMatch =
+      !selectedCity.value || r.city === selectedCity.value
+
+    return searchMatch && cityMatch
+
+  })
+
 })
+
 </script>
+
+
 
 <style scoped>
 
-.explore-wrapper {
-  padding: 120px 40px 140px;
-  max-width: 1200px;
-  margin: 0 auto;
+.explore-wrapper{
+padding:140px 40px;
+max-width:1200px;
+margin:auto;
 }
 
-.explore-header {
-  margin-bottom: 40px;
+
+/* HEADER */
+
+.explore-header{
+margin-bottom:40px;
 }
 
-.explore-header h1 {
-  font-size: 42px;
-  margin-bottom: 20px;
+.explore-header h1{
+font-size:42px;
+margin-bottom:20px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 16px;
-  border: 1px solid #ddd;
-  font-size: 14px;
+.search-input{
+width:100%;
+padding:16px;
+border:1px solid #ddd;
+font-size:14px;
 }
 
-.category-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 60px;
-  flex-wrap: wrap;
+
+/* CATEGORY */
+
+.category-row{
+display:flex;
+gap:20px;
+margin-bottom:60px;
+flex-wrap:wrap;
 }
 
-.category-pill {
-  padding: 10px 18px;
-  border: 1px solid black;
-  text-decoration: none;
-  font-size: 12px;
-  letter-spacing: 2px;
+.category-pill{
+padding:10px 18px;
+border:1px solid black;
+text-decoration:none;
+font-size:12px;
+letter-spacing:2px;
+transition:.2s;
 }
 
-.resources-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
+.category-pill:hover{
+background:black;
+color:white;
 }
 
-.resource-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+
+/* MAP */
+
+.map-section{
+margin-bottom:100px;
 }
 
-.resource-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.map-header{
+font-size:12px;
+letter-spacing:6px;
+text-transform:uppercase;
+margin-bottom:20px;
+opacity:.6;
 }
 
-.resource-content {
-  padding: 30px;
+.map-filter{
+margin-top:10px;
+font-size:12px;
+opacity:.6;
 }
 
-.tag-row {
-  margin: 15px 0;
+
+/* GRID */
+
+.resources-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:40px;
 }
 
-.tag {
-  display: inline-block;
-  font-size: 11px;
-  margin-right: 8px;
-  opacity: 0.6;
+.resource-card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 20px 40px rgba(0,0,0,0.05);
 }
 
-.resource-btn {
-  display: inline-block;
-  padding: 12px 22px;
-  background: black;
-  color: white;
-  text-decoration: none;
-  font-size: 12px;
-  letter-spacing: 2px;
+.resource-image{
+width:100%;
+height:200px;
+object-fit:cover;
 }
 
-@media (max-width: 768px) {
-  .explore-wrapper {
-    padding: 100px 20px 140px;
-  }
+.resource-content{
+padding:30px;
+}
+
+.description{
+opacity:.7;
+line-height:1.6;
+}
+
+.tag-row{
+margin:15px 0;
+}
+
+.tag{
+display:inline-block;
+font-size:11px;
+margin-right:8px;
+opacity:.6;
+}
+
+.resource-btn{
+display:inline-block;
+padding:12px 22px;
+background:black;
+color:white;
+text-decoration:none;
+font-size:12px;
+letter-spacing:2px;
+}
+
+.resource-btn:hover{
+background:#A8985F;
+}
+
+
+@media(max-width:768px){
+
+.explore-wrapper{
+padding:100px 20px 140px;
+}
+
 }
 
 </style>
