@@ -15,7 +15,7 @@ Loading your account...
 <div class="header-left">
 
 <h1 class="greeting">
-Hi, {{ member?.name ? member.name : 'Member' }}
+Hi, {{ firstName }}
 </h1>
 
 <p class="welcome">
@@ -53,7 +53,17 @@ Edit Profile
 
 <div v-else class="avatar-placeholder"></div>
 
-<input type="file" @change="uploadAvatar" />
+<label class="upload-btn">
+
+Upload Photo
+
+<input
+type="file"
+@change="uploadAvatar"
+hidden
+/>
+
+</label>
 
 </div>
 
@@ -277,6 +287,10 @@ const industry = ref('')
 
 const savedResources = ref([])
 const upcomingEvents = ref([])
+const firstName = computed(() => {
+  if (!member.value?.name) return 'Member'
+  return member.value.name.split(' ')[0]
+})
 
 onMounted(async () => {
 
@@ -659,5 +673,38 @@ gap:6px;
 font-size:16px;
 opacity:.6;
 }
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
 
+.upload-btn{
+
+margin-top:12px;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+background:rgba(255,255,255,0.6);
+
+border:1px solid rgba(0,0,0,0.1);
+
+font-size:12px;
+
+cursor:pointer;
+
+transition:all .25s ease;
+
+}
+
+.upload-btn:hover{
+
+background:white;
+
+transform:translateY(-1px);
+
+}
 </style>
