@@ -198,6 +198,20 @@ const searchResults = ref([])
 
 onMounted(async () => {
 
+const { data:{ session } } = await supabase.auth.getSession()
+
+if(session){
+
+const { data: memberData } = await supabase
+.from('members')
+.select('*')
+.eq('id', session.user.id)
+.single()
+
+member.value = memberData
+
+}
+
 const { data } = await supabase
 .from('resources')
 .select('*')

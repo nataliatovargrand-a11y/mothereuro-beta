@@ -83,14 +83,21 @@ const saveResource = async (resourceId) => {
 
 const { data:{ session } } = await supabase.auth.getSession()
 
-if(!session) return
+if(!session){
+alert("Please login first")
+return
+}
 
-await supabase
+const { error } = await supabase
 .from('saved_resources')
 .insert({
-user_id: session.user.id,
+member_id: session.user.id,
 resource_id: resourceId
 })
+
+if(!error){
+alert("Saved to your account")
+}
 
 }
 
