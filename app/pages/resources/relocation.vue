@@ -2,19 +2,22 @@
 
 <div class="library-wrapper">
 
+<!-- HERO -->
+
 <div class="library-hero">
+
 <h1>Relocation Library</h1>
 
 <p>
-A curated guide for women preparing to move to Europe.
-Explore resources designed to help you confidently plan your relocation.
+A curated guide for aspiring members preparing to move to Europe.
+These guides help you navigate relocation, culture, healthcare,
+schools and building a life abroad.
 </p>
+
 </div>
 
 
-<div class="library-section">
-
-<h2>Relocation Guides</h2>
+<!-- RESOURCE GRID -->
 
 <div class="resource-grid">
 
@@ -28,6 +31,8 @@ class="resource-card"
 
 <p>{{ resource.description }}</p>
 
+<div class="resource-actions">
+
 <a
 :href="resource.link_url"
 target="_blank"
@@ -35,6 +40,13 @@ class="resource-btn"
 >
 Open Guide
 </a>
+
+<button
+@click="saveResource(resource.id)"
+class="save-btn"
+>
+Save
+</button>
 
 </div>
 
@@ -66,6 +78,22 @@ resources.value = data || []
 
 })
 
+
+const saveResource = async (resourceId) => {
+
+const { data:{ session } } = await supabase.auth.getSession()
+
+if(!session) return
+
+await supabase
+.from('saved_resources')
+.insert({
+user_id: session.user.id,
+resource_id: resourceId
+})
+
+}
+
 </script>
 
 
@@ -76,6 +104,7 @@ max-width:1100px;
 margin:auto;
 padding:140px 40px;
 }
+
 
 .library-hero{
 max-width:650px;
@@ -93,9 +122,9 @@ opacity:.7;
 line-height:1.6;
 }
 
-.library-section{
-margin-bottom:70px;
-}
+
+
+/* GRID */
 
 .resource-grid{
 display:grid;
@@ -103,24 +132,53 @@ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:28px;
 }
 
+
+
+/* CARD */
+
 .resource-card{
+
 background:rgba(255,255,255,0.35);
+
 backdrop-filter:blur(18px);
-border-radius:16px;
+
+border-radius:18px;
+
 padding:28px;
+
 border:1px solid rgba(255,255,255,0.4);
+
 box-shadow:0 10px 30px rgba(0,0,0,0.05);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
 }
+
 
 .resource-card h3{
 margin-bottom:10px;
+font-size:20px;
 }
 
 .resource-card p{
 font-size:14px;
 opacity:.7;
-margin-bottom:16px;
+margin-bottom:20px;
 }
+
+
+
+/* BUTTONS */
+
+.resource-actions{
+display:flex;
+gap:10px;
+}
+
 
 .resource-btn{
 display:inline-block;
@@ -130,6 +188,28 @@ padding:10px 18px;
 text-decoration:none;
 font-size:12px;
 letter-spacing:1px;
+border-radius:8px;
+}
+
+
+.save-btn{
+
+padding:10px 18px;
+
+border-radius:8px;
+
+border:1px solid rgba(0,0,0,0.1);
+
+background:rgba(255,255,255,0.6);
+
+cursor:pointer;
+
+font-size:12px;
+
+}
+
+.save-btn:hover{
+background:white;
 }
 
 </style>

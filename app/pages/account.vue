@@ -160,7 +160,22 @@ Cancel
 
 </div>
 
+<div v-if="member?.membership_tier === 'aspiring'" class="card">
 
+<h2>Relocation Resources</h2>
+
+<p>
+Explore the relocation guides designed to help you plan your move to Europe.
+</p>
+
+<NuxtLink
+to="/resources/relocation"
+class="resource-btn"
+>
+Open Relocation Library
+</NuxtLink>
+
+</div>
 <!-- SAVED RESOURCES -->
 
 <div class="card">

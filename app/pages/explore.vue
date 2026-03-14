@@ -96,6 +96,11 @@ v-if="member?.membership_tier === 'aspiring'"
 to="/resources/relocation"
 class="category-card relocation"
 >
+<NuxtLink
+v-if="member?.membership_tier === 'aspiring'"
+to="/resources/relocation"
+class="category-card relocation"
+>
 <span>Relocation</span>
 </NuxtLink>
 
@@ -482,5 +487,7 @@ text-decoration:none;
 font-size:12px;
 letter-spacing:2px;
 }
-
+ .relocation{
+background-image:url('/images/travel.jpg');
+}
 </style>
