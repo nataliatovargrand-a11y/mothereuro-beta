@@ -310,7 +310,6 @@ Partner privileges
 </template>
 
 
-
 <script setup>
 
 import { ref, computed, onMounted } from 'vue'
@@ -360,12 +359,9 @@ name.value = data?.name
 city.value = data?.city
 industry.value = data?.industry
 
-
 const { data: saved } = await supabase
 .from('saved_resources')
-.select(`
-resources (*)
-`)
+.select(`resources (*)`)
 .eq('member_id', user.value.id)
 
 savedResources.value = saved?.map(s => s.resources) || []
@@ -387,7 +383,6 @@ savedResources.value =
 savedResources.value.filter(r=>r.id!==id)
 
 }
-
 
 const startEdit = ()=> editing.value=true
 const cancelEdit = ()=> editing.value=false
@@ -446,7 +441,6 @@ return new Date(d).toLocaleDateString()
 </script>
 
 
-
 <style scoped>
 
 .account-wrapper{
@@ -467,6 +461,13 @@ font-size:42px;
 font-weight:500;
 }
 
+.welcome{
+font-size:16px;
+opacity:.6;
+}
+
+/* GLASS CARD */
+
 .card{
 background: rgba(255,255,255,0.35);
 backdrop-filter: blur(18px);
@@ -478,6 +479,8 @@ box-shadow:
 0 8px 24px rgba(0,0,0,0.06),
 inset 0 1px 0 rgba(255,255,255,0.6);
 }
+
+/* PROFILE */
 
 .profile-card{
 display:flex;
@@ -491,6 +494,8 @@ border-radius:50%;
 object-fit:cover;
 }
 
+/* GRID */
+
 .profile-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -503,6 +508,100 @@ letter-spacing:2px;
 opacity:.6;
 text-transform:uppercase;
 }
+
+span{
+display:block;
+margin-top:4px;
+font-size:15px;
+}
+
+/* BUTTONS */
+
+.logout-btn,
+.edit-btn,
+.cancel-btn{
+
+background:rgba(255,255,255,0.55);
+
+border:1px solid rgba(0,0,0,0.08);
+
+padding:10px 18px;
+
+border-radius:12px;
+
+font-size:12px;
+
+letter-spacing:.5px;
+
+cursor:pointer;
+
+transition:all .25s ease;
+
+backdrop-filter:blur(6px);
+
+}
+
+.logout-btn:hover,
+.edit-btn:hover,
+.cancel-btn:hover{
+
+background:rgba(255,255,255,0.85);
+
+transform:translateY(-1px);
+
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+}
+
+.save-btn{
+
+background:black;
+
+color:white;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+}
+
+.save-btn:hover{
+
+transform:translateY(-1px);
+
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+
+}
+
+/* FILE UPLOAD */
+
+.upload-btn{
+
+margin-top:12px;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+background:rgba(255,255,255,0.6);
+
+border:1px solid rgba(0,0,0,0.1);
+
+font-size:12px;
+
+cursor:pointer;
+
+}
+
+.upload-btn:hover{
+background:white;
+}
+
+/* SAVED RESOURCES */
 
 .resource-card{
 border-top:1px solid rgba(0,0,0,0.05);
@@ -527,7 +626,7 @@ color:#c33;
 cursor:pointer;
 }
 
-/* RELOCATION FEATURE */
+/* RELOCATION */
 
 .relocation-content{
 display:flex;
@@ -552,7 +651,6 @@ background:#A8985F;
 color:white;
 text-decoration:none;
 font-size:13px;
-transition:.25s;
 }
 
 .relocation-btn:hover{
