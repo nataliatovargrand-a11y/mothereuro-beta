@@ -1,164 +1,191 @@
 <template>
-  <div class="explore-wrapper">
 
-    <!-- HERO -->
+<div class="explore-wrapper">
 
-    <div class="explore-hero">
+<!-- HERO -->
 
-      <h1>Explore</h1>
+<div class="explore-hero">
 
-      <p class="hero-subtitle">
-        Curated beauty, travel, gastronomy, wellness and education discoveries across Europe for women building abroad.
-      </p>
+<h1>Explore</h1>
 
-      <div class="search-wrapper">
+<p class="hero-subtitle">
+Curated beauty, travel, gastronomy, wellness and education discoveries across Europe for women building abroad.
+</p>
 
-        <div class="search-icon">🔍</div>
+<div class="search-elevated">
 
-        <input
-          v-model="search"
-          @input="searchPlatform"
-          type="text"
-          placeholder="Search members, resources, partners..."
-          class="search-input"
-        />
+<input
+v-model="search"
+@input="searchPlatform"
+type="text"
+placeholder="Search by keyword..."
+class="search-minimal"
+/>
 
-      </div>
+</div>
 
-    </div>
-
-
-    <!-- MAP -->
-
-    <div class="map-section">
-
-      <div class="section-title">
-        Discover Europe
-      </div>
-
-      <ExploreMap
-        :resources="resources"
-        @citySelected="selectedCity = $event"
-      />
-
-    </div>
+</div>
 
 
-    <!-- CATEGORY CARDS -->
 
-    <div class="category-section">
+<!-- SEARCH RESULTS -->
 
-      <NuxtLink to="/resources/beauty" class="category-card beauty">
-        <span>Beauty</span>
-      </NuxtLink>
+<div v-if="searchResults.length" class="search-results">
 
-      <NuxtLink to="/resources/travel" class="category-card travel">
-        <span>Travel</span>
-      </NuxtLink>
+<div
+v-for="result in searchResults"
+:key="result.id"
+class="search-result"
+>
 
-      <NuxtLink to="/resources/gastronomy" class="category-card gastronomy">
-        <span>Gastronomy</span>
-      </NuxtLink>
+<strong>{{ result.title || result.name }}</strong>
 
-      <NuxtLink to="/resources/wellness" class="category-card wellness">
-        <span>Wellness</span>
-      </NuxtLink>
+<span class="result-type">
+{{ result.type }}
+</span>
 
-      <NuxtLink to="/resources/education" class="category-card education">
-        <span>Education</span>
-      </NuxtLink>
+</div>
 
-      <NuxtLink
-        v-if="member?.membership_tier === 'aspiring'"
-        to="/resources/relocation"
-        class="category-card relocation"
-      >
-        <span>Relocation</span>
-      </NuxtLink>
-
-    </div>
+</div>
 
 
-    <!-- FEATURED -->
 
-    <div class="featured-section">
+<!-- MAP -->
 
-      <h2>Editor's Picks</h2>
+<div class="map-section">
 
-      <div class="featured-grid">
+<div class="section-title">
+Discover Europe
+</div>
 
-        <div
-          v-for="resource in featuredResources"
-          :key="resource.id"
-          class="featured-card"
-        >
+<ExploreMap
+:resources="resources"
+@citySelected="selectedCity = $event"
+/>
 
-          <img
-            :src="resource.image_url"
-            class="featured-image"
-          />
-
-          <div class="featured-info">
-
-            <h3>{{ resource.title }}</h3>
-
-            <p>{{ resource.description }}</p>
-
-            <a
-              :href="resource.link_url"
-              target="_blank"
-              class="resource-btn"
-            >
-              View Resource
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
+</div>
 
 
-    <!-- RESOURCES -->
 
-    <div class="resources-grid">
+<!-- CATEGORY CARDS -->
 
-      <div
-        v-for="resource in filteredResources"
-        :key="resource.id"
-        class="resource-card"
-      >
+<div class="category-section">
 
-        <img
-          v-if="resource.image_url"
-          :src="resource.image_url"
-          class="resource-image"
-        />
+<NuxtLink to="/resources/beauty" class="category-card beauty">
+<span>Beauty</span>
+</NuxtLink>
 
-        <div class="resource-content">
+<NuxtLink to="/resources/travel" class="category-card travel">
+<span>Travel</span>
+</NuxtLink>
 
-          <h3>{{ resource.title }}</h3>
+<NuxtLink to="/resources/gastronomy" class="category-card gastronomy">
+<span>Gastronomy</span>
+</NuxtLink>
 
-          <p>{{ resource.description }}</p>
+<NuxtLink to="/resources/wellness" class="category-card wellness">
+<span>Wellness</span>
+</NuxtLink>
 
-          <a
-            :href="resource.link_url"
-            target="_blank"
-            class="resource-btn"
-          >
-            View Resource
-          </a>
+<NuxtLink to="/resources/education" class="category-card education">
+<span>Education</span>
+</NuxtLink>
 
-        </div>
+<NuxtLink
+v-if="member?.membership_tier === 'aspiring'"
+to="/resources/relocation"
+class="category-card relocation"
+>
+<span>Relocation</span>
+</NuxtLink>
 
-      </div>
+</div>
 
-    </div>
 
-  </div>
+
+<!-- EDITOR PICKS -->
+
+<div class="featured-section">
+
+<h2>Editor's Picks</h2>
+
+<div class="featured-grid">
+
+<div
+v-for="resource in featuredResources"
+:key="resource.id"
+class="featured-card"
+>
+
+<img
+:src="resource.image_url"
+class="featured-image"
+/>
+
+<div class="featured-info">
+
+<h3>{{ resource.title }}</h3>
+
+<p>{{ resource.description }}</p>
+
+<a
+:href="resource.link_url"
+target="_blank"
+class="resource-btn"
+>
+View Resource
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RESOURCE GRID -->
+
+<div class="resources-grid">
+
+<div
+v-for="resource in filteredResources"
+:key="resource.id"
+class="resource-card"
+>
+
+<img
+v-if="resource.image_url"
+:src="resource.image_url"
+class="resource-image"
+/>
+
+<div class="resource-content">
+
+<h3>{{ resource.title }}</h3>
+
+<p>{{ resource.description }}</p>
+
+<a
+:href="resource.link_url"
+target="_blank"
+class="resource-btn"
+>
+View Resource
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </template>
+
 
 
 <script setup>
@@ -171,48 +198,83 @@ const resources = ref([])
 const search = ref('')
 const selectedCity = ref(null)
 const member = ref(null)
+const searchResults = ref([])
 
 
 
 onMounted(async () => {
 
-  const { data } = await supabase
-    .from('resources')
-    .select('*')
-    .eq('active', true)
+const { data } = await supabase
+.from('resources')
+.select('*')
+.eq('active', true)
 
-  resources.value = data || []
+resources.value = data || []
 
 })
 
 
 
 const featuredResources = computed(() =>
-  resources.value.filter(r => r.is_featured)
+resources.value.filter(r => r.is_featured)
 )
 
 
 
 const filteredResources = computed(() => {
 
-  return resources.value.filter(r => {
+return resources.value.filter(r => {
 
-    const cityMatch =
-      !selectedCity.value || r.city === selectedCity.value
+const cityMatch =
+!selectedCity.value || r.city === selectedCity.value
 
-    const searchMatch =
-      !search.value ||
-      r.title?.toLowerCase().includes(search.value.toLowerCase())
+const searchMatch =
+!search.value ||
+r.title?.toLowerCase().includes(search.value.toLowerCase())
 
-    return cityMatch && searchMatch
+const relocationGate =
+r.category !== 'relocation' ||
+member.value?.membership_tier === 'aspiring'
 
-  })
+return cityMatch && searchMatch && relocationGate
+
+})
 
 })
 
 
 
-const searchPlatform = () => {}
+const searchPlatform = async () => {
+
+if(!search.value){
+searchResults.value = []
+return
+}
+
+const { data: resourcesData } = await supabase
+.from('resources')
+.select('*')
+.ilike('title', `%${search.value}%`)
+
+const { data: partnersData } = await supabase
+.from('partners')
+.select('*')
+.ilike('name', `%${search.value}%`)
+
+const { data: membersData } = await supabase
+.from('members')
+.select('*')
+.ilike('name', `%${search.value}%`)
+
+searchResults.value = [
+
+...(resourcesData || []).map(r => ({...r,type:'Resource'})),
+...(partnersData || []).map(p => ({...p,type:'Partner'})),
+...(membersData || []).map(m => ({...m,type:'Member'}))
+
+]
+
+}
 
 </script>
 
@@ -231,7 +293,7 @@ margin:auto;
 /* HERO */
 
 .explore-hero{
-margin-bottom:80px;
+margin-bottom:70px;
 max-width:700px;
 }
 
@@ -239,33 +301,55 @@ max-width:700px;
 font-size:18px;
 opacity:.7;
 line-height:1.6;
-margin-bottom:30px;
+margin-bottom:40px;
 }
 
 
 
-/* SEARCH */
+/* LUXURY SEARCH */
 
-.search-wrapper{
-position:relative;
-max-width:720px;
+.search-elevated{
+max-width:680px;
 }
 
-.search-icon{
-position:absolute;
-left:18px;
-top:50%;
-transform:translateY(-50%);
-opacity:.5;
-}
-
-.search-input{
+.search-minimal{
 width:100%;
-padding:18px 18px 18px 46px;
-border-radius:12px;
-border:1px solid rgba(0,0,0,0.1);
-font-size:16px;
-background:white;
+border:none;
+border-bottom:1px solid rgba(0,0,0,0.2);
+background:transparent;
+font-size:18px;
+padding:16px 0;
+letter-spacing:.4px;
+}
+
+.search-minimal::placeholder{
+color:rgba(0,0,0,0.4);
+}
+
+.search-minimal:focus{
+outline:none;
+border-bottom:1px solid #A8985F;
+}
+
+
+
+/* SEARCH RESULTS */
+
+.search-results{
+margin-bottom:60px;
+max-width:680px;
+}
+
+.search-result{
+padding:10px 0;
+border-bottom:1px solid rgba(0,0,0,0.08);
+display:flex;
+justify-content:space-between;
+}
+
+.result-type{
+font-size:12px;
+opacity:.5;
 }
 
 
@@ -321,7 +405,7 @@ z-index:2;
 
 
 
-/* FIXED IMAGE PATHS */
+/* IMAGES */
 
 .beauty{background-image:url('/images/beauty.jpg')}
 .travel{background-image:url('/images/travel.jpg')}
@@ -333,6 +417,10 @@ z-index:2;
 
 
 /* FEATURED */
+
+.featured-section{
+margin-bottom:90px;
+}
 
 .featured-grid{
 display:grid;
@@ -359,7 +447,7 @@ padding:24px;
 
 
 
-/* RESOURCES */
+/* RESOURCE GRID */
 
 .resources-grid{
 display:grid;
