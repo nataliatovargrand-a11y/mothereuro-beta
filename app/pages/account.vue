@@ -2,7 +2,7 @@
 
 <div class="account-wrapper">
 
-<!-- LOADING STATE -->
+<!-- LOADING -->
 
 <div v-if="loading" class="loading">
 Loading your account...
@@ -28,13 +28,78 @@ Log Out
 
 </div>
 
+<!-- DASHBOARD -->
 
+<div class="dashboard">
+
+<div class="dashboard-card">
+
+<div class="dashboard-label">
+Membership
+</div>
+
+<div class="dashboard-value">
+{{ member?.membership_tier }}
+</div>
+
+</div>
+
+
+<div class="dashboard-card">
+
+<div class="dashboard-label">
+Renewal
+</div>
+
+<div class="dashboard-value">
+{{ member?.renewal_date || '—' }}
+</div>
+
+</div>
+
+
+<div class="dashboard-card">
+
+<div class="dashboard-label">
+Events Remaining
+</div>
+
+<div class="dashboard-value">
+{{ remainingEvents }}
+</div>
+
+</div>
+
+
+<div class="dashboard-card">
+
+<div class="dashboard-label">
+Saved Resources
+</div>
+
+<div class="dashboard-value">
+{{ savedResources.length }}
+</div>
+
+</div>
+
+</div>
 
 <!-- PROFILE -->
 
 <div class="section">
 
+<div class="section-header">
 <h2>Profile</h2>
+
+<button
+v-if="!editing"
+class="edit-btn"
+@click="startEdit"
+>
+Edit Profile
+</button>
+</div>
 
 <div class="profile-card">
 
@@ -58,7 +123,11 @@ class="file-input"
 
 <div class="profile-info">
 
-<div><strong>Name:</strong> {{ member?.name }}</div>
+<!-- VIEW MODE -->
+
+<div v-if="!editing">
+
+<div><strong>Name:</strong> {{ member?.name || '—' }}</div>
 <div><strong>Email:</strong> {{ member?.email }}</div>
 <div><strong>Membership:</strong> {{ member?.membership_tier }}</div>
 <div><strong>Renewal date:</strong> {{ member?.renewal_date || '—' }}</div>
@@ -67,10 +136,36 @@ class="file-input"
 
 </div>
 
+
+<!-- EDIT MODE -->
+
+<div v-else class="edit-fields">
+
+<input v-model="name" placeholder="Name" />
+
+<input v-model="city" placeholder="City" />
+
+<input v-model="industry" placeholder="Industry" />
+
+<div class="edit-actions">
+
+<button class="save-btn" @click="saveProfile">
+Save
+</button>
+
+<button class="cancel-btn" @click="cancelEdit">
+Cancel
+</button>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
+
+</div>
 
 
 <!-- MEMBERSHIP -->
@@ -173,7 +268,48 @@ class="event-card"
 
 </div>
 
+<!-- SAVED RESOURCES -->
 
+<div class="section">
+
+<h2>Saved Resources</h2>
+
+<div v-if="savedResources.length === 0" class="empty">
+You haven't saved any resources yet.
+</div>
+
+<div class="resources-grid">
+
+<div
+v-for="resource in savedResources"
+:key="resource.id"
+class="resource-card"
+>
+
+<img
+:src="resource.image_url"
+class="resource-image"
+/>
+
+<div class="resource-info">
+
+<h3>{{ resource.title }}</h3>
+
+<a
+:href="resource.link_url"
+target="_blank"
+class="resource-btn"
+>
+View Resource
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <!-- BENEFITS -->
 
@@ -206,8 +342,8 @@ class="event-card"
 
 </div>
 
-</div>
 
+</div>
 </div>
 
 </template>
@@ -224,62 +360,103 @@ const router = useRouter()
 
 const member = ref(null)
 const user = ref(null)
+
 const loading = ref(true)
+const editing = ref(false)
+
+const name = ref('')
+const city = ref('')
+const industry = ref('')
 
 const upcomingEvents = ref([])
 const pastEvents = ref([])
 const remainingEvents = ref(4)
+const savedResources = ref([])
 
 
 
 onMounted(async () => {
 
-  // Check auth session
+const { data:{ session } } = await supabase.auth.getSession()
 
-  const { data: { session } } = await supabase.auth.getSession()
+if(!session){
+router.push('/login')
+return
+}
 
-  if (!session) {
-    router.push('/login')
-    return
-  }
+user.value = session.user
 
-  user.value = session.user
+const { data, error } = await supabase
+.from('members')
+.select('*')
+.eq('id', user.value.id)
+.single()
 
-  // Load member profile
+if(error){
+console.error(error)
+}
 
-  const { data: memberData, error } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', user.value.id)
-    .single()
+member.value = data
 
-  if (error) {
-    console.error('Member fetch error:', error)
-  }
+name.value = data?.name
+city.value = data?.city
+industry.value = data?.industry
 
-  member.value = memberData
-
-  loading.value = false
+loading.value = false
 
 })
 
+const { data: saved } = await supabase
+.from('saved_resources')
+.select(`
+resource_id,
+resources (*)
+`)
+.eq('member_id', user.value.id)
 
+savedResources.value = saved?.map(r => r.resources) || []
 
-const logout = async () => {
+const startEdit = () => {
 
-  await supabase.auth.signOut()
+editing.value = true
 
-  router.push('/login')
+name.value = member.value?.name
+city.value = member.value?.city
+industry.value = member.value?.industry
 
 }
 
 
 
-const formatDate = (date) => {
+const cancelEdit = () => {
 
-  if (!date) return ''
+editing.value = false
 
-  return new Date(date).toLocaleDateString()
+}
+
+
+
+const saveProfile = async () => {
+
+const { error } = await supabase
+.from('members')
+.update({
+name: name.value,
+city: city.value,
+industry: industry.value
+})
+.eq('id', user.value.id)
+
+if(error){
+console.error(error)
+return
+}
+
+member.value.name = name.value
+member.value.city = city.value
+member.value.industry = industry.value
+
+editing.value = false
 
 }
 
@@ -287,33 +464,51 @@ const formatDate = (date) => {
 
 const uploadAvatar = async (event) => {
 
-  const file = event.target.files[0]
+const file = event.target.files[0]
 
-  if (!file) return
+if(!file) return
 
-  const filePath = `${user.value.id}/${file.name}`
+const filePath = `${user.value.id}/${file.name}`
 
-  const { error } = await supabase.storage
-    .from('avatars')
-    .upload(filePath, file, { upsert: true })
+const { error } = await supabase.storage
+.from('avatars')
+.upload(filePath,file,{ upsert:true })
 
-  if (error) {
-    console.error(error)
-    return
-  }
+if(error){
+console.error(error)
+return
+}
 
-  const { data } = supabase.storage
-    .from('avatars')
-    .getPublicUrl(filePath)
+const { data } = supabase.storage
+.from('avatars')
+.getPublicUrl(filePath)
 
-  const avatarUrl = data.publicUrl
+await supabase
+.from('members')
+.update({ avatar_url:data.publicUrl })
+.eq('id',user.value.id)
 
-  await supabase
-    .from('members')
-    .update({ avatar_url: avatarUrl })
-    .eq('id', user.value.id)
+member.value.avatar_url = data.publicUrl
 
-  member.value.avatar_url = avatarUrl
+}
+
+
+
+const logout = async () => {
+
+await supabase.auth.signOut()
+
+router.push('/login')
+
+}
+
+
+
+const formatDate = (date) => {
+
+if(!date) return ''
+
+return new Date(date).toLocaleDateString()
 
 }
 
@@ -361,10 +556,26 @@ letter-spacing:2px;
 margin-bottom:70px;
 }
 
+.section-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.edit-btn{
+border:1px solid black;
+padding:8px 14px;
+background:white;
+cursor:pointer;
+font-size:12px;
+letter-spacing:2px;
+}
+
 .profile-card{
 display:flex;
 gap:40px;
-align-items:center;
+align-items:flex-start;
 }
 
 .avatar{
@@ -389,6 +600,32 @@ margin-top:10px;
 display:flex;
 flex-direction:column;
 gap:8px;
+}
+
+.edit-fields input{
+padding:10px;
+border:1px solid #ddd;
+margin-bottom:10px;
+}
+
+.edit-actions{
+display:flex;
+gap:10px;
+}
+
+.save-btn{
+background:black;
+color:white;
+padding:10px 14px;
+border:none;
+cursor:pointer;
+}
+
+.cancel-btn{
+border:1px solid black;
+background:white;
+padding:10px 14px;
+cursor:pointer;
 }
 
 .membership-card{
@@ -448,6 +685,66 @@ line-height:1.7;
 .empty{
 opacity:.5;
 font-size:14px;
+}
+.dashboard{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+margin-bottom:60px;
+}
+
+.dashboard-card{
+background:white;
+border:1px solid rgba(0,0,0,0.06);
+border-radius:12px;
+padding:20px;
+}
+
+.dashboard-label{
+font-size:11px;
+letter-spacing:2px;
+opacity:.6;
+text-transform:uppercase;
+margin-bottom:6px;
+}
+
+.dashboard-value{
+font-size:20px;
+font-weight:500;
+}
+
+.resources-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:24px;
+}
+
+.resource-card{
+border:1px solid rgba(0,0,0,0.06);
+border-radius:10px;
+overflow:hidden;
+background:white;
+}
+
+.resource-image{
+width:100%;
+height:140px;
+object-fit:cover;
+}
+
+.resource-info{
+padding:16px;
+}
+
+.resource-btn{
+display:inline-block;
+margin-top:10px;
+padding:8px 14px;
+background:black;
+color:white;
+font-size:11px;
+letter-spacing:2px;
+text-decoration:none;
 }
 
 </style>
