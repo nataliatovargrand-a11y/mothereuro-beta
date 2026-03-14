@@ -400,6 +400,13 @@ padding:140px 40px;
 max-width:900px;
 margin:auto;
 }
+body{
+background:linear-gradient(
+180deg,
+#f5efe7,
+#f2ebe2
+);
+}
 
 /* HEADER */
 
@@ -418,15 +425,21 @@ font-weight:500;
 /* GLASS CARD */
 
 .card{
-background:rgba(255,255,255,0.6);
-backdrop-filter: blur(14px);
--webkit-backdrop-filter: blur(14px);
-border:1px solid rgba(255,255,255,0.4);
-border-radius:16px;
-padding:32px;
+background: rgba(255,255,255,0.35);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+
+border: 1px solid rgba(255,255,255,0.55);
+
+border-radius:18px;
+
+padding:36px;
+
 margin-bottom:40px;
+
 box-shadow:
-0 10px 30px rgba(0,0,0,0.05);
+0 8px 24px rgba(0,0,0,0.06),
+inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 /* PROFILE */
@@ -445,10 +458,11 @@ object-fit:cover;
 }
 
 .avatar-placeholder{
-width:120px;
-height:120px;
-border-radius:50%;
-background:#eee;
+background:linear-gradient(
+135deg,
+rgba(255,255,255,0.6),
+rgba(255,255,255,0.2)
+);
 }
 
 /* GRID */
@@ -478,50 +492,82 @@ font-size:15px;
 .edit-btn,
 .save-btn,
 .cancel-btn{
-border-radius:8px;
+
+border-radius:10px;
+
 padding:10px 18px;
+
 font-size:12px;
-letter-spacing:1px;
+
+letter-spacing:.5px;
+
 cursor:pointer;
+
 transition:all .25s ease;
+
+backdrop-filter:blur(6px);
+
 }
 
-/* PRIMARY BUTTON */
-
-.save-btn{
-background:black;
-color:white;
-border:none;
-}
-
-.save-btn:hover{
-transform:translateY(-1px);
-box-shadow:0 6px 16px rgba(0,0,0,0.15);
-}
-
-/* SECONDARY */
+/* secondary */
 
 .logout-btn,
 .edit-btn,
 .cancel-btn{
-background:rgba(255,255,255,0.6);
-border:1px solid rgba(0,0,0,0.15);
+
+background:rgba(255,255,255,0.5);
+
+border:1px solid rgba(0,0,0,0.08);
+
 }
+
+/* hover */
 
 .logout-btn:hover,
 .edit-btn:hover,
 .cancel-btn:hover{
-background:white;
+
+background:rgba(255,255,255,0.8);
+
+transform:translateY(-1px);
+
 }
 
+/* primary */
+
+.save-btn{
+
+background:black;
+
+color:white;
+
+border:none;
+
+}
+
+.save-btn:hover{
+
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+
+transform:translateY(-1px);
+
+}
 /* FILE INPUT */
 
 .file-input{
+
 margin-top:12px;
+
 font-size:12px;
-padding:6px;
-border-radius:6px;
-background:rgba(255,255,255,0.5);
+
+padding:6px 10px;
+
+border-radius:8px;
+
+background:rgba(255,255,255,0.45);
+
+border:1px solid rgba(0,0,0,0.05);
+
 }
 
 /* EDIT FORM */
