@@ -216,28 +216,26 @@ const user = ref(null)
 
 onMounted(async () => {
 
-  // Get logged in user
-  const { data: authData } = await supabase.auth.getUser()
+  const { data: { session } } = await supabase.auth.getSession()
 
-  user.value = authData.user
-
-  if (!user.value) {
+  if (!session) {
     router.push('/login')
     return
   }
 
-  // Load member profile
-  const { data, error } = await supabase
+  user.value = session.user
+
+  const { data: memberData, error } = await supabase
     .from('members')
     .select('*')
     .eq('id', user.value.id)
     .single()
 
   if (error) {
-    console.error('Member fetch error:', error)
+    console.error("Member fetch error:", error)
   }
 
-  member.value = data
+  member.value = memberData
 
 })
 

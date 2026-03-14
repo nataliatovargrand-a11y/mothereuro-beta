@@ -47,7 +47,7 @@ const login = async () => {
 
   error.value = null
 
-  const { error: loginError } = await supabase.auth.signInWithPassword({
+  const { data, error: loginError } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value
   })
@@ -57,7 +57,12 @@ const login = async () => {
     return
   }
 
-  router.push('/account')
+  // wait for session to exist
+  const { data: sessionData } = await supabase.auth.getSession()
+
+  if (sessionData.session) {
+    router.push('/account')
+  }
 
 }
 </script>
