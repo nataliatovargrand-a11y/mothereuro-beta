@@ -1,103 +1,138 @@
 <template>
-  <div class="explore-wrapper">
 
-    <!-- HEADER -->
+<div class="explore-wrapper">
 
-    <div class="explore-header">
-      <h1>Explore</h1>
+<!-- HERO -->
 
-      <input
-        v-model="search"
-        type="text"
-        placeholder="Search resources..."
-        class="search-input"
-      />
-    </div>
+<div class="explore-header">
 
+<h1>Explore</h1>
 
-    <!-- CATEGORY PILLS -->
+<p class="subtitle">
+Curated beauty, travel, gastronomy, wellness and education discoveries across Europe.
+</p>
 
-    <div class="category-row">
-      <NuxtLink
-        v-for="cat in categories"
-        :key="cat"
-        :to="`/resources/${cat.toLowerCase()}`"
-        class="category-pill"
-      >
-        {{ cat }}
-      </NuxtLink>
-    </div>
+<input
+v-model="search"
+@input="searchPlatform"
+type="text"
+placeholder="Search members, resources, partners..."
+class="search-input"
+/>
+
+</div>
 
 
-    <!-- EXPLORE MAP -->
 
-    <div class="map-section">
+<!-- MAP -->
 
-      <div class="map-header">
-        Discover Europe
-      </div>
+<div class="map-section">
 
-      <ExploreMap
-        @citySelected="selectedCity = $event"
-      />
+<div class="map-title">
+Discover Europe
+</div>
 
-      <div v-if="selectedCity" class="map-filter">
-        Showing resources in {{ selectedCity }}
-      </div>
+<ExploreMap
+:resources="resources"
+@citySelected="selectedCity = $event"
+/>
 
-    </div>
+</div>
 
 
-    <!-- RESOURCES GRID -->
 
-    <div class="resources-grid">
+<!-- CATEGORY BUTTONS -->
 
-      <div
-        v-for="resource in filteredResources"
-        :key="resource.id"
-        class="resource-card"
-      >
+<div class="category-grid">
 
-        <img
-          v-if="resource.image_url"
-          :src="resource.image_url"
-          class="resource-image"
-        />
+<NuxtLink to="/resources/beauty" class="category-btn">
+Beauty
+</NuxtLink>
 
-        <div class="resource-content">
+<NuxtLink to="/resources/travel" class="category-btn">
+Travel
+</NuxtLink>
 
-          <h2>{{ resource.title }}</h2>
+<NuxtLink to="/resources/gastronomy" class="category-btn">
+Gastronomy
+</NuxtLink>
 
-          <p class="description">
-            {{ resource.description }}
-          </p>
+<NuxtLink to="/resources/wellness" class="category-btn">
+Wellness
+</NuxtLink>
 
-          <div class="tag-row">
-            <span
-              v-for="tag in resource.tags"
-              :key="tag"
-              class="tag"
-            >
-              {{ tag }}
-            </span>
-          </div>
+<NuxtLink to="/resources/education" class="category-btn">
+Education
+</NuxtLink>
 
-          <a
-            :href="resource.link_url"
-            target="_blank"
-            class="resource-btn"
-          >
-            View Resource
-          </a>
+</div>
 
-        </div>
 
-      </div>
 
-    </div>
+<!-- SEARCH RESULTS -->
 
-  </div>
+<div v-if="searchResults.length > 0" class="search-results">
+
+<h2>Search Results</h2>
+
+<div
+v-for="result in searchResults"
+:key="result.id"
+class="search-card"
+>
+
+<strong>{{ result.title || result.name }}</strong>
+
+<div class="result-type">
+{{ result.type }}
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RESOURCES -->
+
+<div class="resources-grid">
+
+<div
+v-for="resource in filteredResources"
+:key="resource.id"
+class="resource-card"
+>
+
+<img
+v-if="resource.image_url"
+:src="resource.image_url"
+class="resource-image"
+/>
+
+<div class="resource-content">
+
+<h3>{{ resource.title }}</h3>
+
+<p>{{ resource.description }}</p>
+
+<a
+:href="resource.link_url"
+target="_blank"
+class="resource-btn"
+>
+View Resource
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </template>
+
 
 
 <script setup>
@@ -108,44 +143,74 @@ import ExploreMap from '~/components/ExploreMap.vue'
 
 const resources = ref([])
 const search = ref('')
+const searchResults = ref([])
 const selectedCity = ref(null)
 
-const categories = [
-  'Beauty',
-  'Travel',
-  'Food',
-  'Wellness'
-]
+
 
 onMounted(async () => {
 
-  const { data } = await supabase
-    .from('resources')
-    .select('*')
-    .eq('active', true)
-    .eq('access_level', 'public')
+const { data } = await supabase
+.from('resources')
+.select('*')
+.eq('active', true)
 
-  resources.value = data || []
+resources.value = data || []
 
 })
+
 
 
 const filteredResources = computed(() => {
 
-  return resources.value.filter(r => {
+return resources.value.filter(r => {
 
-    const searchMatch =
-      r.title?.toLowerCase().includes(search.value.toLowerCase()) ||
-      r.tags?.join(' ').toLowerCase().includes(search.value.toLowerCase())
+const cityMatch =
+!selectedCity.value || r.city === selectedCity.value
 
-    const cityMatch =
-      !selectedCity.value || r.city === selectedCity.value
+const searchMatch =
+!search.value ||
+r.title?.toLowerCase().includes(search.value.toLowerCase())
 
-    return searchMatch && cityMatch
-
-  })
+return cityMatch && searchMatch
 
 })
+
+})
+
+
+
+const searchPlatform = async () => {
+
+if(!search.value){
+searchResults.value=[]
+return
+}
+
+const { data: resourcesData } = await supabase
+.from('resources')
+.select('*')
+.ilike('title', `%${search.value}%`)
+
+const { data: partnersData } = await supabase
+.from('partners')
+.select('*')
+.ilike('name', `%${search.value}%`)
+
+const { data: membersData } = await supabase
+.from('members')
+.select('*')
+.ilike('name', `%${search.value}%`)
+
+searchResults.value = [
+
+...(resourcesData || []).map(r => ({...r,type:'Resource'})),
+...(partnersData || []).map(p => ({...p,type:'Partner'})),
+...(membersData || []).map(m => ({...m,type:'Member'}))
+
+]
+
+}
 
 </script>
 
@@ -160,84 +225,71 @@ margin:auto;
 }
 
 
-/* HEADER */
 
 .explore-header{
-margin-bottom:40px;
+margin-bottom:50px;
 }
 
-.explore-header h1{
-font-size:42px;
+.subtitle{
 margin-bottom:20px;
+opacity:.7;
 }
 
 .search-input{
 width:100%;
 padding:16px;
 border:1px solid #ddd;
-font-size:14px;
 }
 
 
-/* CATEGORY */
-
-.category-row{
-display:flex;
-gap:20px;
-margin-bottom:60px;
-flex-wrap:wrap;
-}
-
-.category-pill{
-padding:10px 18px;
-border:1px solid black;
-text-decoration:none;
-font-size:12px;
-letter-spacing:2px;
-transition:.2s;
-}
-
-.category-pill:hover{
-background:black;
-color:white;
-}
-
-
-/* MAP */
 
 .map-section{
-margin-bottom:100px;
+margin:80px 0;
 }
 
-.map-header{
-font-size:12px;
+.map-title{
 letter-spacing:6px;
-text-transform:uppercase;
+font-size:12px;
 margin-bottom:20px;
 opacity:.6;
 }
 
-.map-filter{
-margin-top:10px;
-font-size:12px;
-opacity:.6;
+
+
+.category-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+margin-bottom:60px;
+}
+
+.category-btn{
+border:1px solid black;
+padding:26px;
+text-align:center;
+letter-spacing:4px;
+text-decoration:none;
+font-size:13px;
 }
 
 
-/* GRID */
 
 .resources-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:40px;
 }
 
+
+
 .resource-card{
 background:white;
-border-radius:20px;
+border-radius:16px;
 overflow:hidden;
-box-shadow:0 20px 40px rgba(0,0,0,0.05);
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
 }
+
+
 
 .resource-image{
 width:100%;
@@ -245,29 +297,18 @@ height:200px;
 object-fit:cover;
 }
 
+
+
 .resource-content{
-padding:30px;
+padding:20px;
 }
 
-.description{
-opacity:.7;
-line-height:1.6;
-}
 
-.tag-row{
-margin:15px 0;
-}
-
-.tag{
-display:inline-block;
-font-size:11px;
-margin-right:8px;
-opacity:.6;
-}
 
 .resource-btn{
 display:inline-block;
-padding:12px 22px;
+margin-top:10px;
+padding:10px 20px;
 background:black;
 color:white;
 text-decoration:none;
@@ -275,17 +316,22 @@ font-size:12px;
 letter-spacing:2px;
 }
 
-.resource-btn:hover{
-background:#A8985F;
+
+
+.search-results{
+margin-bottom:80px;
 }
 
 
-@media(max-width:768px){
 
-.explore-wrapper{
-padding:100px 20px 140px;
+.search-card{
+padding:16px;
+border-bottom:1px solid #eee;
 }
 
+.result-type{
+font-size:11px;
+opacity:.6;
 }
 
 </style>
