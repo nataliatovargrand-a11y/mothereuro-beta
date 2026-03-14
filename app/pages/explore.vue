@@ -12,6 +12,12 @@
 Curated beauty, travel, gastronomy, wellness and education discoveries across Europe for women building abroad.
 </p>
 
+<div class="search-wrapper">
+
+<div class="search-icon">
+🔍
+</div>
+
 <input
 v-model="search"
 @input="searchPlatform"
@@ -21,7 +27,6 @@ class="search-input"
 />
 
 </div>
-
 
 
 <!-- MAP -->
@@ -392,9 +397,9 @@ z-index:2;
 
 .beauty{background-image:url('/images/beauty.jpg')}
 .travel{background-image:url('/images/travel.jpg')}
-.gastronomy{background-image:url('/images/food.jpg')}
+.gastronomy{background-image:url('/images/gastronomy.jpg')}
 .wellness{background-image:url('/images/wellness.jpg')}
-.education{background-image:url('/images/travel.jpg')}
+.education{background-image:url('/images/education.jpg')}
 .relocation{background-image:url('/images/travel.jpg')}
 
 
@@ -497,18 +502,35 @@ letter-spacing:2px;
 
 /* SEARCH */
 
-.search-results{
-margin-bottom:80px;
+.search-wrapper{
+position:relative;
+max-width:720px;
 }
 
-.search-card{
-padding:16px;
-border-bottom:1px solid #eee;
+.search-icon{
+position:absolute;
+left:18px;
+top:50%;
+transform:translateY(-50%);
+font-size:16px;
+opacity:.5;
 }
 
-.result-type{
-font-size:11px;
-opacity:.6;
+.search-input{
+width:100%;
+padding:18px 18px 18px 46px;
+border-radius:12px;
+border:1px solid rgba(0,0,0,0.1);
+font-size:16px;
+background:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
+transition:.2s;
+}
+
+.search-input:focus{
+outline:none;
+border-color:#A8985F;
+box-shadow:0 10px 40px rgba(0,0,0,0.08);
 }
 
 </style>
