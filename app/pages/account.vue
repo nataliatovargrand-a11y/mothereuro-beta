@@ -385,6 +385,8 @@ return new Date(d).toLocaleDateString()
 
 <style scoped>
 
+/* PAGE */
+
 .account-wrapper{
 padding:140px 40px;
 max-width:900px;
@@ -397,28 +399,26 @@ margin:auto;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:60px;
+margin-bottom:70px;
 }
 
 .greeting{
 font-size:42px;
+font-weight:500;
 }
 
-.logout-btn{
-border:1px solid black;
-padding:8px 16px;
-background:white;
-cursor:pointer;
-}
-
-/* CARDS */
+/* GLASS CARD */
 
 .card{
-background:white;
-border:1px solid rgba(0,0,0,.08);
-border-radius:14px;
-padding:28px;
+background:rgba(255,255,255,0.6);
+backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+border:1px solid rgba(255,255,255,0.4);
+border-radius:16px;
+padding:32px;
 margin-bottom:40px;
+box-shadow:
+0 10px 30px rgba(0,0,0,0.05);
 }
 
 /* PROFILE */
@@ -426,6 +426,7 @@ margin-bottom:40px;
 .profile-card{
 display:flex;
 gap:40px;
+align-items:flex-start;
 }
 
 .avatar{
@@ -442,10 +443,12 @@ border-radius:50%;
 background:#eee;
 }
 
+/* GRID */
+
 .profile-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:20px;
+gap:22px;
 }
 
 label{
@@ -453,32 +456,114 @@ font-size:11px;
 letter-spacing:2px;
 opacity:.6;
 display:block;
+text-transform:uppercase;
+margin-bottom:3px;
 }
 
 span{
 font-size:15px;
 }
 
-/* EDIT */
+/* BUTTONS */
+
+.logout-btn,
+.edit-btn,
+.save-btn,
+.cancel-btn{
+border-radius:8px;
+padding:10px 18px;
+font-size:12px;
+letter-spacing:1px;
+cursor:pointer;
+transition:all .25s ease;
+}
+
+/* PRIMARY BUTTON */
+
+.save-btn{
+background:black;
+color:white;
+border:none;
+}
+
+.save-btn:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* SECONDARY */
+
+.logout-btn,
+.edit-btn,
+.cancel-btn{
+background:rgba(255,255,255,0.6);
+border:1px solid rgba(0,0,0,0.15);
+}
+
+.logout-btn:hover,
+.edit-btn:hover,
+.cancel-btn:hover{
+background:white;
+}
+
+/* FILE INPUT */
+
+.file-input{
+margin-top:12px;
+font-size:12px;
+padding:6px;
+border-radius:6px;
+background:rgba(255,255,255,0.5);
+}
+
+/* EDIT FORM */
 
 .edit-form input{
 display:block;
 width:100%;
-margin-bottom:10px;
 padding:10px;
-border:1px solid #ddd;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid rgba(0,0,0,0.1);
+background:white;
 }
 
-.edit-actions{
+/* MEMBERSHIP */
+
+.membership-row{
 display:flex;
-gap:10px;
+gap:60px;
+}
+
+.membership-item label{
+opacity:.6;
+}
+
+.membership-item span{
+font-size:18px;
+}
+
+/* EVENTS */
+
+.event-card{
+border-top:1px solid rgba(0,0,0,0.05);
+padding:18px 0;
+}
+
+.event-title{
+font-weight:500;
+}
+
+.event-date{
+font-size:13px;
+opacity:.6;
 }
 
 /* RESOURCES */
 
 .resource-card{
-border-top:1px solid #eee;
-padding:16px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+padding:18px 0;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -488,21 +573,16 @@ align-items:center;
 background:black;
 color:white;
 padding:6px 12px;
+border-radius:6px;
 text-decoration:none;
+font-size:12px;
 }
 
 .remove-btn{
 border:none;
 background:none;
-color:red;
+color:#c33;
 cursor:pointer;
-}
-
-/* EVENTS */
-
-.event-card{
-border-top:1px solid #eee;
-padding:16px 0;
 }
 
 /* BENEFITS */
