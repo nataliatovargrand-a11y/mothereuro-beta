@@ -27,7 +27,6 @@ class="search-minimal"
 </div>
 
 
-
 <!-- SEARCH RESULTS -->
 
 <div v-if="searchResults.length" class="search-results">
@@ -49,7 +48,6 @@ class="search-result"
 </div>
 
 
-
 <!-- MAP -->
 
 <div class="map-section">
@@ -64,7 +62,6 @@ Discover Europe
 />
 
 </div>
-
 
 
 <!-- CATEGORY CARDS -->
@@ -96,16 +93,10 @@ v-if="member?.membership_tier === 'aspiring'"
 to="/resources/relocation"
 class="category-card relocation"
 >
-<NuxtLink
-v-if="member?.membership_tier === 'aspiring'"
-to="/resources/relocation"
-class="category-card relocation"
->
 <span>Relocation</span>
 </NuxtLink>
 
 </div>
-
 
 
 <!-- EDITOR PICKS -->
@@ -148,7 +139,6 @@ View Resource
 </div>
 
 </div>
-
 
 
 <!-- RESOURCE GRID -->
@@ -206,7 +196,6 @@ const member = ref(null)
 const searchResults = ref([])
 
 
-
 onMounted(async () => {
 
 const { data } = await supabase
@@ -219,11 +208,9 @@ resources.value = data || []
 })
 
 
-
 const featuredResources = computed(() =>
 resources.value.filter(r => r.is_featured)
 )
-
 
 
 const filteredResources = computed(() => {
@@ -246,7 +233,6 @@ return cityMatch && searchMatch && relocationGate
 })
 
 })
-
 
 
 const searchPlatform = async () => {
@@ -311,7 +297,7 @@ margin-bottom:40px;
 
 
 
-/* LUXURY SEARCH */
+/* SEARCH */
 
 .search-elevated{
 max-width:680px;
@@ -324,7 +310,6 @@ border-bottom:1px solid rgba(0,0,0,0.2);
 background:transparent;
 font-size:18px;
 padding:16px 0;
-letter-spacing:.4px;
 }
 
 .search-minimal::placeholder{
@@ -410,14 +395,14 @@ z-index:2;
 
 
 
-/* IMAGES */
+/* CATEGORY IMAGES */
 
 .beauty{background-image:url('/images/beauty.jpg')}
 .travel{background-image:url('/images/travel.jpg')}
 .gastronomy{background-image:url('/images/gastronomy.jpg')}
 .wellness{background-image:url('/images/wellness.jpg')}
 .education{background-image:url('/images/education.jpg')}
-.relocation{background-image:url('/images/travel.jpg')}
+.relocation{background-image:url('/images/relocation.jpg')}
 
 
 
@@ -487,7 +472,5 @@ text-decoration:none;
 font-size:12px;
 letter-spacing:2px;
 }
- .relocation{
-background-image:url('/images/travel.jpg');
-}
+
 </style>
