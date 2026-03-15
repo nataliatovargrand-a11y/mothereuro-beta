@@ -64,6 +64,38 @@ Discover Europe
 </div>
 
 
+<!-- DISCOVER BY CITY -->
+
+<div class="city-section">
+
+<div class="section-title">
+Discover by City
+</div>
+
+<div class="city-buttons">
+
+<button
+v-for="city in cities"
+:key="city"
+@click="selectedCity = city"
+class="city-btn"
+>
+{{ city }}
+</button>
+
+<button
+v-if="selectedCity"
+@click="selectedCity = null"
+class="city-clear"
+>
+Clear Filter
+</button>
+
+</div>
+
+</div>
+
+
 <!-- CATEGORY CARDS -->
 
 <div class="category-section">
@@ -89,54 +121,12 @@ Discover Europe
 </NuxtLink>
 
 <NuxtLink
-v-if="member?.membership_tier === 'aspiring'"
+v-if="member && member.membership_tier === 'aspiring'"
 to="/resources/relocation"
 class="category-card relocation"
 >
 <span>Relocation</span>
 </NuxtLink>
-
-</div>
-
-
-<!-- EDITOR PICKS -->
-
-<div class="featured-section">
-
-<h2>Editor's Picks</h2>
-
-<div class="featured-grid">
-
-<div
-v-for="resource in featuredResources"
-:key="resource.id"
-class="featured-card"
->
-
-<img
-:src="resource.image_url"
-class="featured-image"
-/>
-
-<div class="featured-info">
-
-<h3>{{ resource.title }}</h3>
-
-<p>{{ resource.description }}</p>
-
-<a
-:href="resource.link_url"
-target="_blank"
-class="resource-btn"
->
-View Resource
-</a>
-
-</div>
-
-</div>
-
-</div>
 
 </div>
 
@@ -195,6 +185,15 @@ const selectedCity = ref(null)
 const member = ref(null)
 const searchResults = ref([])
 
+const cities = [
+'Madrid',
+'Paris',
+'London',
+'Lisbon',
+'Milan',
+'Barcelona',
+'Rome'
+]
 
 onMounted(async () => {
 
@@ -220,11 +219,6 @@ const { data } = await supabase
 resources.value = data || []
 
 })
-
-
-const featuredResources = computed(() =>
-resources.value.filter(r => r.is_featured)
-)
 
 
 const filteredResources = computed(() => {
@@ -294,7 +288,6 @@ margin:auto;
 }
 
 
-
 /* HERO */
 
 .explore-hero{
@@ -308,7 +301,6 @@ opacity:.7;
 line-height:1.6;
 margin-bottom:40px;
 }
-
 
 
 /* SEARCH */
@@ -336,7 +328,6 @@ border-bottom:1px solid #A8985F;
 }
 
 
-
 /* SEARCH RESULTS */
 
 .search-results{
@@ -357,7 +348,6 @@ opacity:.5;
 }
 
 
-
 /* MAP */
 
 .map-section{
@@ -371,6 +361,42 @@ margin-bottom:20px;
 opacity:.6;
 }
 
+
+/* CITY FILTER */
+
+.city-section{
+margin-bottom:80px;
+}
+
+.city-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+}
+
+.city-btn{
+background:white;
+border:1px solid rgba(0,0,0,0.08);
+padding:10px 18px;
+border-radius:30px;
+cursor:pointer;
+font-size:12px;
+letter-spacing:1px;
+}
+
+.city-btn:hover{
+background:#f5f5f5;
+}
+
+.city-clear{
+background:black;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:30px;
+cursor:pointer;
+font-size:12px;
+}
 
 
 /* CATEGORY CARDS */
@@ -408,7 +434,6 @@ z-index:2;
 }
 
 
-
 /* CATEGORY IMAGES */
 
 .beauty{background-image:url('/images/beauty.jpg')}
@@ -417,38 +442,6 @@ z-index:2;
 .wellness{background-image:url('/images/wellness.jpg')}
 .education{background-image:url('/images/education.jpg')}
 .relocation{background-image:url('/images/relocation.jpg')}
-
-
-
-/* FEATURED */
-
-.featured-section{
-margin-bottom:90px;
-}
-
-.featured-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:30px;
-}
-
-.featured-card{
-background:white;
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 20px 40px rgba(0,0,0,0.06);
-}
-
-.featured-image{
-width:100%;
-height:220px;
-object-fit:cover;
-}
-
-.featured-info{
-padding:24px;
-}
-
 
 
 /* RESOURCE GRID */
