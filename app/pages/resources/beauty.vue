@@ -9,36 +9,43 @@ Private recommendations across skincare, makeup, hair, and supplements curated f
 </p>
 
 
-<!-- SUNNIE FEATURE -->
+<!-- FEATURED CURATOR -->
 
-<div class="sunnie-feature">
+<div class="featured-curator">
 
-<div class="feature-text">
+  <div class="curator-inner">
 
-<div class="feature-label">
-Featured Curator
+    <div class="curator-image">
+      <img src="/images/sunnie.jpg" alt="Sunnie" />
+    </div>
+
+    <div class="curator-text">
+
+      <div class="curator-label">
+        FEATURED CURATOR
+      </div>
+
+      <h2>
+        Sunnie's Recommendations
+      </h2>
+
+      <p>
+        Discover Sunnie's private beauty recommendations for skincare,
+        makeup, hair and supplements.
+      </p>
+
+      <NuxtLink
+        to="/curators/sunnie"
+        class="sunnie-btn"
+      >
+        Explore Sunnie's Library
+      </NuxtLink>
+
+    </div>
+
+  </div>
+
 </div>
-
-<h2>Sunnie's Recommendations</h2>
-
-<p>
-Discover Sunnie’s private beauty recommendations for skincare, makeup,
-hair and supplements.
-</p>
-
-<NuxtLink
-to="/curators/sunnie"
-class="sunnie-btn"
->
-Sunnie's Recommendations
-</NuxtLink>
-
-</div>
-
-<div class="feature-image"></div>
-
-</div>
-
 
 
 <!-- SKINCARE -->
