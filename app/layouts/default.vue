@@ -8,31 +8,29 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-      <div class="bottom-nav-inner">
 
-        <NuxtLink to="/account" class="nav-item">
-          Account
+      <NuxtLink to="/account" class="nav-item">
+        Account
+      </NuxtLink>
+
+      <NuxtLink to="/explore" class="nav-item">
+        Explore
+      </NuxtLink>
+
+      <div class="logo-center">
+        <NuxtLink to="/">
+          <img src="/images/logo.png" class="footer-logo" />
         </NuxtLink>
-
-        <NuxtLink to="/explore" class="nav-item">
-          Explore
-        </NuxtLink>
-
-        <div class="logo-center">
-          <NuxtLink to="/">
-            <img src="/images/logo.png" class="footer-logo" />
-          </NuxtLink>
-        </div>
-
-        <NuxtLink to="/events" class="nav-item">
-          Events
-        </NuxtLink>
-
-        <NuxtLink to="/partners" class="nav-item">
-          Partners
-        </NuxtLink>
-
       </div>
+
+      <NuxtLink to="/events" class="nav-item">
+        Events
+      </NuxtLink>
+
+      <NuxtLink to="/partners" class="nav-item">
+        Partners
+      </NuxtLink>
+
     </nav>
 
   </div>
@@ -40,53 +38,82 @@
 
 <style scoped>
 
-.page-content {
-  padding-bottom: 90px;
+/* PAGE CONTENT */
+
+.page-content{
+  padding-bottom:90px;
 }
 
 /* NAV BAR */
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(25px);
-  border-top: 1px solid rgba(0,0,0,0.05);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.bottom-nav{
+
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:72px;
+
+  display:grid;
+  grid-template-columns:1fr 1fr auto 1fr 1fr;
+  align-items:center;
+
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(25px);
+
+  border-top:1px solid rgba(0,0,0,0.05);
+
+  z-index:1000;
+
 }
 
-.bottom-nav-inner {
-  width: 100%;
-  max-width: 900px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  position: relative;
+/* NAV ITEMS */
+
+.nav-item{
+
+  text-align:center;
+
+  font-size:11px;
+  letter-spacing:2px;
+
+  text-decoration:none;
+  color:black;
+
+  opacity:.6;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  transition:opacity .2s ease;
+
 }
 
-.nav-item {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: black;
-  opacity: 0.6;
+.nav-item:hover{
+  opacity:1;
 }
 
-.logo-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+/* CENTER LOGO */
+
+.logo-center{
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
 }
 
-.footer-logo {
-  width: 36px;
-  height: auto;
+.footer-logo{
+
+  width:36px;
+  height:auto;
+
+  transition:transform .25s ease;
+
+}
+
+.footer-logo:hover{
+  transform:scale(1.05);
 }
 
 </style>
