@@ -130,43 +130,6 @@ class="category-card relocation"
 
 </div>
 
-
-<!-- RESOURCE GRID -->
-
-<div class="resources-grid">
-
-<div
-v-for="resource in filteredResources"
-:key="resource.id"
-class="resource-card"
->
-
-<img
-v-if="resource.image_url"
-:src="resource.image_url"
-class="resource-image"
-/>
-
-<div class="resource-content">
-
-<h3>{{ resource.title }}</h3>
-
-<p>{{ resource.description }}</p>
-
-<a
-:href="resource.link_url"
-target="_blank"
-class="resource-btn"
->
-View Resource
-</a>
-
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </template>
@@ -175,7 +138,7 @@ View Resource
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import ExploreMap from '~/components/ExploreMap.vue'
 
@@ -217,28 +180,6 @@ const { data } = await supabase
 .eq('active', true)
 
 resources.value = data || []
-
-})
-
-
-const filteredResources = computed(() => {
-
-return resources.value.filter(r => {
-
-const cityMatch =
-!selectedCity.value || r.city === selectedCity.value
-
-const searchMatch =
-!search.value ||
-r.title?.toLowerCase().includes(search.value.toLowerCase())
-
-const relocationGate =
-r.category !== 'relocation' ||
-member.value?.membership_tier === 'aspiring'
-
-return cityMatch && searchMatch && relocationGate
-
-})
 
 })
 
@@ -442,42 +383,5 @@ z-index:2;
 .wellness{background-image:url('/images/wellness.jpg')}
 .education{background-image:url('/images/education.jpg')}
 .relocation{background-image:url('/images/relocation.jpg')}
-
-
-/* RESOURCE GRID */
-
-.resources-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:40px;
-}
-
-.resource-card{
-background:white;
-border-radius:16px;
-overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,0.06);
-}
-
-.resource-image{
-width:100%;
-height:200px;
-object-fit:cover;
-}
-
-.resource-content{
-padding:20px;
-}
-
-.resource-btn{
-display:inline-block;
-margin-top:10px;
-padding:10px 20px;
-background:black;
-color:white;
-text-decoration:none;
-font-size:12px;
-letter-spacing:2px;
-}
 
 </style>
