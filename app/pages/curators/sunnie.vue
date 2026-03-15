@@ -27,10 +27,11 @@ working with clients, celebrities and global beauty brands.
 <div class="curator-socials">
 
 <a
-href="https://www.instagram.com/sunniebrook/?hl=en"
+href="https://www.instagram.com/sunniebrook/"
 target="_blank"
+class="instagram-handle"
 >
-Instagram
+@sunniebrook
 </a>
 
 </div>
@@ -388,6 +389,17 @@ letter-spacing:1px;
 text-decoration:none;
 color:black;
 border-bottom:1px solid black;
+}
+.instagram-handle{
+font-size:14px;
+text-decoration:none;
+color:black;
+border-bottom:1px solid black;
+transition:.2s;
+}
+
+.instagram-handle:hover{
+opacity:.7;
 }
 
 </style>
