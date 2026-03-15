@@ -16,7 +16,7 @@ Private recommendations across skincare, makeup, hair, and supplements curated f
   <div class="curator-inner">
 
     <div class="curator-image">
-      <img src="/images/sunnie.jpg" alt="Sunnie" />
+      <img src="/images/sunnie.jpg" alt="Sunnie"/>
     </div>
 
     <div class="curator-text">
@@ -62,7 +62,7 @@ v-for="r in skincare"
 class="resource-card"
 >
 
-<img :src="r.image_url"/>
+<img v-if="r.image_url" :src="r.image_url"/>
 
 <h3>{{ r.title }}</h3>
 
@@ -94,7 +94,7 @@ v-for="r in makeup"
 class="resource-card"
 >
 
-<img :src="r.image_url"/>
+<img v-if="r.image_url" :src="r.image_url"/>
 
 <h3>{{ r.title }}</h3>
 
@@ -126,7 +126,7 @@ v-for="r in hair"
 class="resource-card"
 >
 
-<img :src="r.image_url"/>
+<img v-if="r.image_url" :src="r.image_url"/>
 
 <h3>{{ r.title }}</h3>
 
@@ -158,7 +158,7 @@ v-for="r in supplements"
 class="resource-card"
 >
 
-<img :src="r.image_url"/>
+<img v-if="r.image_url" :src="r.image_url"/>
 
 <h3>{{ r.title }}</h3>
 
@@ -173,6 +173,7 @@ View Product
 </div>
 
 </div>
+
 
 </div>
 
@@ -193,7 +194,7 @@ const { data } = await supabase
 .from('resources')
 .select('*')
 .in('category', ['skincare','makeup','hair','supplements'])
-.eq('active',true)
+.eq('active', true)
 
 resources.value = data || []
 
@@ -201,19 +202,19 @@ resources.value = data || []
 
 
 const skincare = computed(() =>
-resources.value.filter(r => r.subcategory === 'skincare')
+resources.value.filter(r => r.category === 'skincare')
 )
 
 const makeup = computed(() =>
-resources.value.filter(r => r.subcategory === 'makeup')
+resources.value.filter(r => r.category === 'makeup')
 )
 
 const hair = computed(() =>
-resources.value.filter(r => r.subcategory === 'hair')
+resources.value.filter(r => r.category === 'hair')
 )
 
 const supplements = computed(() =>
-resources.value.filter(r => r.subcategory === 'supplements')
+resources.value.filter(r => r.category === 'supplements')
 )
 
 </script>
@@ -231,49 +232,73 @@ margin:auto;
 .intro{
 opacity:.7;
 margin-bottom:60px;
+font-size:16px;
+line-height:1.6;
 }
 
 
 
-/* SUNNIE FEATURE */
+/* FEATURED CURATOR */
 
-.sunnie-feature{
+.featured-curator{
+margin-bottom:90px;
+}
+
+.curator-inner{
 display:flex;
-justify-content:space-between;
 align-items:center;
-gap:40px;
-margin-bottom:80px;
-background:rgba(255,255,255,0.35);
+gap:50px;
+background:rgba(255,255,255,0.4);
+backdrop-filter:blur(20px);
 border-radius:20px;
 padding:40px;
-backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.6);
 }
 
-.feature-label{
+.curator-image img{
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.curator-label{
 font-size:11px;
-letter-spacing:2px;
-text-transform:uppercase;
+letter-spacing:3px;
 opacity:.6;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
-.feature-btn{
+.curator-text h2{
+font-size:28px;
+margin-bottom:10px;
+}
+
+.curator-text p{
+opacity:.75;
+max-width:420px;
+margin-bottom:20px;
+}
+
+
+
+/* BUTTON */
+
+.sunnie-btn{
 display:inline-block;
-margin-top:18px;
-padding:12px 26px;
+padding:12px 28px;
 border-radius:30px;
 background:#A8985F;
 color:white;
 text-decoration:none;
+font-size:13px;
+letter-spacing:.5px;
+transition:.25s;
 }
 
-.feature-image{
-width:220px;
-height:140px;
-border-radius:14px;
-background-image:url('/images/sunnie.jpg');
-background-size:cover;
-background-position:center;
+.sunnie-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 24px rgba(0,0,0,0.15);
 }
 
 
@@ -281,7 +306,7 @@ background-position:center;
 /* SECTIONS */
 
 .section{
-margin-bottom:80px;
+margin-bottom:90px;
 }
 
 .grid{
@@ -292,9 +317,15 @@ gap:30px;
 
 .resource-card{
 background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+padding:22px;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+transition:.25s;
+}
+
+.resource-card:hover{
+transform:translateY(-4px);
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
 .resource-card img{
@@ -305,11 +336,24 @@ border-radius:10px;
 margin-bottom:12px;
 }
 
+.resource-card h3{
+font-size:16px;
+margin-bottom:6px;
+}
+
+.resource-card p{
+font-size:14px;
+opacity:.7;
+}
+
 .resource-card a{
 display:inline-block;
 margin-top:10px;
 font-size:13px;
 letter-spacing:1px;
+text-decoration:none;
+color:black;
+border-bottom:1px solid black;
 }
 
 </style>
