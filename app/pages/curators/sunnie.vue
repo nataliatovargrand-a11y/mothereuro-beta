@@ -166,44 +166,6 @@ View Product
 
 
 
-<!-- SUPPLEMENTS -->
-
-<div class="section">
-
-<h2>Supplements</h2>
-
-<div class="grid">
-
-<div
-v-for="r in supplements"
-:key="r.id"
-class="resource-card"
->
-
-<img
-v-if="r.image_url"
-:src="r.image_url"
-/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a
-:href="r.link_url"
-target="_blank"
->
-View Product
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 </template>
 
 
@@ -239,9 +201,6 @@ const hair = computed(() =>
 resources.value.filter(r => r.category === 'hair')
 )
 
-const supplements = computed(() =>
-resources.value.filter(r => r.category === 'supplements')
-)
 
 </script>
 
