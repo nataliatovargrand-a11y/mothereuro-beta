@@ -27,10 +27,10 @@ hair and supplements.
 </p>
 
 <NuxtLink
-to="/members/sunnie"
-class="feature-btn"
+to="/curators/sunnie"
+class="sunnie-btn"
 >
-Explore Sunnie's Library
+Sunnie's Recommendations
 </NuxtLink>
 
 </div>
@@ -185,7 +185,7 @@ onMounted(async()=>{
 const { data } = await supabase
 .from('resources')
 .select('*')
-.eq('category','beauty')
+.in('category', ['skincare','makeup','hair','supplements'])
 .eq('active',true)
 
 resources.value = data || []
