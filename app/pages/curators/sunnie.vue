@@ -6,50 +6,35 @@
 
 <div class="curator-hero">
 
-<div class="curator-card">
-
 <img
 src="/images/sunnie.jpg"
-alt="Sunnie Brook"
 class="curator-photo"
 />
 
-<div class="curator-info">
-
 <h1>Sunnie Brook</h1>
 
-<p class="curator-bio">
-Celebrity hairstylist and beauty expert Sunnie Brook shares the skincare,
-hair, makeup and supplement products she trusts after more than two decades
-working with clients, celebrities and global beauty brands.
+<div class="handle">
+@sunniebrook
+</div>
+
+<p class="bio">
+Celebrity hairstylist Sunnie Brook shares her curated beauty
+recommendations across skincare, makeup and hair.
 </p>
 
-<div class="curator-socials">
-
-<a
-href="https://www.instagram.com/sunniebrook/"
-target="_blank"
-class="instagram-handle"
->
-@sunniebrook
-</a>
-
-</div>
+<div class="hero-buttons">
 
 <a
 href="https://sunniebrook.com/"
 target="_blank"
 class="website-btn"
 >
-Visit Sunnie's Website
+Visit Website
 </a>
 
 </div>
 
 </div>
-
-</div>
-
 
 
 <!-- SKINCARE -->
@@ -78,6 +63,7 @@ v-if="r.image_url"
 <a
 :href="r.link_url"
 target="_blank"
+class="product-btn"
 >
 View Product
 </a>
@@ -87,7 +73,6 @@ View Product
 </div>
 
 </div>
-
 
 
 <!-- MAKEUP -->
@@ -116,6 +101,7 @@ v-if="r.image_url"
 <a
 :href="r.link_url"
 target="_blank"
+class="product-btn"
 >
 View Product
 </a>
@@ -125,7 +111,6 @@ View Product
 </div>
 
 </div>
-
 
 
 <!-- HAIR -->
@@ -154,6 +139,7 @@ v-if="r.image_url"
 <a
 :href="r.link_url"
 target="_blank"
+class="product-btn"
 >
 View Product
 </a>
@@ -164,7 +150,7 @@ View Product
 
 </div>
 
-
+</div>
 
 </template>
 
@@ -172,7 +158,7 @@ View Product
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const resources = ref([])
@@ -182,12 +168,13 @@ onMounted(async () => {
 const { data } = await supabase
 .from('resources')
 .select('*')
-.eq('recommended_by','Sunnie')
+.eq('recommended_by','sunnie')
 .eq('active', true)
 
 resources.value = data || []
 
 })
+
 
 const skincare = computed(() =>
 resources.value.filter(r => r.category === 'skincare')
@@ -201,7 +188,6 @@ const hair = computed(() =>
 resources.value.filter(r => r.category === 'hair')
 )
 
-
 </script>
 
 
@@ -214,65 +200,34 @@ max-width:1100px;
 margin:auto;
 }
 
-
-
 /* HERO */
 
 .curator-hero{
-margin-bottom:90px;
-}
-
-.curator-card{
-display:flex;
-align-items:center;
-gap:40px;
-
-background:rgba(255,255,255,0.4);
-backdrop-filter:blur(20px);
-
-border-radius:22px;
-padding:40px;
-
-border:1px solid rgba(255,255,255,0.6);
+text-align:center;
+margin-bottom:80px;
 }
 
 .curator-photo{
-width:140px;
-height:140px;
+width:160px;
+height:160px;
 border-radius:50%;
 object-fit:cover;
+margin-bottom:20px;
 }
 
-.curator-info h1{
-font-size:32px;
-margin-bottom:8px;
-}
-
-.curator-bio{
-opacity:.75;
-max-width:520px;
-margin-bottom:16px;
-}
-
-
-
-/* SOCIALS */
-
-.curator-socials{
-display:flex;
-gap:18px;
-margin-bottom:16px;
-}
-
-.curator-socials a{
+.handle{
 font-size:14px;
-text-decoration:none;
-border-bottom:1px solid black;
+opacity:.6;
+margin-bottom:16px;
 }
 
-
-
-/* WEBSITE BUTTON */
+.bio{
+max-width:520px;
+margin:auto;
+opacity:.7;
+line-height:1.6;
+margin-bottom:20px;
+}
 
 .website-btn{
 display:inline-block;
@@ -283,7 +238,6 @@ color:white;
 text-decoration:none;
 font-size:13px;
 letter-spacing:.5px;
-transition:.25s;
 }
 
 .website-btn:hover{
@@ -292,11 +246,10 @@ box-shadow:0 10px 24px rgba(0,0,0,0.15);
 }
 
 
-
 /* SECTIONS */
 
 .section{
-margin-bottom:90px;
+margin-bottom:80px;
 }
 
 .grid{
@@ -305,21 +258,11 @@ grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 gap:30px;
 }
 
-
-
-/* RESOURCE CARD */
-
 .resource-card{
 background:white;
-padding:22px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.06);
-transition:.25s;
-}
-
-.resource-card:hover{
-transform:translateY(-4px);
-box-shadow:0 20px 40px rgba(0,0,0,0.08);
+padding:20px;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
 }
 
 .resource-card img{
@@ -330,35 +273,16 @@ border-radius:10px;
 margin-bottom:12px;
 }
 
-.resource-card h3{
-font-size:16px;
-margin-bottom:6px;
-}
-
-.resource-card p{
-font-size:14px;
-opacity:.7;
-}
-
-.resource-card a{
+.product-btn{
 display:inline-block;
-margin-top:10px;
-font-size:13px;
+margin-top:12px;
+padding:8px 16px;
+background:black;
+color:white;
+font-size:12px;
 letter-spacing:1px;
 text-decoration:none;
-color:black;
-border-bottom:1px solid black;
-}
-.instagram-handle{
-font-size:14px;
-text-decoration:none;
-color:black;
-border-bottom:1px solid black;
-transition:.2s;
-}
-
-.instagram-handle:hover{
-opacity:.7;
+border-radius:6px;
 }
 
 </style>
