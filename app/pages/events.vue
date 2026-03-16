@@ -11,13 +11,23 @@ Private gatherings, cultural salons, and curated dinners for the Mother Euro com
 
 <!-- CITY FILTER -->
 
-<div class="filter-bar">
+<div class="city-filter">
 
-<input
-v-model="citySearch"
-placeholder="Search by city..."
-class="city-search"
-/>
+<button
+v-for="city in cities"
+:key="city"
+@click="selectedCity = city"
+:class="['city-pill', selectedCity === city ? 'active' : '']"
+>
+{{ city }}
+</button>
+
+<button
+@click="selectedCity = null"
+class="city-pill clear"
+>
+All
+</button>
 
 </div>
 
@@ -37,11 +47,9 @@ class="featured-image"
 NEXT EVENT
 </div>
 
-<div class="event-tag" v-if="featuredEvent.event_type">
-{{ featuredEvent.event_type }}
-</div>
-
-<h2>{{ featuredEvent.title }}</h2>
+<h2>
+{{ featuredEvent.title }}
+</h2>
 
 <p class="event-date">
 {{ formatDate(featuredEvent.event_date) }}
@@ -50,6 +58,35 @@ NEXT EVENT
 <p class="event-location">
 {{ featuredEvent.location }}
 </p>
+
+
+<!-- RSVP AVATARS -->
+
+<div class="rsvp-row" v-if="featuredEvent.attendees.length">
+
+<img
+v-for="a in featuredEvent.attendees.slice(0,5)"
+:key="a.member_id"
+:src="a.avatar_url || '/avatar-placeholder.png'"
+class="avatar"
+/>
+
+<div v-if="featuredEvent.attendees.length > 5" class="avatar-more">
++{{ featuredEvent.attendees.length - 5 }}
+</div>
+
+</div>
+
+
+<!-- WAITLIST -->
+
+<div
+v-if="featuredEvent.capacity && featuredEvent.attending >= featuredEvent.capacity"
+class="waitlist-badge"
+>
+Waitlist
+</div>
+
 
 <button
 @click="register(featuredEvent)"
@@ -85,10 +122,6 @@ class="event-image"
 
 <div class="event-content">
 
-<div class="event-tag" v-if="event.event_type">
-{{ event.event_type }}
-</div>
-
 <h3>{{ event.title }}</h3>
 
 <p class="event-date">
@@ -99,9 +132,34 @@ class="event-image"
 {{ event.location }}
 </p>
 
-<div class="capacity-note" v-if="event.capacity">
-{{ event.attending }} / {{ event.capacity }} attending
+
+<!-- RSVP AVATARS -->
+
+<div class="rsvp-row" v-if="event.attendees.length">
+
+<img
+v-for="a in event.attendees.slice(0,5)"
+:key="a.member_id"
+:src="a.avatar_url || '/avatar-placeholder.png'"
+class="avatar"
+/>
+
+<div v-if="event.attendees.length > 5" class="avatar-more">
++{{ event.attendees.length - 5 }}
 </div>
+
+</div>
+
+
+<!-- WAITLIST -->
+
+<div
+v-if="event.capacity && event.attending >= event.capacity"
+class="waitlist-badge"
+>
+Waitlist
+</div>
+
 
 <button
 @click="register(event)"
@@ -121,23 +179,32 @@ Reserve
 </template>
 
 
-
 <script setup>
 
 import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const events = ref([])
-const member = ref(null)
-const citySearch = ref('')
 const featuredEvent = ref(null)
+const member = ref(null)
+
+const selectedCity = ref(null)
+
+const cities = [
+'Madrid',
+'Barcelona',
+'Paris',
+'Lisbon',
+'London',
+'Virtual'
+]
+
 
 onMounted(async()=>{
 
 const { data:{ session } } = await supabase.auth.getSession()
-if(!session) return
 
-/* Load member */
+if(!session) return
 
 const { data: memberData } = await supabase
 .from('members')
@@ -148,105 +215,66 @@ const { data: memberData } = await supabase
 member.value = memberData
 
 
-/* Load events */
-
 const { data } = await supabase
 .from('events')
 .select('*')
 .order('event_date',{ascending:true})
 
+if(!data) return
 
-events.value = data || []
 
+for(const event of data){
 
-/* Set featured event */
+const { data: attendees } = await supabase
+.from('event_registrations')
+.select(`
+member_id,
+members(avatar_url)
+`)
+.eq('event_id',event.id)
 
-featuredEvent.value = events.value[0]
+event.attendees = attendees?.map(a=>({
+member_id: a.member_id,
+avatar_url: a.members?.avatar_url
+})) || []
+
+event.attending = event.attendees.length
+
+}
+
+events.value = data
+
+const now = new Date()
+
+const future = events.value.filter(e=>{
+return new Date(e.event_date) > now
+})
+
+featuredEvent.value = future[0]
 
 })
 
 
-/* Filter events */
-
 const filteredEvents = computed(()=>{
 
-const others = events.value.slice(1)
+const now = new Date()
 
-if(!citySearch.value) return others
+let future = events.value.filter(e=>{
+return new Date(e.event_date) > now
+})
 
-return others.filter(e=>
-e.location?.toLowerCase().includes(citySearch.value.toLowerCase())
+future = future.slice(1)
+
+if(!selectedCity.value) return future
+
+return future.filter(e=>
+e.location?.includes(selectedCity.value)
 )
 
 })
 
 
-
-/* Register */
-
 const register = async(event)=>{
-
-if(member.value.membership_tier === 'global'){
-
-const { data: registrations } = await supabase
-.from('event_registrations')
-.select('*, events(event_date)')
-.eq('member_id', member.value.id)
-
-const yearStart = new Date(new Date().getFullYear(),0,1)
-
-const yearlyCount = registrations.filter(r=>{
-return new Date(r.events.event_date) >= yearStart
-}).length
-
-if(yearlyCount >= 4){
-alert("Global members may attend four events per year.")
-return
-}
-
-const month = new Date().getMonth()
-const quarterStart = Math.floor(month/3)*3
-
-const qStart = new Date(new Date().getFullYear(),quarterStart,1)
-const qEnd = new Date(new Date().getFullYear(),quarterStart+3,1)
-
-const quarterEvents = registrations.filter(r=>{
-const d = new Date(r.events.event_date)
-return d >= qStart && d < qEnd
-})
-
-if(quarterEvents.length >= 1){
-alert("Global members may attend only one event per quarter.")
-return
-}
-
-}
-
-
-/* Capacity */
-
-const { data: attendees } = await supabase
-.from('event_registrations')
-.select('*')
-.eq('event_id', event.id)
-.eq('waitlist', false)
-
-if(event.capacity && attendees.length >= event.capacity){
-
-await supabase
-.from('event_registrations')
-.insert({
-member_id: member.value.id,
-event_id: event.id,
-waitlist: true
-})
-
-alert("This event is full. You've been added to the waitlist.")
-return
-}
-
-
-/* Register */
 
 await supabase
 .from('event_registrations')
@@ -260,9 +288,6 @@ window.open(event.luma_url)
 }
 
 
-
-/* Date formatting */
-
 const formatDate=(d)=>{
 return new Date(d).toLocaleDateString(undefined,{
 weekday:'long',
@@ -272,7 +297,6 @@ day:'numeric'
 }
 
 </script>
-
 
 
 <style scoped>
@@ -295,18 +319,36 @@ max-width:520px;
 line-height:1.6;
 }
 
-.filter-bar{
+
+/* CITY FILTER */
+
+.city-filter{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
 margin-bottom:60px;
 }
 
-.city-search{
-width:300px;
-border:none;
-border-bottom:1px solid rgba(0,0,0,0.2);
-background:transparent;
-padding:12px 0;
-font-size:16px;
+.city-pill{
+padding:8px 16px;
+border:1px solid rgba(0,0,0,0.1);
+background:white;
+cursor:pointer;
+border-radius:30px;
+font-size:12px;
 }
+
+.city-pill.active{
+background:black;
+color:white;
+}
+
+.city-pill.clear{
+opacity:.6;
+}
+
+
+/* FEATURED */
 
 .featured-event{
 display:grid;
@@ -344,19 +386,44 @@ cursor:pointer;
 letter-spacing:2px;
 }
 
-.featured-btn:hover{
-background:#A8985F;
+
+/* RSVP */
+
+.rsvp-row{
+display:flex;
+align-items:center;
+margin-bottom:12px;
 }
 
-.event-tag{
-display:inline-block;
-font-size:10px;
-letter-spacing:2px;
-text-transform:uppercase;
-background:#f2f2f2;
-padding:4px 8px;
-margin-bottom:8px;
+.avatar{
+width:32px;
+height:32px;
+border-radius:50%;
+object-fit:cover;
+margin-right:-8px;
+border:2px solid white;
 }
+
+.avatar-more{
+margin-left:10px;
+font-size:12px;
+opacity:.6;
+}
+
+
+/* WAITLIST */
+
+.waitlist-badge{
+display:inline-block;
+background:#f5f5f5;
+padding:4px 10px;
+font-size:11px;
+letter-spacing:1px;
+margin-bottom:10px;
+}
+
+
+/* GRID */
 
 .section-label{
 font-size:12px;
@@ -388,46 +455,13 @@ object-fit:cover;
 padding:20px;
 }
 
-.event-date{
-font-size:13px;
-opacity:.6;
-margin-bottom:4px;
-}
-
-.event-location{
-font-size:13px;
-opacity:.8;
-margin-bottom:10px;
-}
-
-.capacity-note{
-font-size:12px;
-opacity:.5;
-margin-bottom:10px;
-}
-
 .event-btn{
+margin-top:10px;
 padding:10px 18px;
 background:black;
 color:white;
 border:none;
 cursor:pointer;
-}
-
-.event-btn:hover{
-background:#A8985F;
-}
-
-@media (max-width:900px){
-
-.featured-event{
-grid-template-columns:1fr;
-}
-
-.featured-image{
-height:280px;
-}
-
 }
 
 </style>
