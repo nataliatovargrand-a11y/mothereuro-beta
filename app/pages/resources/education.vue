@@ -1,70 +1,72 @@
 <template>
 
-<div class="category-page">
+<div class="resources-wrapper">
 
 <h1>Education</h1>
 
 <p class="intro">
-Trusted schools and summer programs across Europe recommended by the Mother Euro community.
+Trusted education advisors and curated summer programs across Europe.
 </p>
 
 
-<!-- SCHOOLS -->
+<!-- EDUCATION ADVISOR -->
 
-<div class="section">
+<div class="advisor-card">
 
-<h2>Schools</h2>
+<img
+src="/images/education-advisor.jpg"
+class="advisor-photo"
+/>
 
-<div class="grid">
+<div class="advisor-content">
 
-<div
-v-for="r in schools"
-:key="r.id"
-class="resource-card"
+<div class="advisor-label">
+EDUCATION ADVISOR
+</div>
+
+<h2>Advisor Name</h2>
+
+<p class="advisor-contact">
+advisor@email.com<br>
++34 XXX XXX XXX
+</p>
+
+<a
+href="mailto:advisor@email.com"
+class="advisor-button"
 >
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
+Contact Now
 </a>
 
 </div>
 
 </div>
 
+
+<!-- EUROPEAN SUMMER SOCIETY -->
+
+<div class="summer-card">
+
+<div class="summer-content">
+
+<div class="summer-label">
+Summer Camps
 </div>
 
+<h2>European Summer Society</h2>
 
-<!-- SUMMER CAMPS -->
+<p>
+Immersive summer experiences across Europe where children build global friendships,
+discover new cultures, and return home with confidence, independence, and lifelong connections.
+</p>
 
-<div class="section">
-
-<h2>Summer Camps</h2>
-
-<div class="grid">
-
-<div
-v-for="r in camps"
-:key="r.id"
-class="resource-card"
+<a
+href="https://europeansummersociety.com"
+target="_blank"
+class="summer-button"
 >
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
+Explore Programs
 </a>
-
-</div>
 
 </div>
 
@@ -75,72 +77,129 @@ Visit
 </template>
 
 
-<script setup>
-
-import { ref, computed, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-
-const resources = ref([])
-
-onMounted(async()=>{
-
-const { data } = await supabase
-.from('resources')
-.select('*')
-.eq('category','education')
-.eq('active',true)
-
-resources.value = data || []
-
-})
-
-const schools = computed(() =>
-resources.value.filter(r => r.subcategory === 'schools')
-)
-
-const camps = computed(() =>
-resources.value.filter(r => r.subcategory === 'summer-camps')
-)
-
-</script>
-
-
 <style scoped>
 
-.category-page{
+.resources-wrapper{
 padding:140px 40px;
-max-width:1100px;
+max-width:1000px;
 margin:auto;
 }
 
 .intro{
+font-size:18px;
 opacity:.7;
-margin-bottom:60px;
-}
-
-.section{
+max-width:620px;
 margin-bottom:80px;
+line-height:1.6;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:30px;
+
+/* ADVISOR CARD */
+
+.advisor-card{
+display:flex;
+align-items:center;
+gap:40px;
+margin-bottom:100px;
 }
 
-.resource-card{
-background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
-}
-
-.resource-card img{
-width:100%;
-height:180px;
+.advisor-photo{
+width:160px;
+height:160px;
+border-radius:50%;
 object-fit:cover;
-border-radius:10px;
-margin-bottom:12px;
+}
+
+.advisor-content{
+max-width:520px;
+}
+
+.advisor-label{
+letter-spacing:4px;
+font-size:12px;
+opacity:.6;
+margin-bottom:10px;
+}
+
+.advisor-content h2{
+margin-bottom:10px;
+}
+
+.advisor-contact{
+font-size:16px;
+opacity:.7;
+line-height:1.6;
+margin-bottom:20px;
+}
+
+.advisor-button{
+background:#A8985F;
+color:white;
+padding:14px 26px;
+border-radius:40px;
+text-decoration:none;
+font-size:14px;
+letter-spacing:1px;
+display:inline-block;
+}
+
+
+/* SUMMER SOCIETY HERO */
+
+.summer-card{
+height:420px;
+border-radius:20px;
+padding:70px;
+display:flex;
+align-items:center;
+background-image:url('/images/european-summer.jpg');
+background-size:cover;
+background-position:center;
+color:white;
+position:relative;
+}
+
+.summer-card::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.35);
+border-radius:20px;
+}
+
+.summer-content{
+position:relative;
+z-index:2;
+max-width:520px;
+}
+
+.summer-label{
+letter-spacing:4px;
+font-size:12px;
+opacity:.8;
+margin-bottom:14px;
+}
+
+.summer-card h2{
+font-size:36px;
+margin-bottom:16px;
+}
+
+.summer-card p{
+line-height:1.6;
+margin-bottom:26px;
+opacity:.9;
+}
+
+.summer-button{
+background:white;
+color:black;
+padding:14px 26px;
+border-radius:40px;
+text-decoration:none;
+font-size:13px;
+letter-spacing:2px;
+display:inline-block;
 }
 
 </style>
