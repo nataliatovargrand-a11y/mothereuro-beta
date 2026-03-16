@@ -12,10 +12,10 @@ for the Mother Euro community.
 
 <!-- FEATURED EVENT -->
 
-<div v-if="nextEvent" class="featured-event">
+<div v-if="featuredEvent" class="featured-event">
 
 <img
-:src="nextEvent.cover_url"
+:src="featuredEvent.image_url"
 class="featured-image"
 />
 
@@ -26,39 +26,73 @@ NEXT EVENT
 </div>
 
 <h2>
-{{ nextEvent.name }}
+{{ featuredEvent.title }}
 </h2>
 
-<p>
-{{ nextEvent.description }}
+<p class="event-date">
+{{ formatDate(featuredEvent.event_date) }}
 </p>
 
-<a
-:href="nextEvent.url"
-target="_blank"
+<p class="event-location">
+{{ featuredEvent.location }}
+</p>
+
+<button
+@click="register(featuredEvent)"
 class="featured-btn"
 >
 Reserve Your Seat
-</a>
+</button>
 
 </div>
 
 </div>
 
 
-<!-- LUMA CALENDAR -->
+<!-- UPCOMING EVENTS -->
 
 <div class="section-label">
 Upcoming Events
 </div>
 
-<div class="luma-wrapper">
+<div class="events-grid">
 
-<iframe
-src="https://luma.com/embed/calendar/cal-Hv0aqpqNkf2UIKs/events"
-frameborder="0"
-allowfullscreen
-></iframe>
+<div
+v-for="event in upcomingEvents"
+:key="event.id"
+class="event-card"
+>
+
+<img
+v-if="event.image_url"
+:src="event.image_url"
+class="event-image"
+/>
+
+<div class="event-content">
+
+<h3>
+{{ event.title }}
+</h3>
+
+<p class="event-date">
+{{ formatDate(event.event_date) }}
+</p>
+
+<p class="event-location">
+{{ event.location }}
+</p>
+
+<button
+@click="register(event)"
+class="event-btn"
+>
+Reserve
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -70,24 +104,103 @@ allowfullscreen
 <script setup>
 
 import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
 
-const nextEvent = ref(null)
+const events = ref([])
+const featuredEvent = ref(null)
+const upcomingEvents = ref([])
+const member = ref(null)
 
-onMounted(async () => {
+onMounted(async()=>{
 
-const response = await fetch(
-'https://api.luma.com/calendar/cal-Hv0aqpqNkf2UIKs/events'
-)
+const { data:{ session } } = await supabase.auth.getSession()
 
-const data = await response.json()
+if(!session) return
 
-if(data.entries && data.entries.length){
+const { data: memberData } = await supabase
+.from('members')
+.select('*')
+.eq('id', session.user.id)
+.single()
 
-nextEvent.value = data.entries[0]
+member.value = memberData
+
+const { data } = await supabase
+.from('events')
+.select('*')
+.order('event_date',{ascending:true})
+
+events.value = data || []
+
+const now = new Date()
+
+const futureEvents = events.value.filter(e=>{
+return new Date(e.event_date) > now
+})
+
+featuredEvent.value = futureEvents[0]
+upcomingEvents.value = futureEvents.slice(1)
+
+})
+
+
+const register = async(event)=>{
+
+if(member.value.membership_tier === 'global'){
+
+const { data: registrations } = await supabase
+.from('event_registrations')
+.select('*, events(event_date)')
+.eq('member_id', member.value.id)
+
+const yearStart = new Date(new Date().getFullYear(),0,1)
+
+const yearlyCount = registrations.filter(r=>{
+return new Date(r.events.event_date) >= yearStart
+}).length
+
+if(yearlyCount >= 4){
+alert("Global members may attend four events per year.")
+return
+}
+
+const month = new Date().getMonth()
+const quarterStart = Math.floor(month/3)*3
+
+const qStart = new Date(new Date().getFullYear(),quarterStart,1)
+const qEnd = new Date(new Date().getFullYear(),quarterStart+3,1)
+
+const quarterEvents = registrations.filter(r=>{
+const d = new Date(r.events.event_date)
+return d >= qStart && d < qEnd
+})
+
+if(quarterEvents.length >= 1){
+alert("Global members may attend only one event per quarter.")
+return
+}
 
 }
 
+await supabase
+.from('event_registrations')
+.insert({
+member_id: member.value.id,
+event_id: event.id
 })
+
+window.open(event.luma_url)
+
+}
+
+
+const formatDate=(d)=>{
+return new Date(d).toLocaleDateString(undefined,{
+weekday:'long',
+month:'long',
+day:'numeric'
+})
+}
 
 </script>
 
@@ -95,7 +208,7 @@ nextEvent.value = data.entries[0]
 <style scoped>
 
 .events-wrapper{
-padding:140px 40px 140px;
+padding:140px 40px;
 max-width:1100px;
 margin:auto;
 }
@@ -139,20 +252,27 @@ margin-bottom:16px;
 
 .featured-content h2{
 font-size:34px;
-margin-bottom:12px;
+margin-bottom:10px;
 }
 
-.featured-content p{
+.event-date{
+font-size:13px;
+opacity:.6;
+margin-bottom:6px;
+}
+
+.event-location{
+font-size:13px;
 opacity:.8;
-margin-bottom:24px;
-line-height:1.6;
+margin-bottom:20px;
 }
 
 .featured-btn{
 background:black;
 color:white;
 padding:14px 26px;
-text-decoration:none;
+border:none;
+cursor:pointer;
 font-size:11px;
 letter-spacing:2px;
 }
@@ -162,7 +282,7 @@ background:#A8985F;
 }
 
 
-/* CALENDAR */
+/* EVENT GRID */
 
 .section-label{
 font-size:12px;
@@ -172,16 +292,46 @@ opacity:.6;
 margin-bottom:30px;
 }
 
-.luma-wrapper{
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 25px 50px rgba(0,0,0,.08);
+.events-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:30px;
 }
 
-.luma-wrapper iframe{
+.event-card{
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+}
+
+.event-image{
 width:100%;
-height:720px;
+height:200px;
+object-fit:cover;
+}
+
+.event-content{
+padding:20px;
+}
+
+.event-content h3{
+margin-bottom:6px;
+}
+
+.event-btn{
+margin-top:10px;
+padding:10px 18px;
+background:black;
+color:white;
 border:none;
+cursor:pointer;
+font-size:11px;
+letter-spacing:2px;
+}
+
+.event-btn:hover{
+background:#A8985F;
 }
 
 
