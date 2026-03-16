@@ -18,7 +18,7 @@ Curated beauty, travel, gastronomy, wellness and education discoveries across Eu
 v-model="search"
 @input="searchPlatform"
 type="text"
-placeholder="Search by keyword..."
+placeholder="Search members, partners, or resources..."
 class="search-minimal"
 />
 
@@ -29,19 +29,96 @@ class="search-minimal"
 
 <!-- SEARCH RESULTS -->
 
-<div v-if="searchResults.length" class="search-results">
+<div v-if="search.length" class="search-results">
 
-<div
-v-for="result in searchResults"
-:key="result.id"
+<!-- MEMBERS -->
+
+<div v-if="members.length" class="search-section">
+
+<div class="section-title">
+Members
+</div>
+
+<NuxtLink
+v-for="member in members"
+:key="member.id"
+:to="'/members/' + member.id"
 class="search-result"
 >
 
-<strong>{{ result.title || result.name }}</strong>
+<div class="result-left">
+
+<img
+:src="member.avatar_url || '/avatar-placeholder.png'"
+class="avatar"
+/>
+
+<div>
+
+<strong>{{ member.name }}</strong>
+
+<div class="result-meta">
+{{ member.city }} • {{ member.industry }}
+</div>
+
+</div>
+
+</div>
+
+<span class="result-type">Member</span>
+
+</NuxtLink>
+
+</div>
+
+
+<!-- RESOURCES -->
+
+<div v-if="resourcesResults.length" class="search-section">
+
+<div class="section-title">
+Resources
+</div>
+
+<NuxtLink
+v-for="resource in resourcesResults"
+:key="resource.id"
+:to="'/resources/' + resource.slug"
+class="search-result"
+>
+
+<strong>{{ resource.title }}</strong>
 
 <span class="result-type">
-{{ result.type }}
+Resource
 </span>
+
+</NuxtLink>
+
+</div>
+
+
+<!-- PARTNERS -->
+
+<div v-if="partners.length" class="search-section">
+
+<div class="section-title">
+Partners
+</div>
+
+<div
+v-for="partner in partners"
+:key="partner.id"
+class="search-result"
+>
+
+<strong>{{ partner.name }}</strong>
+
+<span class="result-type">
+Partner
+</span>
+
+</div>
 
 </div>
 
@@ -142,11 +219,15 @@ import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 import ExploreMap from '~/components/ExploreMap.vue'
 
-const resources = ref([])
 const search = ref('')
+
+const resources = ref([])
+const resourcesResults = ref([])
+const partners = ref([])
+const members = ref([])
+
 const selectedCity = ref(null)
 const member = ref(null)
-const searchResults = ref([])
 
 const cities = [
 'Madrid',
@@ -157,6 +238,7 @@ const cities = [
 'Barcelona',
 'Rome'
 ]
+
 
 onMounted(async () => {
 
@@ -187,32 +269,36 @@ resources.value = data || []
 const searchPlatform = async () => {
 
 if(!search.value){
-searchResults.value = []
+
+resourcesResults.value = []
+partners.value = []
+members.value = []
+
 return
+
 }
 
 const { data: resourcesData } = await supabase
 .from('resources')
 .select('*')
 .ilike('title', `%${search.value}%`)
+.limit(6)
 
 const { data: partnersData } = await supabase
 .from('partners')
 .select('*')
 .ilike('name', `%${search.value}%`)
+.limit(6)
 
 const { data: membersData } = await supabase
 .from('members')
-.select('*')
-.ilike('name', `%${search.value}%`)
+.select('id,name,city,industry,avatar_url')
+.or(`name.ilike.%${search.value}%,city.ilike.%${search.value}%,industry.ilike.%${search.value}%`)
+.limit(6)
 
-searchResults.value = [
-
-...(resourcesData || []).map(r => ({...r,type:'Resource'})),
-...(partnersData || []).map(p => ({...p,type:'Partner'})),
-...(membersData || []).map(m => ({...m,type:'Member'}))
-
-]
+resourcesResults.value = resourcesData || []
+partners.value = partnersData || []
+members.value = membersData || []
 
 }
 
@@ -259,10 +345,6 @@ font-size:18px;
 padding:16px 0;
 }
 
-.search-minimal::placeholder{
-color:rgba(0,0,0,0.4);
-}
-
 .search-minimal:focus{
 outline:none;
 border-bottom:1px solid #A8985F;
@@ -273,19 +355,47 @@ border-bottom:1px solid #A8985F;
 
 .search-results{
 margin-bottom:60px;
-max-width:680px;
+max-width:700px;
+}
+
+.search-section{
+margin-bottom:40px;
 }
 
 .search-result{
-padding:10px 0;
-border-bottom:1px solid rgba(0,0,0,0.08);
 display:flex;
 justify-content:space-between;
+align-items:center;
+padding:14px 0;
+border-bottom:1px solid rgba(0,0,0,0.08);
+text-decoration:none;
+color:inherit;
+}
+
+.result-left{
+display:flex;
+gap:14px;
+align-items:center;
 }
 
 .result-type{
 font-size:12px;
 opacity:.5;
+}
+
+.result-meta{
+font-size:13px;
+opacity:.6;
+}
+
+
+/* MEMBER AVATAR */
+
+.avatar{
+width:36px;
+height:36px;
+border-radius:50%;
+object-fit:cover;
 }
 
 
@@ -322,11 +432,6 @@ padding:10px 18px;
 border-radius:30px;
 cursor:pointer;
 font-size:12px;
-letter-spacing:1px;
-}
-
-.city-btn:hover{
-background:#f5f5f5;
 }
 
 .city-clear{
@@ -347,7 +452,6 @@ display:flex;
 gap:24px;
 overflow-x:auto;
 padding-bottom:10px;
-scroll-snap-type:x mandatory;
 margin:60px 0;
 }
 
@@ -358,10 +462,7 @@ display:none;
 .category-card{
 min-width:220px;
 height:260px;
-flex-shrink:0;
-scroll-snap-align:start;
 
-position:relative;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -376,6 +477,8 @@ background-size:cover;
 background-position:center;
 
 border-radius:14px;
+
+position:relative;
 }
 
 .category-card::after{
