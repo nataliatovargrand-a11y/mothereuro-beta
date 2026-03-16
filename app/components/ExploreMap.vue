@@ -36,7 +36,10 @@ function updateMap() {
     if (p.latitude && p.longitude) {
       features.push({
         type: "Feature",
-        properties: { type: "partner" },
+        properties: { 
+  type: "partner",
+  name: p.name
+},
         geometry: {
           type: "Point",
           coordinates: [p.longitude, p.latitude]
@@ -58,16 +61,27 @@ function updateMap() {
       data: geojson
     })
 
-    map.addLayer({
-      id: "resource-dots",
-      type: "circle",
-      source: "locations",
-      filter: ["==", ["get", "type"], "resource"],
-      paint: {
-        "circle-radius": 5,
-        "circle-color": "#000"
-      }
-    })
+map.addLayer({
+  id: "partner-dots",
+  type: "circle",
+  source: "locations",
+  filter: ["==", ["get", "type"], "partner"],
+  paint: {
+    "circle-radius": 7,
+    "circle-color": "#A8985F"
+  }
+})
+map.on("click", "partner-dots", (e) => {
+
+const coordinates = e.features[0].geometry.coordinates.slice()
+const name = e.features[0].properties.name
+
+new mapboxgl.Popup()
+.setLngLat(coordinates)
+.setHTML(`<strong>${name}</strong>`)
+.addTo(map)
+
+})
 
     map.addLayer({
       id: "partner-dots",
