@@ -143,6 +143,45 @@ Cancel
 </div>
 
 
+<!-- RELOCATION FEATURE -->
+
+<div
+v-if="member?.membership_tier === 'aspiring'"
+class="card relocation-feature"
+>
+
+<div class="relocation-content">
+
+<div class="relocation-text">
+
+<div class="relocation-label">
+Aspiring Member Benefit
+</div>
+
+<h2>
+Relocation Library
+</h2>
+
+<p>
+Expert relocation guides designed to help you confidently plan your move to Europe.
+</p>
+
+<NuxtLink
+to="/resources/relocation"
+class="relocation-btn"
+>
+Explore the Library
+</NuxtLink>
+
+</div>
+
+<div class="relocation-image"></div>
+
+</div>
+
+</div>
+
+
 <!-- SAVED RESOURCES -->
 
 <div class="card">
@@ -509,6 +548,42 @@ cursor:pointer;
 }
 
 
+/* RELOCATION */
+
+.relocation-content{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:40px;
+}
+
+.relocation-label{
+font-size:12px;
+letter-spacing:2px;
+opacity:.6;
+margin-bottom:8px;
+}
+
+.relocation-btn{
+display:inline-block;
+margin-top:14px;
+padding:12px 24px;
+border-radius:30px;
+background:#A8985F;
+color:white;
+text-decoration:none;
+}
+
+.relocation-image{
+width:220px;
+height:130px;
+border-radius:14px;
+background-image:url('/images/relocation.jpg');
+background-size:cover;
+background-position:center;
+}
+
+
 /* MOBILE */
 
 @media (max-width:768px){
@@ -527,6 +602,16 @@ grid-template-columns:1fr;
 flex-direction:column;
 align-items:flex-start;
 gap:16px;
+}
+
+.relocation-content{
+flex-direction:column;
+text-align:center;
+}
+
+.relocation-image{
+width:100%;
+height:160px;
 }
 
 }
