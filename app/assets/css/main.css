@@ -1,18 +1,24 @@
 /* GOOGLE FONTS – Luxury Web Equivalent to Brand Manual */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400&family=IBM+Plex+Mono:wght@400&display=swap');
 
+
+/* ROOT COLORS */
+
 :root {
   --me-bg: #FAF3EA;
   --me-text: #2E2B29;
   --me-accent: #A8985F;
 }
 
-/* RESET */
+
+/* GLOBAL RESET */
+
 * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: var(--me-bg);
@@ -20,34 +26,110 @@ html, body {
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Editorial Headings */
-h1, h2, h3 {
+
+/* GLOBAL TYPOGRAPHY */
+
+h1,
+h2,
+h3 {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
   letter-spacing: 0.03em;
 }
 
-/* Buttons */
+h1{
+  font-size:48px;
+}
+
+h2{
+  font-size:32px;
+}
+
+h3{
+  font-size:22px;
+}
+
+
+/* BUTTONS */
+
 button {
   font-family: 'Inter', sans-serif;
 }
-/* Prevent horizontal overflow */
 
-body{
-overflow-x:hidden;
-}
+
+/* GLOBAL PAGE WRAPPERS */
+/* prevents horizontal scroll bugs */
 
 .explore-wrapper,
 .events-wrapper,
 .partners-wrapper,
-.resources-wrapper{
-overflow-x:hidden;
+.resources-wrapper,
+.account-wrapper{
+  overflow-x:hidden;
 }
 
-/* Prevent padding layout bugs */
 
-*{
-box-sizing:border-box;
+/* GLOBAL LINKS */
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+a:hover{
+  color:var(--me-accent);
+}
+
+
+/* IMAGE SAFETY */
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+
+/* MOBILE TYPOGRAPHY */
+
+@media (max-width:768px){
+
+h1{
+  font-size:34px;
+}
+
+h2{
+  font-size:26px;
+}
+
+h3{
+  font-size:20px;
+}
+
+}
+
+
+/* MOBILE PAGE SPACING */
+
+@media (max-width:768px){
+
+.explore-wrapper,
+.events-wrapper,
+.partners-wrapper,
+.resources-wrapper,
+.account-wrapper{
+  padding-left:20px !important;
+  padding-right:20px !important;
+}
+
+}
+
+
+/* SMOOTH UI */
+
+button,
+a{
+  transition:all .2s ease;
 }

@@ -475,4 +475,46 @@ padding:18px;
 }
 
 }
+/* MOBILE EVENTS */
+
+@media (max-width:768px){
+
+.events-wrapper{
+padding:110px 20px;
+}
+
+.featured-event{
+grid-template-columns:1fr;
+gap:24px;
+margin-bottom:70px;
+}
+
+.featured-image{
+height:240px;
+}
+
+.events-grid{
+grid-template-columns:1fr;
+gap:16px;
+}
+
+.event-card{
+border-radius:16px;
+overflow:hidden;
+}
+
+.event-image{
+height:160px;
+}
+
+.event-content{
+padding:16px;
+}
+
+.event-btn{
+width:100%;
+margin-top:12px;
+}
+
+}
 </style>
