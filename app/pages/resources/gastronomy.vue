@@ -96,7 +96,8 @@ onMounted(async () => {
 const { data: restaurantData } = await supabase
 .from('resources')
 .select('*')
-.eq('category','gastronomy_restaurant')
+.eq('category','gastronomy')
+.eq('subcategory','restaurants')
 .eq('active', true)
 
 restaurants.value = restaurantData || []
@@ -107,7 +108,8 @@ restaurants.value = restaurantData || []
 const { data: cafeData } = await supabase
 .from('resources')
 .select('*')
-.eq('category','gastronomy_cafe')
+.eq('category','gastronomy')
+.eq('subcategory','cafes')
 .eq('active', true)
 
 cafes.value = cafeData || []
