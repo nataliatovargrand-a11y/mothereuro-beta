@@ -9,7 +9,11 @@ Trusted education advisors and curated summer programs across Europe.
 </p>
 
 
-<!-- EDUCATION ADVISOR -->
+<!-- EDUCATION & SCHOOLS -->
+
+<div class="section-title">
+Education & Schools
+</div>
 
 <div class="advisor-card">
 
@@ -43,7 +47,11 @@ Contact Now
 </div>
 
 
-<!-- EUROPEAN SUMMER SOCIETY -->
+<!-- SUMMER CAMPS -->
+
+<div class="section-title">
+Summer Camps
+</div>
 
 <div class="summer-card">
 
@@ -63,6 +71,7 @@ discover new cultures, and return home with confidence, independence, and lifelo
 <a
 href="https://europeansummersociety.com"
 target="_blank"
+rel="noopener noreferrer"
 class="summer-button"
 >
 Explore Programs
@@ -91,6 +100,16 @@ opacity:.7;
 max-width:620px;
 margin-bottom:80px;
 line-height:1.6;
+}
+
+
+/* SECTION TITLES */
+
+.section-title{
+letter-spacing:6px;
+font-size:12px;
+margin-bottom:30px;
+opacity:.6;
 }
 
 
@@ -144,7 +163,7 @@ display:inline-block;
 }
 
 
-/* SUMMER SOCIETY HERO */
+/* SUMMER CARD */
 
 .summer-card{
 height:420px;
@@ -157,6 +176,7 @@ background-size:cover;
 background-position:center;
 color:white;
 position:relative;
+margin-bottom:40px;
 }
 
 .summer-card::after{
