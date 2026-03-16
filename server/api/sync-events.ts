@@ -3,12 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 export default defineEventHandler(async () => {
 
   const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
   const response = await fetch(
-    'https://api.lu.ma/public/v1/calendar/list-events?calendar_id=caL-Hv0apqNkf2UIKs',
+    'https://api.lu.ma/public/v1/calendar-events?calendar_id=caL-Hv0apqNkf2UIKs',
     {
       headers: {
         Authorization: `Bearer ${process.env.LUMA_API_KEY}`
@@ -18,7 +18,7 @@ export default defineEventHandler(async () => {
 
   const data = await response.json()
 
-  const events = data.entries || data.items || []
+  const events = data.entries || []
 
   for (const event of events) {
 
