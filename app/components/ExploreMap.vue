@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-
 import { ref, onMounted, watch } from "vue"
 import mapboxgl from "mapbox-gl"
 
@@ -14,57 +13,76 @@ const props = defineProps({
 
 const mapContainer = ref(null)
 let map
-let markers = []
 
-function clearMarkers() {
-  markers.forEach(m => m.remove())
-  markers = []
-}
-
-function drawMarkers() {
-
+function updateMap() {
   if (!map) return
 
-  clearMarkers()
+  const features = []
 
-  /* RESOURCES */
-
-  props.resources?.forEach(resource => {
-
-    if (!resource.latitude || !resource.longitude) return
-
-    const el = document.createElement("div")
-    el.className = "resource-pin"
-
-    const marker = new mapboxgl.Marker(el)
-      .setLngLat([resource.longitude, resource.latitude])
-      .addTo(map)
-
-    markers.push(marker)
-
+  props.resources?.forEach(r => {
+    if (r.latitude && r.longitude) {
+      features.push({
+        type: "Feature",
+        properties: { type: "resource" },
+        geometry: {
+          type: "Point",
+          coordinates: [r.longitude, r.latitude]
+        }
+      })
+    }
   })
 
-  /* PARTNERS */
-
-  props.partners?.forEach(partner => {
-
-    if (!partner.latitude || !partner.longitude) return
-
-    const el = document.createElement("div")
-    el.className = "partner-pin"
-
-    const marker = new mapboxgl.Marker(el)
-      .setLngLat([partner.longitude, partner.latitude])
-      .addTo(map)
-
-    markers.push(marker)
-
+  props.partners?.forEach(p => {
+    if (p.latitude && p.longitude) {
+      features.push({
+        type: "Feature",
+        properties: { type: "partner" },
+        geometry: {
+          type: "Point",
+          coordinates: [p.longitude, p.latitude]
+        }
+      })
+    }
   })
 
+  const geojson = {
+    type: "FeatureCollection",
+    features
+  }
+
+  if (map.getSource("locations")) {
+    map.getSource("locations").setData(geojson)
+  } else {
+    map.addSource("locations", {
+      type: "geojson",
+      data: geojson
+    })
+
+    map.addLayer({
+      id: "resource-dots",
+      type: "circle",
+      source: "locations",
+      filter: ["==", ["get", "type"], "resource"],
+      paint: {
+        "circle-radius": 5,
+        "circle-color": "#000"
+      }
+    })
+
+    map.addLayer({
+      id: "partner-dots",
+      type: "circle",
+      source: "locations",
+      filter: ["==", ["get", "type"], "partner"],
+      paint: {
+        "circle-radius": 7,
+        "circle-color": "#A8985F"
+      }
+    })
+  }
 }
 
 onMounted(() => {
-
   mapboxgl.accessToken = useRuntimeConfig().public.mapboxToken
 
   map = new mapboxgl.Map({
@@ -75,48 +93,17 @@ onMounted(() => {
   })
 
   map.on("load", () => {
-    drawMarkers()
+    updateMap()
   })
-
 })
 
-/* react when data arrives */
-
-watch(
-  () => [props.resources, props.partners],
-  () => drawMarkers(),
-  { deep: true }
-)
-
+watch(() => [props.resources, props.partners], updateMap, { deep: true })
 </script>
 
 <style scoped>
-
 .map{
   width:100%;
   height:420px;
   border-radius:16px;
 }
-
-/* resources */
-
-.resource-pin{
-  width:10px;
-  height:10px;
-  background:black;
-  border-radius:50%;
-  border:2px solid white;
-}
-
-/* partners */
-
-.partner-pin{
-  width:14px;
-  height:14px;
-  background:#A8985F;
-  border-radius:50%;
-  border:2px solid white;
-  box-shadow:0 0 8px rgba(168,152,95,0.4);
-}
-
 </style>
