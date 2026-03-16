@@ -19,11 +19,11 @@ Restaurants
 
 <div
 v-for="restaurant in restaurants"
-:key="restaurant.name"
+:key="restaurant.id"
 class="gastronomy-card"
 >
 
-<h3>{{ restaurant.name }}</h3>
+<h3>{{ restaurant.title }}</h3>
 
 <p class="location">
 {{ restaurant.city }}
@@ -53,11 +53,11 @@ Cafés
 
 <div
 v-for="cafe in cafes"
-:key="cafe.name"
+:key="cafe.id"
 class="gastronomy-card"
 >
 
-<h3>{{ cafe.name }}</h3>
+<h3>{{ cafe.title }}</h3>
 
 <p class="location">
 {{ cafe.city }}
@@ -83,62 +83,36 @@ View Website
 
 <script setup>
 
-const restaurants = [
+import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
 
-{
-name: "Saddle",
-city: "Madrid",
-website: "https://www.saddle-madrid.com"
-},
+const restaurants = ref([])
+const cafes = ref([])
 
-{
-name: "Bouchon Racine",
-city: "London",
-website: "https://www.bouchonracine.co.uk"
-},
+onMounted(async () => {
 
-{
-name: "Septime",
-city: "Paris",
-website: "https://www.septime-charonne.fr"
-},
+/* RESTAURANTS */
 
-{
-name: "Da Vittorio",
-city: "Bergamo",
-website: "https://www.davittorio.com"
-}
+const { data: restaurantData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','gastronomy_restaurant')
+.eq('active', true)
 
-]
+restaurants.value = restaurantData || []
 
 
-const cafes = [
+/* CAFES */
 
-{
-name: "Toma Café",
-city: "Madrid",
-website: "https://www.instagram.com/tomacafe"
-},
+const { data: cafeData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','gastronomy_cafe')
+.eq('active', true)
 
-{
-name: "Holybelly",
-city: "Paris",
-website: "https://holybellycafe.com"
-},
+cafes.value = cafeData || []
 
-{
-name: "Feya",
-city: "London",
-website: "https://feya.co.uk"
-},
-
-{
-name: "Nomade",
-city: "Lisbon",
-website: "https://nomade.pt"
-}
-
-]
+})
 
 </script>
 
@@ -159,9 +133,6 @@ max-width:620px;
 margin-bottom:80px;
 line-height:1.6;
 }
-
-
-/* SECTION */
 
 .section-title{
 letter-spacing:6px;
