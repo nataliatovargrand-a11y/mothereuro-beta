@@ -1,38 +1,66 @@
 <template>
-  <div class="login-wrapper">
 
-    <h1>Member Login</h1>
+<div class="login-wrapper">
 
-    <div class="login-card">
+<h1>Member Login</h1>
 
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Email"
-        class="input"
-      />
+<div class="login-card">
 
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        class="input"
-      />
+<input
+v-model="email"
+type="email"
+placeholder="Email"
+class="input"
+@keyup.enter="login"
+/>
 
-      <button class="login-btn" @click="login">
-        Sign In
-      </button>
+<input
+v-model="password"
+type="password"
+placeholder="Password"
+class="input"
+@keyup.enter="login"
+/>
 
-      <p v-if="error" class="error">
-        {{ error }}
-      </p>
+<button
+class="login-btn"
+@click="login"
+:disabled="loading"
+>
 
-    </div>
+<span v-if="!loading">Sign In</span>
+<span v-else>Signing In...</span>
 
-  </div>
+</button>
+
+<div class="forgot">
+
+<button
+class="forgot-btn"
+@click="resetPassword"
+>
+Forgot password?
+</button>
+
+</div>
+
+<p v-if="message" class="message">
+{{ message }}
+</p>
+
+<p v-if="error" class="error">
+{{ error }}
+</p>
+
+</div>
+
+</div>
+
 </template>
 
+
 <script setup>
+
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '~/utils/supabase'
@@ -42,30 +70,78 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref(null)
+const message = ref(null)
+const loading = ref(false)
+
 
 const login = async () => {
 
-  error.value = null
+loading.value = true
+error.value = null
+message.value = null
 
-  const { data, error: loginError } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
-  })
+const { error: loginError } =
+await supabase.auth.signInWithPassword({
 
-  if (loginError) {
-    error.value = loginError.message
-    return
-  }
+email: email.value,
+password: password.value
 
-  // wait for session to exist
-  const { data: sessionData } = await supabase.auth.getSession()
+})
 
-  if (sessionData.session) {
-    router.push('/account')
-  }
+if(loginError){
+
+error.value = loginError.message
+loading.value = false
+return
 
 }
+
+const { data: sessionData } =
+await supabase.auth.getSession()
+
+if(sessionData.session){
+
+router.push('/account')
+
+}
+
+loading.value = false
+
+}
+
+
+const resetPassword = async () => {
+
+error.value = null
+message.value = null
+
+if(!email.value){
+
+error.value = "Enter your email first"
+return
+
+}
+
+const { error: resetError } =
+await supabase.auth.resetPasswordForEmail(email.value,{
+
+redirectTo: window.location.origin + '/update-password'
+
+})
+
+if(resetError){
+
+error.value = resetError.message
+return
+
+}
+
+message.value = "Password reset email sent"
+
+}
+
 </script>
+
 
 <style scoped>
 
@@ -90,6 +166,7 @@ gap:14px;
 padding:12px;
 border:1px solid rgba(0,0,0,.15);
 border-radius:6px;
+font-size:14px;
 }
 
 .login-btn{
@@ -102,10 +179,38 @@ letter-spacing:2px;
 font-size:12px;
 }
 
+.login-btn:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+.forgot{
+text-align:right;
+margin-top:-6px;
+}
+
+.forgot-btn{
+background:none;
+border:none;
+font-size:12px;
+cursor:pointer;
+opacity:.7;
+}
+
+.forgot-btn:hover{
+opacity:1;
+}
+
 .error{
-color:red;
+color:#c33;
 font-size:13px;
-margin-top:10px;
+margin-top:6px;
+}
+
+.message{
+color:#2b7a2b;
+font-size:13px;
+margin-top:6px;
 }
 
 </style>
