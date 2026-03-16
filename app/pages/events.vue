@@ -4,9 +4,21 @@
 
 <h1 class="page-title">Events</h1>
 
-<div class="events-subtitle">
-Private gatherings, cultural salons, and curated dinners
-for the Mother Euro community.
+<p class="events-subtitle">
+Private gatherings, cultural salons, and curated dinners for the Mother Euro community.
+</p>
+
+
+<!-- CITY FILTER -->
+
+<div class="filter-bar">
+
+<input
+v-model="citySearch"
+placeholder="Search by city..."
+class="city-search"
+/>
+
 </div>
 
 
@@ -58,7 +70,7 @@ Upcoming Events
 <div class="events-grid">
 
 <div
-v-for="event in upcomingEvents"
+v-for="event in filteredEvents"
 :key="event.id"
 class="event-card"
 >
@@ -71,9 +83,7 @@ class="event-image"
 
 <div class="event-content">
 
-<h3>
-{{ event.title }}
-</h3>
+<h3>{{ event.title }}</h3>
 
 <p class="event-date">
 {{ formatDate(event.event_date) }}
@@ -101,15 +111,18 @@ Reserve
 </template>
 
 
+
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const events = ref([])
-const featuredEvent = ref(null)
-const upcomingEvents = ref([])
 const member = ref(null)
+const citySearch = ref('')
+
+const featuredEvent = ref(null)
+
 
 onMounted(async()=>{
 
@@ -139,7 +152,25 @@ return new Date(e.event_date) > now
 })
 
 featuredEvent.value = futureEvents[0]
-upcomingEvents.value = futureEvents.slice(1)
+
+})
+
+
+const filteredEvents = computed(()=>{
+
+const now = new Date()
+
+const future = events.value.filter(e=>{
+return new Date(e.event_date) > now
+})
+
+const others = future.slice(1)
+
+if(!citySearch.value) return others
+
+return others.filter(e=>
+e.location?.toLowerCase().includes(citySearch.value.toLowerCase())
+)
 
 })
 
@@ -205,6 +236,7 @@ day:'numeric'
 </script>
 
 
+
 <style scoped>
 
 .events-wrapper{
@@ -220,9 +252,25 @@ margin-bottom:20px;
 
 .events-subtitle{
 opacity:.7;
-margin-bottom:80px;
+margin-bottom:60px;
 max-width:520px;
 line-height:1.6;
+}
+
+
+/* FILTER */
+
+.filter-bar{
+margin-bottom:60px;
+}
+
+.city-search{
+width:300px;
+border:none;
+border-bottom:1px solid rgba(0,0,0,0.2);
+background:transparent;
+padding:12px 0;
+font-size:16px;
 }
 
 
@@ -273,7 +321,6 @@ color:white;
 padding:14px 26px;
 border:none;
 cursor:pointer;
-font-size:11px;
 letter-spacing:2px;
 }
 
@@ -282,12 +329,11 @@ background:#A8985F;
 }
 
 
-/* EVENT GRID */
+/* EVENTS GRID */
 
 .section-label{
 font-size:12px;
 letter-spacing:4px;
-text-transform:uppercase;
 opacity:.6;
 margin-bottom:30px;
 }
@@ -315,10 +361,6 @@ object-fit:cover;
 padding:20px;
 }
 
-.event-content h3{
-margin-bottom:6px;
-}
-
 .event-btn{
 margin-top:10px;
 padding:10px 18px;
@@ -326,16 +368,12 @@ background:black;
 color:white;
 border:none;
 cursor:pointer;
-font-size:11px;
-letter-spacing:2px;
 }
 
 .event-btn:hover{
 background:#A8985F;
 }
 
-
-/* MOBILE */
 
 @media (max-width:900px){
 
