@@ -22,6 +22,7 @@
 
   </div>
 
+
   <!-- CATEGORY SECTIONS -->
 
   <div
@@ -34,7 +35,10 @@
       {{ formatCategory(category) }}
     </h2>
 
-    <div class="partners-grid">
+
+    <!-- PARTNER CAROUSEL -->
+
+    <div class="partners-carousel">
 
       <div
         v-for="partner in group"
@@ -101,15 +105,12 @@
 
 </template>
 
+
 <script setup>
 
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
-const formatCategory = (category) => {
-  if (!category) return ''
-  return category.charAt(0).toUpperCase() + category.slice(1)
-}
 const partners = ref([])
 
 onMounted(async () => {
@@ -121,6 +122,12 @@ onMounted(async () => {
   partners.value = data || []
 
 })
+
+const formatCategory = (category) => {
+  if (!category) return ''
+  return category.charAt(0).toUpperCase() + category.slice(1)
+}
+
 
 const groupedPartners = computed(() => {
 
@@ -141,6 +148,7 @@ const groupedPartners = computed(() => {
   return groups
 
 })
+
 
 const redeemPartner = async (partner) => {
 
@@ -165,7 +173,35 @@ const redeemPartner = async (partner) => {
 
 </script>
 
+
 <style scoped>
+
+/* WRAPPER */
+
+.partners-wrapper{
+padding:120px 40px 140px;
+max-width:1100px;
+margin:0 auto;
+}
+
+
+/* HEADER */
+
+.partners-header{
+margin-bottom:60px;
+}
+
+.partners-header h1{
+font-size:40px;
+letter-spacing:2px;
+margin-bottom:10px;
+}
+
+.partners-subtitle{
+opacity:.6;
+}
+
+
 /* LOGO WALL */
 
 .logo-wall{
@@ -187,58 +223,52 @@ transition:.25s ease;
 opacity:1;
 transform:scale(1.05);
 }
-.partners-wrapper{
-padding:120px 40px 140px;
-max-width:1100px;
-margin:0 auto;
-}
 
-.partners-header{
-margin-bottom:60px;
-}
-
-.partners-header h1{
-font-size:40px;
-letter-spacing:2px;
-margin-bottom:10px;
-}
-
-.partners-subtitle{
-opacity:.6;
-}
 
 /* CATEGORY */
 
 .category-section{
-margin-bottom:60px;
+margin-bottom:80px;
 }
 
 .category-title{
-font-size:22px;
-margin-bottom:20px;
-letter-spacing:1px;
-letter-spacing: 2px;
-text-transform: uppercase;
-font-size: 20px;
-margin-bottom: 24px;
+letter-spacing:2px;
+text-transform:uppercase;
+font-size:18px;
+margin-bottom:24px;
 }
 
-/* GRID */
 
-.partners-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-gap:30px;
+/* CAROUSEL */
+
+.partners-carousel{
+display:flex;
+gap:28px;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
+padding-bottom:10px;
 }
+
+.partners-carousel::-webkit-scrollbar{
+display:none;
+}
+
 
 /* CARD */
 
 .partner-card{
+
+min-width:260px;
+flex-shrink:0;
+scroll-snap-align:start;
+
 background:white;
 border-radius:20px;
 padding:28px;
+
 box-shadow:0 10px 30px rgba(0,0,0,0.05);
 transition:.25s ease;
+
 }
 
 .partner-card:hover{
@@ -246,10 +276,12 @@ transform:translateY(-4px);
 box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
+
 .partner-logo{
 width:100px;
 margin-bottom:16px;
 }
+
 
 .partner-name{
 font-size:18px;
@@ -257,10 +289,12 @@ font-weight:500;
 margin-bottom:8px;
 }
 
+
 .partner-description{
 font-size:14px;
 margin-bottom:20px;
 }
+
 
 /* BENEFIT */
 
@@ -281,6 +315,7 @@ margin-bottom:4px;
 .benefit-text{
 font-size:14px;
 }
+
 
 /* CODE */
 
@@ -310,6 +345,7 @@ font-size:12px;
 background:black;
 color:white;
 }
+
 
 .visit-btn{
 text-decoration:none;

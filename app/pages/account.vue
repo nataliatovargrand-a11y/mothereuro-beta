@@ -53,11 +53,15 @@ Edit Profile
 
 <div class="avatar-block">
 
-<img v-if="member?.avatar_url" :src="member.avatar_url" class="avatar"/>
+<img
+v-if="member?.avatar_url"
+:src="member.avatar_url"
+class="avatar"
+/>
 
 <div v-else class="avatar-placeholder"></div>
 
-<label class="upload-btn">
+<label class="upload-btn profile-upload">
 
 Upload Photo
 
@@ -109,6 +113,7 @@ hidden
 
 </div>
 
+
 <!-- EDIT MODE -->
 
 <div v-else class="edit-form">
@@ -132,45 +137,6 @@ Cancel
 </div>
 
 </div>
-
-</div>
-
-</div>
-
-
-<!-- RELOCATION FEATURE -->
-
-<div
-v-if="member?.membership_tier === 'aspiring'"
-class="card relocation-feature"
->
-
-<div class="relocation-content">
-
-<div class="relocation-text">
-
-<div class="relocation-label">
-Aspiring Member Benefit
-</div>
-
-<h2>
-Relocation Library
-</h2>
-
-<p>
-Expert relocation guides designed to help you confidently plan your move to Europe.
-</p>
-
-<NuxtLink
-to="/resources/relocation"
-class="relocation-btn"
->
-Explore the Library
-</NuxtLink>
-
-</div>
-
-<div class="relocation-image"></div>
 
 </div>
 
@@ -249,36 +215,6 @@ class="event-card"
 
 </div>
 
-
-<!-- BENEFITS -->
-
-<div class="card">
-
-<h2>Your Membership Benefits</h2>
-
-<div class="benefits">
-
-<div v-if="member?.membership_tier === 'aspiring'">
-Community events<br>
-Relocation resources<br>
-Member introductions
-</div>
-
-<div v-if="member?.membership_tier === 'resident'">
-Full resource library<br>
-Unlimited events<br>
-Partner benefits
-</div>
-
-<div v-if="member?.membership_tier === 'global'">
-Exclusive dinners<br>
-Global network<br>
-Partner privileges
-</div>
-
-</div>
-
-</div>
 
 </div>
 
@@ -423,7 +359,7 @@ return new Date(d).toLocaleDateString()
 <style scoped>
 
 .account-wrapper{
-padding:140px 40px;
+padding:120px 24px;
 max-width:900px;
 margin:auto;
 }
@@ -432,12 +368,11 @@ margin:auto;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:70px;
+margin-bottom:60px;
 }
 
 .greeting{
-font-size:42px;
-font-weight:500;
+font-size:38px;
 }
 
 .welcome{
@@ -445,28 +380,32 @@ font-size:16px;
 opacity:.6;
 }
 
+
+/* CARD */
+
 .card{
 background: rgba(255,255,255,0.35);
 backdrop-filter: blur(18px);
 border: 1px solid rgba(255,255,255,0.55);
 border-radius:18px;
-padding:36px;
-margin-bottom:40px;
-box-shadow:
-0 8px 24px rgba(0,0,0,0.06),
-inset 0 1px 0 rgba(255,255,255,0.6);
+padding:32px;
+margin-bottom:32px;
 }
 
-.card-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:24px;
-}
+
+/* PROFILE CARD */
 
 .profile-card{
 display:flex;
 gap:40px;
+align-items:flex-start;
+}
+
+.avatar-block{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
 }
 
 .avatar{
@@ -474,6 +413,21 @@ width:120px;
 height:120px;
 border-radius:50%;
 object-fit:cover;
+}
+
+.avatar-placeholder{
+width:120px;
+height:120px;
+border-radius:50%;
+background:#eee;
+}
+
+.profile-upload{
+font-size:12px;
+}
+
+.profile-info{
+flex:1;
 }
 
 .profile-grid{
@@ -495,35 +449,23 @@ margin-top:4px;
 font-size:15px;
 }
 
-.logout-btn{
 
-background:rgba(255,255,255,0.55);
+/* BUTTONS */
+
+.logout-btn{
 border:1px solid rgba(0,0,0,0.08);
 padding:10px 18px;
 border-radius:12px;
-font-size:12px;
 cursor:pointer;
-transition:.25s;
-
-}
-
-.logout-btn:hover{
 background:white;
-transform:translateY(-1px);
 }
 
 .upload-btn{
-
-padding:10px 18px;
+padding:8px 14px;
 border-radius:12px;
-background:rgba(255,255,255,0.6);
-border:1px solid rgba(0,0,0,0.08);
-font-size:12px;
+border:1px solid rgba(0,0,0,0.1);
 cursor:pointer;
-
-}
-
-.upload-btn:hover{
+font-size:12px;
 background:white;
 }
 
@@ -532,13 +474,16 @@ background:black;
 color:white;
 border:none;
 padding:10px 18px;
-border-radius:12px;
+border-radius:10px;
 cursor:pointer;
 }
 
 .cancel-btn{
 margin-left:10px;
 }
+
+
+/* SAVED */
 
 .resource-card{
 border-top:1px solid rgba(0,0,0,0.05);
@@ -563,29 +508,27 @@ color:#c33;
 cursor:pointer;
 }
 
-.relocation-content{
-display:flex;
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+.profile-card{
+flex-direction:column;
 align-items:center;
-justify-content:space-between;
-gap:40px;
+text-align:center;
 }
 
-.relocation-btn{
-display:inline-block;
-padding:12px 24px;
-border-radius:30px;
-background:#A8985F;
-color:white;
-text-decoration:none;
+.profile-grid{
+grid-template-columns:1fr;
 }
 
-.relocation-image{
-width:220px;
-height:130px;
-border-radius:14px;
-background-image:url('/images/relocation.jpg');
-background-size:cover;
-background-position:center;
+.account-header{
+flex-direction:column;
+align-items:flex-start;
+gap:16px;
+}
+
 }
 
 </style>
