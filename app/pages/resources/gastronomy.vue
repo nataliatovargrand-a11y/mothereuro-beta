@@ -137,10 +137,14 @@ line-height:1.6;
 }
 
 .section-title{
-letter-spacing:6px;
-font-size:12px;
+font-family:'Inter', sans-serif;
+font-size:18px;
+font-weight:400;
+color:var(--me-text);
+margin-top:60px;
 margin-bottom:24px;
-opacity:.6;
+letter-spacing:0;
+opacity:.7;
 }
 
 
@@ -184,6 +188,10 @@ margin-bottom:20px;
 .link{
 text-decoration:underline;
 font-size:14px;
+}
+
+.resources-wrapper h1{
+margin-bottom:20px;
 }
 
 </style>
