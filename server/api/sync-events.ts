@@ -8,7 +8,7 @@ export default defineEventHandler(async () => {
   )
 
 const response = await fetch(
-  'https://api.lu.ma/public/v1/calendar-events?calendar_id=cal-Hv0aqqpqNkf2UIKs&include_private=true',
+  'https://api.lu.ma/public/v1/events',
   {
     headers: {
       Authorization: `Bearer ${process.env.LUMA_API_KEY}`
