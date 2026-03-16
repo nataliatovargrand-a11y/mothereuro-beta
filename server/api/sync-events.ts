@@ -7,14 +7,14 @@ export default defineEventHandler(async () => {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  const response = await fetch(
-    'https://api.lu.ma/public/v1/calendar-events?calendar_id=cal-Hv0aqqpqNkf2UIKs',
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.LUMA_API_KEY}`
-      }
+const response = await fetch(
+  'https://api.lu.ma/public/v1/calendar-events?calendar_id=cal-Hv0aqqpqNkf2UIKs&include_private=true',
+  {
+    headers: {
+      Authorization: `Bearer ${process.env.LUMA_API_KEY}`
     }
-  )
+  }
+)
 
   const data = await response.json()
 
