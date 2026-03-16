@@ -41,9 +41,7 @@ NEXT EVENT
 {{ featuredEvent.event_type }}
 </div>
 
-<h2>
-{{ featuredEvent.title }}
-</h2>
+<h2>{{ featuredEvent.title }}</h2>
 
 <p class="event-date">
 {{ formatDate(featuredEvent.event_date) }}
@@ -139,6 +137,8 @@ onMounted(async()=>{
 const { data:{ session } } = await supabase.auth.getSession()
 if(!session) return
 
+/* Load member */
+
 const { data: memberData } = await supabase
 .from('members')
 .select('*')
@@ -148,6 +148,8 @@ const { data: memberData } = await supabase
 member.value = memberData
 
 
+/* Load events */
+
 const { data } = await supabase
 .from('events')
 .select(`
@@ -156,34 +158,27 @@ event_registrations(count)
 `)
 .order('event_date',{ascending:true})
 
-events.value = data.map(e=>{
+
+events.value = (data || []).map(e=>{
 return {
 ...e,
 attending: e.event_registrations?.[0]?.count || 0
 }
 })
 
-const now = new Date()
 
-const futureEvents = events.value.filter(e=>{
-return new Date(e.event_date) > now
-})
+/* Set featured event */
 
-featuredEvent.value = futureEvents[0]
+featuredEvent.value = events.value[0]
 
 })
 
 
+/* Filter events */
 
 const filteredEvents = computed(()=>{
 
-const now = new Date()
-
-const future = events.value.filter(e=>{
-return new Date(e.event_date) > now
-})
-
-const others = future.slice(1)
+const others = events.value.slice(1)
 
 if(!citySearch.value) return others
 
@@ -195,9 +190,9 @@ e.location?.toLowerCase().includes(citySearch.value.toLowerCase())
 
 
 
-const register = async(event)=>{
+/* Register */
 
-/* GLOBAL MEMBER GATING */
+const register = async(event)=>{
 
 if(member.value.membership_tier === 'global'){
 
@@ -236,7 +231,7 @@ return
 }
 
 
-/* CAPACITY + WAITLIST */
+/* Capacity */
 
 const { data: attendees } = await supabase
 .from('event_registrations')
@@ -255,12 +250,11 @@ waitlist: true
 })
 
 alert("This event is full. You've been added to the waitlist.")
-
 return
 }
 
 
-/* REGISTER */
+/* Register */
 
 await supabase
 .from('event_registrations')
@@ -274,6 +268,8 @@ window.open(event.luma_url)
 }
 
 
+
+/* Date formatting */
 
 const formatDate=(d)=>{
 return new Date(d).toLocaleDateString(undefined,{
@@ -307,10 +303,6 @@ max-width:520px;
 line-height:1.6;
 }
 
-
-
-/* FILTER */
-
 .filter-bar{
 margin-bottom:60px;
 }
@@ -323,10 +315,6 @@ background:transparent;
 padding:12px 0;
 font-size:16px;
 }
-
-
-
-/* FEATURED */
 
 .featured-event{
 display:grid;
@@ -368,10 +356,6 @@ letter-spacing:2px;
 background:#A8985F;
 }
 
-
-
-/* EVENT TAG */
-
 .event-tag{
 display:inline-block;
 font-size:10px;
@@ -381,10 +365,6 @@ background:#f2f2f2;
 padding:4px 8px;
 margin-bottom:8px;
 }
-
-
-
-/* GRID */
 
 .section-label{
 font-size:12px;
@@ -445,10 +425,6 @@ cursor:pointer;
 .event-btn:hover{
 background:#A8985F;
 }
-
-
-
-/* MOBILE */
 
 @media (max-width:900px){
 
