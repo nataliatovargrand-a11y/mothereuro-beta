@@ -8,8 +8,8 @@ import { onMounted, ref } from 'vue'
 import mapboxgl from 'mapbox-gl'
 
 const props = defineProps({
-resources:Array,
-partners:Array
+resources: Array,
+partners: Array
 })
 
 const mapContainer = ref(null)
@@ -25,11 +25,13 @@ center: [10,50],
 zoom: 3
 })
 
-/* RESOURCES */
+map.on('load', () => {
+
+/* RESOURCE MARKERS */
 
 props.resources?.forEach(resource => {
 
-if(!resource.latitude || !resource.longitude) return
+if(resource.latitude == null || resource.longitude == null) return
 
 const el = document.createElement('div')
 el.className = 'resource-pin'
@@ -40,11 +42,11 @@ new mapboxgl.Marker(el)
 
 })
 
-/* PARTNERS */
+/* PARTNER MARKERS */
 
 props.partners?.forEach(partner => {
 
-if(!partner.latitude || !partner.longitude) return
+if(partner.latitude == null || partner.longitude == null) return
 
 const el = document.createElement('div')
 el.className = 'partner-pin'
@@ -52,6 +54,8 @@ el.className = 'partner-pin'
 new mapboxgl.Marker(el)
 .setLngLat([partner.longitude, partner.latitude])
 .addTo(map)
+
+})
 
 })
 
@@ -67,7 +71,7 @@ height:420px;
 border-radius:16px;
 }
 
-/* RESOURCE DOT */
+/* RESOURCE */
 
 .resource-pin{
 width:10px;
@@ -77,7 +81,7 @@ border-radius:50%;
 border:2px solid white;
 }
 
-/* PARTNER DOT */
+/* PARTNERS */
 
 .partner-pin{
 width:14px;
@@ -85,7 +89,7 @@ height:14px;
 background:#A8985F;
 border-radius:50%;
 border:2px solid white;
-box-shadow:0 0 6px rgba(0,0,0,0.3);
+box-shadow:0 0 6px rgba(0,0,0,0.25);
 }
 
 </style>
