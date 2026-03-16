@@ -33,3 +33,21 @@ h1, h2, h3 {
 button {
   font-family: 'Inter', sans-serif;
 }
+/* Prevent horizontal overflow */
+
+body{
+overflow-x:hidden;
+}
+
+.explore-wrapper,
+.events-wrapper,
+.partners-wrapper,
+.resources-wrapper{
+overflow-x:hidden;
+}
+
+/* Prevent padding layout bugs */
+
+*{
+box-sizing:border-box;
+}

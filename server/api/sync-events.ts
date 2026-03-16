@@ -23,3 +23,33 @@ export default defineEventHandler(async () => {
   }
 
 })
+
+@media (max-width:768px){
+
+.featured-event{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+.featured-image{
+width:100%;
+height:220px;
+border-radius:16px;
+object-fit:cover;
+}
+
+.featured-content{
+padding:0;
+}
+
+.featured-content h2{
+font-size:28px;
+line-height:1.2;
+}
+
+.featured-btn{
+width:100%;
+}
+
+}

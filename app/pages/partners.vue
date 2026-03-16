@@ -258,9 +258,13 @@ display:none;
 
 .partner-card{
 
-min-width:260px;
+min-width:220px;
+max-width:260px;
+
 flex-shrink:0;
 scroll-snap-align:start;
+
+}
 
 background:white;
 border-radius:20px;
@@ -354,3 +358,20 @@ letter-spacing:1px;
 }
 
 </style>
+@media (max-width:768px){
+
+.partners-carousel{
+padding-left:4px;
+}
+
+.partner-card{
+min-width:200px;
+max-width:220px;
+padding:20px;
+}
+
+.partner-logo{
+width:80px;
+}
+
+}

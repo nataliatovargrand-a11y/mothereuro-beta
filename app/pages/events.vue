@@ -434,15 +434,13 @@ margin-bottom:30px;
 
 .events-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:30px;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
 }
 
 .event-card{
-background:white;
-border-radius:14px;
-overflow:hidden;
-box-shadow:0 15px 35px rgba(0,0,0,.06);
+width:100%;
+}
 }
 
 .event-image{
@@ -465,3 +463,15 @@ cursor:pointer;
 }
 
 </style>
+
+@media (max-width:768px){
+
+.events-grid{
+grid-template-columns:1fr;
+}
+
+.event-card{
+padding:18px;
+}
+
+}
