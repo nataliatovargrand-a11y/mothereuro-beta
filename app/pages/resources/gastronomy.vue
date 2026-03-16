@@ -163,14 +163,16 @@ display:none;
 
 .gastronomy-card{
 min-width:320px;
-background:#F4F2EE;
+background:white;
 padding:34px;
 border-radius:18px;
 flex-shrink:0;
+box-shadow:0 4px 18px rgba(0,0,0,0.04);
 }
 
 .gastronomy-card h3{
 font-size:22px;
+font-weight:600;
 margin-bottom:10px;
 }
 
