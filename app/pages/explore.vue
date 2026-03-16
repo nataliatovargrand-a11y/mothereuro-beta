@@ -263,6 +263,9 @@ resources.value = resourcesData || []
 const { data: partnersData } = await supabase
 .from('partners')
 .select('*')
+.eq('active', true)
+.not('latitude', 'is', null)
+.not('longitude', 'is', null)
 
 partners.value = partnersData || []
 
