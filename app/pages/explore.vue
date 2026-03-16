@@ -189,6 +189,10 @@ Clear Filter
 <span>Education</span>
 </NuxtLink>
 
+<NuxtLink to="/resources/real-estate" class="category-card realestate">
+<span>Real Estate</span>
+</NuxtLink>
+
 <NuxtLink
 v-if="member && member.membership_tier === 'aspiring'"
 to="/resources/relocation"
@@ -490,6 +494,7 @@ z-index:2;
 .gastronomy{background-image:url('/images/gastronomy.jpg')}
 .wellness{background-image:url('/images/wellness.jpg')}
 .education{background-image:url('/images/education.jpg')}
+.realestate{background-image:url('/images/realestate.jpg')}
 .relocation{background-image:url('/images/relocation.jpg')}
 
 </style>
