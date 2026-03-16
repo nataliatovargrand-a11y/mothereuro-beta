@@ -441,7 +441,6 @@ gap:20px;
 .event-card{
 width:100%;
 }
-}
 
 .event-image{
 width:100%;
@@ -462,7 +461,8 @@ border:none;
 cursor:pointer;
 }
 
-</style>
+
+/* MOBILE */
 
 @media (max-width:768px){
 
@@ -475,3 +475,4 @@ padding:18px;
 }
 
 }
+</style>
