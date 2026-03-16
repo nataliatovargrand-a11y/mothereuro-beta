@@ -96,9 +96,9 @@ Clear Filter
 </div>
 
 
-<!-- CATEGORY CARDS -->
+<!-- CATEGORY CAROUSEL -->
 
-<div class="category-section">
+<div class="category-carousel">
 
 <NuxtLink to="/resources/beauty" class="category-card beauty">
 <span>Beauty</span>
@@ -340,27 +340,42 @@ font-size:12px;
 }
 
 
-/* CATEGORY CARDS */
+/* CATEGORY CAROUSEL */
 
-.category-section{
-display:grid;
-grid-template-columns:repeat(2,1fr);
+.category-carousel{
+display:flex;
 gap:24px;
-margin:80px 0;
+overflow-x:auto;
+padding-bottom:10px;
+scroll-snap-type:x mandatory;
+margin:60px 0;
+}
+
+.category-carousel::-webkit-scrollbar{
+display:none;
 }
 
 .category-card{
-position:relative;
+min-width:220px;
 height:260px;
+flex-shrink:0;
+scroll-snap-align:start;
+
+position:relative;
 display:flex;
 align-items:center;
 justify-content:center;
+
 text-decoration:none;
 color:white;
-font-size:24px;
+
+font-size:22px;
 letter-spacing:4px;
+
 background-size:cover;
 background-position:center;
+
+border-radius:14px;
 }
 
 .category-card::after{
@@ -368,6 +383,7 @@ content:"";
 position:absolute;
 inset:0;
 background:rgba(0,0,0,0.25);
+border-radius:14px;
 }
 
 .category-card span{
