@@ -37,6 +37,10 @@ class="featured-image"
 NEXT EVENT
 </div>
 
+<div class="event-tag" v-if="featuredEvent.event_type">
+{{ featuredEvent.event_type }}
+</div>
+
 <h2>
 {{ featuredEvent.title }}
 </h2>
@@ -83,6 +87,10 @@ class="event-image"
 
 <div class="event-content">
 
+<div class="event-tag" v-if="event.event_type">
+{{ event.event_type }}
+</div>
+
 <h3>{{ event.title }}</h3>
 
 <p class="event-date">
@@ -92,6 +100,10 @@ class="event-image"
 <p class="event-location">
 {{ event.location }}
 </p>
+
+<div class="capacity-note" v-if="event.capacity">
+{{ event.attending }} / {{ event.capacity }} attending
+</div>
 
 <button
 @click="register(event)"
@@ -120,14 +132,11 @@ import { supabase } from '~/utils/supabase'
 const events = ref([])
 const member = ref(null)
 const citySearch = ref('')
-
 const featuredEvent = ref(null)
-
 
 onMounted(async()=>{
 
 const { data:{ session } } = await supabase.auth.getSession()
-
 if(!session) return
 
 const { data: memberData } = await supabase
@@ -138,12 +147,21 @@ const { data: memberData } = await supabase
 
 member.value = memberData
 
+
 const { data } = await supabase
 .from('events')
-.select('*')
+.select(`
+*,
+event_registrations(count)
+`)
 .order('event_date',{ascending:true})
 
-events.value = data || []
+events.value = data.map(e=>{
+return {
+...e,
+attending: e.event_registrations?.[0]?.count || 0
+}
+})
 
 const now = new Date()
 
@@ -154,6 +172,7 @@ return new Date(e.event_date) > now
 featuredEvent.value = futureEvents[0]
 
 })
+
 
 
 const filteredEvents = computed(()=>{
@@ -175,7 +194,10 @@ e.location?.toLowerCase().includes(citySearch.value.toLowerCase())
 })
 
 
+
 const register = async(event)=>{
+
+/* GLOBAL MEMBER GATING */
 
 if(member.value.membership_tier === 'global'){
 
@@ -213,6 +235,33 @@ return
 
 }
 
+
+/* CAPACITY + WAITLIST */
+
+const { data: attendees } = await supabase
+.from('event_registrations')
+.select('*')
+.eq('event_id', event.id)
+.eq('waitlist', false)
+
+if(event.capacity && attendees.length >= event.capacity){
+
+await supabase
+.from('event_registrations')
+.insert({
+member_id: member.value.id,
+event_id: event.id,
+waitlist: true
+})
+
+alert("This event is full. You've been added to the waitlist.")
+
+return
+}
+
+
+/* REGISTER */
+
 await supabase
 .from('event_registrations')
 .insert({
@@ -223,6 +272,7 @@ event_id: event.id
 window.open(event.luma_url)
 
 }
+
 
 
 const formatDate=(d)=>{
@@ -258,6 +308,7 @@ line-height:1.6;
 }
 
 
+
 /* FILTER */
 
 .filter-bar{
@@ -274,7 +325,8 @@ font-size:16px;
 }
 
 
-/* FEATURED EVENT */
+
+/* FEATURED */
 
 .featured-event{
 display:grid;
@@ -295,24 +347,12 @@ border-radius:12px;
 font-size:11px;
 letter-spacing:4px;
 opacity:.6;
-margin-bottom:16px;
+margin-bottom:10px;
 }
 
 .featured-content h2{
 font-size:34px;
 margin-bottom:10px;
-}
-
-.event-date{
-font-size:13px;
-opacity:.6;
-margin-bottom:6px;
-}
-
-.event-location{
-font-size:13px;
-opacity:.8;
-margin-bottom:20px;
 }
 
 .featured-btn{
@@ -329,7 +369,22 @@ background:#A8985F;
 }
 
 
-/* EVENTS GRID */
+
+/* EVENT TAG */
+
+.event-tag{
+display:inline-block;
+font-size:10px;
+letter-spacing:2px;
+text-transform:uppercase;
+background:#f2f2f2;
+padding:4px 8px;
+margin-bottom:8px;
+}
+
+
+
+/* GRID */
 
 .section-label{
 font-size:12px;
@@ -361,8 +416,25 @@ object-fit:cover;
 padding:20px;
 }
 
+.event-date{
+font-size:13px;
+opacity:.6;
+margin-bottom:4px;
+}
+
+.event-location{
+font-size:13px;
+opacity:.8;
+margin-bottom:10px;
+}
+
+.capacity-note{
+font-size:12px;
+opacity:.5;
+margin-bottom:10px;
+}
+
 .event-btn{
-margin-top:10px;
 padding:10px 18px;
 background:black;
 color:white;
@@ -374,6 +446,9 @@ cursor:pointer;
 background:#A8985F;
 }
 
+
+
+/* MOBILE */
 
 @media (max-width:900px){
 
