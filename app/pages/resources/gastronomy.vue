@@ -1,82 +1,75 @@
 <template>
 
-<div class="category-page">
+<div class="resources-wrapper">
 
 <h1>Gastronomy</h1>
 
 <p class="intro">
-Restaurants, cafes and bars across Europe recommended by the Mother Euro community.
+A curated guide to exceptional restaurants and cafés across Europe loved by the Mother Euro community.
 </p>
+
 
 <!-- RESTAURANTS -->
 
-<div class="section">
+<div class="section-title">
+Restaurants
+</div>
 
-<h2>Restaurants</h2>
+<div class="carousel">
 
-<div class="grid">
+<div
+v-for="restaurant in restaurants"
+:key="restaurant.name"
+class="gastronomy-card"
+>
 
-<div v-for="r in restaurants" :key="r.id" class="resource-card">
+<h3>{{ restaurant.name }}</h3>
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<p class="location">
+{{ restaurant.city }}
+</p>
 
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">View</a>
+<a
+:href="restaurant.website"
+target="_blank"
+class="link"
+>
+View Website
+</a>
 
 </div>
 
 </div>
 
-</div>
 
 
 <!-- CAFES -->
 
-<div class="section">
-
-<h2>Cafes</h2>
-
-<div class="grid">
-
-<div v-for="r in cafes" :key="r.id" class="resource-card">
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">View</a>
-
+<div class="section-title">
+Cafés
 </div>
 
-</div>
+<div class="carousel">
 
-</div>
+<div
+v-for="cafe in cafes"
+:key="cafe.name"
+class="gastronomy-card"
+>
 
+<h3>{{ cafe.name }}</h3>
 
-<!-- BARS -->
+<p class="location">
+{{ cafe.city }}
+</p>
 
-<div class="section">
-
-<h2>Bars</h2>
-
-<div class="grid">
-
-<div v-for="r in bars" :key="r.id" class="resource-card">
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">View</a>
-
-</div>
+<a
+:href="cafe.website"
+target="_blank"
+class="link"
+>
+View Website
+</a>
 
 </div>
 
@@ -86,27 +79,136 @@ Restaurants, cafes and bars across Europe recommended by the Mother Euro communi
 
 </template>
 
+
+
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
+const restaurants = [
 
-const resources = ref([])
+{
+name: "Saddle",
+city: "Madrid",
+website: "https://www.saddle-madrid.com"
+},
 
-onMounted(async()=>{
+{
+name: "Bouchon Racine",
+city: "London",
+website: "https://www.bouchonracine.co.uk"
+},
 
-const { data } = await supabase
-.from('resources')
-.select('*')
-.eq('category','gastronomy')
-.eq('active',true)
+{
+name: "Septime",
+city: "Paris",
+website: "https://www.septime-charonne.fr"
+},
 
-resources.value = data || []
+{
+name: "Da Vittorio",
+city: "Bergamo",
+website: "https://www.davittorio.com"
+}
 
-})
+]
 
-const restaurants = computed(()=>resources.value.filter(r=>r.subcategory==='restaurants'))
-const cafes = computed(()=>resources.value.filter(r=>r.subcategory==='cafes'))
-const bars = computed(()=>resources.value.filter(r=>r.subcategory==='bars'))
+
+const cafes = [
+
+{
+name: "Toma Café",
+city: "Madrid",
+website: "https://www.instagram.com/tomacafe"
+},
+
+{
+name: "Holybelly",
+city: "Paris",
+website: "https://holybellycafe.com"
+},
+
+{
+name: "Feya",
+city: "London",
+website: "https://feya.co.uk"
+},
+
+{
+name: "Nomade",
+city: "Lisbon",
+website: "https://nomade.pt"
+}
+
+]
 
 </script>
+
+
+
+<style scoped>
+
+.resources-wrapper{
+padding:140px 40px;
+max-width:1200px;
+margin:auto;
+}
+
+.intro{
+font-size:18px;
+opacity:.7;
+max-width:620px;
+margin-bottom:80px;
+line-height:1.6;
+}
+
+
+/* SECTION */
+
+.section-title{
+letter-spacing:6px;
+font-size:12px;
+margin-bottom:24px;
+opacity:.6;
+}
+
+
+/* CAROUSEL */
+
+.carousel{
+display:flex;
+gap:24px;
+overflow-x:auto;
+padding-bottom:20px;
+margin-bottom:80px;
+}
+
+.carousel::-webkit-scrollbar{
+display:none;
+}
+
+
+/* CARDS */
+
+.gastronomy-card{
+min-width:320px;
+background:#F4F2EE;
+padding:34px;
+border-radius:18px;
+flex-shrink:0;
+}
+
+.gastronomy-card h3{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.location{
+opacity:.6;
+margin-bottom:20px;
+}
+
+.link{
+text-decoration:underline;
+font-size:14px;
+}
+
+</style>
