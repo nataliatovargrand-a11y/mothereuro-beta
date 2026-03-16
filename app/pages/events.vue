@@ -152,19 +152,11 @@ member.value = memberData
 
 const { data } = await supabase
 .from('events')
-.select(`
-*,
-event_registrations(count)
-`)
+.select('*')
 .order('event_date',{ascending:true})
 
 
-events.value = (data || []).map(e=>{
-return {
-...e,
-attending: e.event_registrations?.[0]?.count || 0
-}
-})
+events.value = data || []
 
 
 /* Set featured event */
