@@ -13,20 +13,20 @@
 
 /* GLOBAL RESET */
 
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
 html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--me-bg);
-  color: var(--me-text);
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+body{
+  margin:0;
+  padding:0;
+  background:var(--me-bg);
+  color:var(--me-text);
+  font-family:'Inter', sans-serif;
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
 
 
@@ -34,10 +34,10 @@ body {
 
 h1,
 h2,
-h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  letter-spacing: 0.03em;
+h3{
+  font-family:'Cormorant Garamond', serif;
+  font-weight:300;
+  letter-spacing:0.03em;
 }
 
 h1{
@@ -53,25 +53,6 @@ h3{
 }
 
 
-/* BUTTONS */
-
-button {
-  font-family: 'Inter', sans-serif;
-}
-
-
-/* GLOBAL PAGE WRAPPERS */
-/* prevents horizontal scroll bugs */
-
-.explore-wrapper,
-.events-wrapper,
-.partners-wrapper,
-.resources-wrapper,
-.account-wrapper{
-  overflow-x:hidden;
-}
-
-
 /* GLOBAL LINKS */
 
 a{
@@ -84,11 +65,59 @@ a:hover{
 }
 
 
+/* BUTTONS */
+
+button{
+  font-family:'Inter', sans-serif;
+  transition:all .2s ease;
+  cursor:pointer;
+}
+
+
 /* IMAGE SAFETY */
 
 img{
   max-width:100%;
   display:block;
+}
+
+
+/* PAGE WRAPPERS */
+/* prevents horizontal scroll bugs */
+
+.explore-wrapper,
+.events-wrapper,
+.partners-wrapper,
+.resources-wrapper,
+.account-wrapper{
+  overflow-x:hidden;
+}
+
+
+/* HERO LOGO FIX */
+/* keeps Mother Euro logo perfectly centered */
+
+.hero-logo{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.hero-logo img{
+  width:110px;
+  margin:auto;
+  transform:translateX(6px);
+}
+
+
+/* HERO TEXT CENTERING */
+
+.hero{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
 
 
@@ -127,9 +156,28 @@ h3{
 }
 
 
-/* SMOOTH UI */
+/* MOBILE HERO IMPROVEMENTS */
+
+@media (max-width:768px){
+
+.hero-logo img{
+  width:95px;
+}
+
+}
+
+
+/* GLOBAL UI SMOOTHNESS */
 
 button,
 a{
   transition:all .2s ease;
+}
+
+
+/* FIXES RANDOM MOBILE OVERFLOW BUGS */
+
+section,
+div{
+  max-width:100%;
 }
