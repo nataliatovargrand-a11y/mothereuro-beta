@@ -1,101 +1,101 @@
 <template>
 
-<div class="category-page">
+<div class="resources-wrapper">
 
 <h1>Wellness</h1>
 
 <p class="intro">
-Trusted doctors, clinics, spas and holistic practitioners across Europe recommended by the Mother Euro network.
+A curated guide to trusted wellness spaces across Europe — from clinics and restorative spas to exceptional studios and holistic practitioners.
 </p>
-
-
-<!-- DOCTORS -->
-
-<div class="section">
-
-<h2>Doctors</h2>
-
-<div class="grid">
-
-<div
-v-for="r in doctors"
-:key="r.id"
-class="resource-card"
->
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
-</a>
-
-</div>
-
-</div>
-
-</div>
 
 
 <!-- CLINICS -->
 
-<div class="section">
+<div class="section-title">Clinics</div>
 
-<h2>Clinics</h2>
-
-<div class="grid">
+<div class="carousel">
 
 <div
-v-for="r in clinics"
-:key="r.id"
-class="resource-card"
+v-for="item in clinics"
+:key="item.id"
+class="wellness-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.title }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="location">
+{{ item.city }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
+<a
+:href="item.website"
+target="_blank"
+class="link"
+>
+View Website
 </a>
 
 </div>
 
 </div>
 
-</div>
 
+<!-- SPA -->
 
-<!-- SPAS -->
+<div class="section-title">Spas</div>
 
-<div class="section">
-
-<h2>Spas</h2>
-
-<div class="grid">
+<div class="carousel">
 
 <div
-v-for="r in spas"
-:key="r.id"
-class="resource-card"
+v-for="item in spa"
+:key="item.id"
+class="wellness-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.title }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="location">
+{{ item.city }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
+<a
+:href="item.website"
+target="_blank"
+class="link"
+>
+View Website
 </a>
 
 </div>
+
+</div>
+
+
+<!-- STUDIOS -->
+
+<div class="section-title">Studios</div>
+
+<div class="carousel">
+
+<div
+v-for="item in studios"
+:key="item.id"
+class="wellness-card"
+>
+
+<h3>{{ item.title }}</h3>
+
+<p class="location">
+{{ item.city }}
+</p>
+
+<a
+:href="item.website"
+target="_blank"
+class="link"
+>
+View Website
+</a>
 
 </div>
 
@@ -104,29 +104,29 @@ Visit
 
 <!-- WOO -->
 
-<div class="section">
+<div class="section-title">Woo</div>
 
-<h2>Woo</h2>
-
-<div class="grid">
+<div class="carousel">
 
 <div
-v-for="r in woo"
-:key="r.id"
-class="resource-card"
+v-for="item in woo"
+:key="item.id"
+class="wellness-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.title }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="location">
+{{ item.city }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-Visit
+<a
+:href="item.website"
+target="_blank"
+class="link"
+>
+View Website
 </a>
-
-</div>
 
 </div>
 
@@ -137,80 +137,109 @@ Visit
 </template>
 
 
+
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
-const resources = ref([])
+const clinics = ref([])
+const spa = ref([])
+const studios = ref([])
+const woo = ref([])
 
-onMounted(async()=>{
+onMounted(async () => {
 
 const { data } = await supabase
 .from('resources')
 .select('*')
 .eq('category','wellness')
-.eq('active',true)
+.eq('active', true)
 
-resources.value = data || []
+if(!data) return
+
+clinics.value = data.filter(r => r.subcategory === 'clinics')
+spa.value = data.filter(r => r.subcategory === 'spa')
+studios.value = data.filter(r => r.subcategory === 'studios')
+woo.value = data.filter(r => r.subcategory === 'woo')
 
 })
-
-const doctors = computed(() =>
-resources.value.filter(r => r.subcategory === 'doctors')
-)
-
-const clinics = computed(() =>
-resources.value.filter(r => r.subcategory === 'clinics')
-)
-
-const spas = computed(() =>
-resources.value.filter(r => r.subcategory === 'spas')
-)
-
-const woo = computed(() =>
-resources.value.filter(r => r.subcategory === 'woo')
-)
 
 </script>
 
 
+
 <style scoped>
 
-.category-page{
+.resources-wrapper{
 padding:140px 40px;
-max-width:1100px;
+max-width:1200px;
 margin:auto;
 }
 
 .intro{
+font-size:18px;
 opacity:.7;
+max-width:620px;
+margin-bottom:80px;
+line-height:1.6;
+}
+
+
+/* SECTION TITLES */
+
+.section-title{
+font-family:'Inter', sans-serif;
+font-size:18px;
+font-weight:400;
+color:var(--me-text);
+margin-top:60px;
+margin-bottom:24px;
+opacity:.7;
+}
+
+
+/* CAROUSEL */
+
+.carousel{
+display:flex;
+gap:24px;
+overflow-x:auto;
+padding-bottom:20px;
 margin-bottom:60px;
 }
 
-.section{
-margin-bottom:80px;
+.carousel::-webkit-scrollbar{
+display:none;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:30px;
-}
 
-.resource-card{
+/* CARDS */
+
+.wellness-card{
+min-width:320px;
 background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+padding:34px;
+border-radius:18px;
+flex-shrink:0;
+box-shadow:0 4px 18px rgba(0,0,0,0.04);
 }
 
-.resource-card img{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:10px;
-margin-bottom:12px;
+.wellness-card h3{
+font-size:22px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.location{
+opacity:.55;
+margin-bottom:20px;
+font-size:15px;
+}
+
+.link{
+text-decoration:underline;
+font-size:14px;
 }
 
 </style>
