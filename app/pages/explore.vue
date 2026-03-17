@@ -487,6 +487,9 @@ border-radius:14px;
 
 .category-card span{
 z-index:2;
+text-transform:uppercase;
+letter-spacing:4px;
+font-weight:500;
 }
 
 .beauty{background-image:url('/images/beauty.jpg')}
