@@ -69,6 +69,36 @@ Explore Persepolis
 
 </div>
 
+<!-- PRACTICA -->
+
+<div class="hero-card practica">
+
+<div class="card-content">
+
+<div class="card-label">
+Architectural & Design Studio
+</div>
+
+<h2>
+Practica
+</h2>
+
+<p>
+Practica is an architectural and design studio known for refined,
+modern spaces and thoughtful residential design across Europe.
+</p>
+
+<a
+href="https://studiopractica.com/"
+target="_blank"
+class="card-button"
+>
+Visit Website
+</a>
+
+</div>
+
+</div>
 
 </div>
 
@@ -150,6 +180,9 @@ letter-spacing:2px;
 display:inline-block;
 }
 
+.practica{
+background-image:url('/images/practica.jpg');
+}
 
 /* BACKGROUNDS */
 
