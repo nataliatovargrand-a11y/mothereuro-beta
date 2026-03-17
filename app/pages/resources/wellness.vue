@@ -19,10 +19,6 @@ Clinics
 
 <div class="wellness-card">
 
-<img src="/images/iwhc.jpg" class="card-image"/>
-
-<div class="card-content">
-
 <h3>International Women's Health Center</h3>
 
 <p class="location">Madrid</p>
@@ -37,18 +33,14 @@ Visit Website
 
 </div>
 
-</div>
-
 
 <div class="wellness-card">
 
-<img src="/images/clinica-cloe.jpg" class="card-image"/>
-
-<div class="card-content">
-
 <h3>Clinica Cloe</h3>
 
-<p class="location">Odontología Especializada • Madrid</p>
+<p class="location">
+Odontología Especializada • Madrid
+</p>
 
 <a
 href="https://www.clinicacloe.com/en/clinica-cloe-english/"
@@ -57,8 +49,6 @@ class="card-button"
 >
 Visit Website
 </a>
-
-</div>
 
 </div>
 
@@ -76,10 +66,6 @@ Spas
 
 <div class="wellness-card">
 
-<img src="/images/eva-ometz.jpg" class="card-image"/>
-
-<div class="card-content">
-
 <h3>Eva Ometz</h3>
 
 <a
@@ -92,14 +78,8 @@ Visit Website
 
 </div>
 
-</div>
-
 
 <div class="wellness-card">
-
-<img src="/images/six-harmonies.jpg" class="card-image"/>
-
-<div class="card-content">
 
 <h3>Six Harmonies</h3>
 
@@ -110,8 +90,6 @@ class="card-button"
 >
 Visit Website
 </a>
-
-</div>
 
 </div>
 
@@ -194,40 +172,27 @@ display:none;
 /* CARD */
 
 .wellness-card{
-min-width:260px;
+min-width:240px;
+height:240px;
 background:white;
 border-radius:16px;
-overflow:hidden;
+padding:30px;
 flex-shrink:0;
-box-shadow:0 8px 24px rgba(0,0,0,0.05);
-}
-
-
-/* IMAGE */
-
-.card-image{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-
-/* CONTENT */
-
-.card-content{
-padding:20px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+box-shadow:0 6px 18px rgba(0,0,0,0.04);
 }
 
 .wellness-card h3{
 font-size:18px;
 font-weight:600;
-margin-bottom:8px;
+line-height:1.3;
 }
 
 .location{
 font-size:14px;
 opacity:.6;
-margin-bottom:16px;
 }
 
 
@@ -242,6 +207,7 @@ border-radius:30px;
 font-size:11px;
 letter-spacing:1px;
 text-decoration:none;
+width:fit-content;
 }
 
 
