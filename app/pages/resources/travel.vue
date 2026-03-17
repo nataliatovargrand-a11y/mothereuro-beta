@@ -34,8 +34,8 @@ class="travel-card"
 </p>
 
 <a
-v-if="item.website_url"
-:href="item.website_url"
+v-if="item.website || item.website_url"
+:href="item.website || item.website_url"
 target="_blank"
 >
 Visit Website
@@ -44,6 +44,7 @@ Visit Website
 </div>
 
 </div>
+
 
 
 <!-- EXPERIENCES -->
@@ -69,8 +70,8 @@ class="travel-card"
 </p>
 
 <a
-v-if="item.website_url"
-:href="item.website_url"
+v-if="item.website || item.website_url"
+:href="item.website || item.website_url"
 target="_blank"
 >
 Visit Website
@@ -85,6 +86,7 @@ Visit Website
 </template>
 
 
+
 <script setup>
 
 import { ref, onMounted } from 'vue'
@@ -95,20 +97,39 @@ const experiences = ref([])
 
 onMounted(async () => {
 
-const { data } = await supabase
+/* LOAD RESOURCES */
+
+const { data: resources } = await supabase
 .from('resources')
 .select('*')
 .eq('category','travel')
 .eq('active', true)
 
-if(!data) return
 
-hotels.value = data.filter(item =>
+/* LOAD PARTNERS */
+
+const { data: partners } = await supabase
+.from('partners')
+.select('*')
+.eq('active', true)
+
+
+/* MERGE DATA */
+
+const combined = [
+...(resources || []),
+...(partners || [])
+]
+
+
+/* FILTER */
+
+hotels.value = combined.filter(item =>
 item.subcategory &&
 item.subcategory.toLowerCase().includes('hotel')
 )
 
-experiences.value = data.filter(item =>
+experiences.value = combined.filter(item =>
 item.subcategory &&
 item.subcategory.toLowerCase().includes('experience')
 )
@@ -116,6 +137,7 @@ item.subcategory.toLowerCase().includes('experience')
 })
 
 </script>
+
 
 
 <style scoped>
