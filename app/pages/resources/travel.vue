@@ -1,100 +1,83 @@
 <template>
 
-<div class="category-page">
+<div class="resources-wrapper">
 
-<h1>Travel</h1>
+<!-- PAGE TITLE -->
 
-<p class="intro">
-Hotels, retreats and travel experiences across Europe recommended by the Mother Euro network.
+<h1 class="page-title">
+Travel
+</h1>
+
+<p class="page-intro">
+Curated hotels and travel experiences across Europe trusted by the Mother Euro community.
 </p>
+
 
 <!-- HOTELS -->
 
-<div class="section">
+<h2 class="section-title">
+HOTELS
+</h2>
 
-<h2>Hotels</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in hotels"
-:key="r.id"
-class="resource-card"
+v-for="item in hotels"
+:key="item.id"
+class="travel-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>
+{{ item.name || item.title }}
+</h3>
 
-<h3>{{ r.title }}</h3>
+<p v-if="item.description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-View
+<a
+v-if="item.website_url"
+:href="item.website_url"
+target="_blank"
+>
+Visit Website
 </a>
 
 </div>
 
 </div>
 
-</div>
-
-
-<!-- RETREATS -->
-
-<div class="section">
-
-<h2>Retreats</h2>
-
-<div class="grid">
-
-<div
-v-for="r in retreats"
-:key="r.id"
-class="resource-card"
->
-
-<img v-if="r.image_url" :src="r.image_url"/>
-
-<h3>{{ r.title }}</h3>
-
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-View
-</a>
-
-</div>
-
-</div>
-
-</div>
 
 
 <!-- EXPERIENCES -->
 
-<div class="section">
+<h2 class="section-title">
+EXPERIENCES
+</h2>
 
-<h2>Experiences</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in experiences"
-:key="r.id"
-class="resource-card"
+v-for="item in experiences"
+:key="item.id"
+class="travel-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>
+{{ item.name || item.title }}
+</h3>
 
-<h3>{{ r.title }}</h3>
+<p v-if="item.description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
-View
+<a
+v-if="item.website_url"
+:href="item.website_url"
+target="_blank"
+>
+Visit Website
 </a>
-
-</div>
 
 </div>
 
@@ -104,75 +87,105 @@ View
 
 </template>
 
+
+
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
-const resources = ref([])
+const hotels = ref([])
+const experiences = ref([])
 
-onMounted(async()=>{
+onMounted(async () => {
 
 const { data } = await supabase
 .from('resources')
 .select('*')
 .eq('category','travel')
-.eq('active',true)
+.eq('active', true)
 
-resources.value = data || []
+if(!data) return
+
+hotels.value = data.filter(item =>
+item.subcategory &&
+item.subcategory.toLowerCase() === 'hotels'
+)
+
+experiences.value = data.filter(item =>
+item.subcategory &&
+item.subcategory.toLowerCase() === 'experiences'
+)
 
 })
 
-const hotels = computed(() =>
-resources.value.filter(r => r.subcategory === 'hotels')
-)
-
-const retreats = computed(() =>
-resources.value.filter(r => r.subcategory === 'retreats')
-)
-
-const experiences = computed(() =>
-resources.value.filter(r => r.subcategory === 'experiences')
-)
-
 </script>
+
+
 
 <style scoped>
 
-.category-page{
+.resources-wrapper{
 padding:140px 40px;
-max-width:1100px;
+max-width:1200px;
 margin:auto;
 }
 
-.intro{
-opacity:.7;
-margin-bottom:60px;
+/* PAGE */
+
+.page-title{
+font-size:48px;
+margin-bottom:10px;
 }
 
-.section{
+.page-intro{
+font-size:18px;
+opacity:.7;
+max-width:640px;
+line-height:1.6;
 margin-bottom:80px;
 }
 
-.grid{
+/* SECTION TITLES */
+
+.section-title{
+font-size:18px;
+letter-spacing:2px;
+text-transform:uppercase;
+opacity:.7;
+margin-top:70px;
+margin-bottom:30px;
+}
+
+/* CARDS */
+
+.card-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+grid-template-columns:repeat(3,1fr);
 gap:30px;
 }
 
-.resource-card{
+.travel-card{
 background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+padding:28px;
+border-radius:18px;
+box-shadow:0 4px 20px rgba(0,0,0,0.04);
 }
 
-.resource-card img{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:10px;
-margin-bottom:12px;
+.travel-card h3{
+font-size:20px;
+margin-bottom:10px;
+}
+
+.travel-card p{
+font-size:14px;
+opacity:.7;
+margin-bottom:14px;
+}
+
+.travel-card a{
+text-decoration:underline;
+font-size:14px;
 }
 
 </style>
