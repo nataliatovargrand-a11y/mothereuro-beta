@@ -19,7 +19,7 @@ Trusted education advisors, summer programs, and thoughtfully designed spaces fo
 Education
 </h2>
 
-<div class="hero-card advisor">
+<div class="hero-card advisor-card">
 
 <div class="card-content">
 
@@ -172,6 +172,20 @@ Visit Website
 
 <style scoped>
 
+.advisor-card{
+background:#f6f4f1;
+color:black;
+}
+
+.advisor-card::after{
+display:none;
+}
+
+.advisor-card .card-button{
+background:#A8985F;
+color:white;
+}
+
 .resources-wrapper{
 padding:140px 40px;
 max-width:1100px;
@@ -198,8 +212,11 @@ margin-bottom:80px;
 /* SECTION TITLES */
 
 .section-title{
-font-size:32px;
-margin-top:60px;
+font-size:18px;
+opacity:.7;
+letter-spacing:2px;
+text-transform:uppercase;
+margin-top:70px;
 margin-bottom:30px;
 }
 
