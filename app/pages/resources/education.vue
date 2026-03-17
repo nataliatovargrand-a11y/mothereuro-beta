@@ -2,42 +2,43 @@
 
 <div class="resources-wrapper">
 
-<h1>Education</h1>
+<!-- PAGE TITLE -->
 
-<p class="intro">
-Trusted education advisors and curated summer programs across Europe.
+<h1 class="page-title">
+Education
+</h1>
+
+<p class="page-intro">
+Trusted education advisors, summer programs, and thoughtfully designed spaces for children across Europe.
 </p>
 
 
-<!-- EDUCATION & SCHOOLS -->
+<!-- EDUCATION ADVISOR -->
 
-<div class="section-title">
-Education & Schools
+<h2 class="section-title">
+Education
+</h2>
+
+<div class="hero-card advisor">
+
+<div class="card-content">
+
+<div class="card-label">
+Education Advisor
 </div>
 
-<div class="advisor-card">
+<h2>
+Personalized School & University Guidance
+</h2>
 
-<img
-src="/images/education-advisor.jpg"
-class="advisor-photo"
-/>
-
-<div class="advisor-content">
-
-<div class="advisor-label">
-EDUCATION ADVISOR
-</div>
-
-<h2>Advisor Name</h2>
-
-<p class="advisor-contact">
-advisor@email.com<br>
-+34 XXX XXX XXX
+<p>
+Our education advisor helps families navigate European school systems,
+international programs, and university pathways with personalized guidance.
 </p>
 
 <a
-href="mailto:advisor@email.com"
-class="advisor-button"
+href="mailto:emily@mothereuro.com"
+class="card-button"
 >
 Contact Now
 </a>
@@ -47,34 +48,116 @@ Contact Now
 </div>
 
 
+
 <!-- SUMMER CAMPS -->
 
-<div class="section-title">
+<h2 class="section-title">
+Summer Camps
+</h2>
+
+<div class="hero-card summer">
+
+<div class="card-content">
+
+<div class="card-label">
 Summer Camps
 </div>
 
-<div class="summer-card">
-
-<div class="summer-content">
-
-<div class="summer-label">
-Summer Camps
-</div>
-
-<h2>European Summer Society</h2>
+<h2>
+European Summer Society
+</h2>
 
 <p>
 Immersive summer experiences across Europe where children build global friendships,
-discover new cultures, and return home with confidence, independence, and lifelong connections.
+discover new cultures, and return home with confidence and independence.
 </p>
 
 <a
 href="https://europeansummersociety.com"
 target="_blank"
-rel="noopener noreferrer"
-class="summer-button"
+class="card-button"
 >
 Explore Programs
+</a>
+
+</div>
+
+</div>
+
+
+
+<!-- CHILDREN SPACES -->
+
+<h2 class="section-title">
+Children Spaces
+</h2>
+
+<div class="card-grid">
+
+
+<!-- HOUSE OF MINI -->
+
+<div class="resource-card">
+
+<h3>House of Mini</h3>
+
+<p>
+Creative children's concept space focused on imagination,
+learning and exploration.
+</p>
+
+<a
+href="https://museumofmini.com/"
+target="_blank"
+class="card-link"
+>
+Visit Website
+</a>
+
+</div>
+
+
+
+<!-- CAFE REGGIO -->
+
+<div class="resource-card">
+
+<h3>Cafe Reggio</h3>
+
+<p>
+A playful café space designed for children and parents to relax,
+create and connect.
+</p>
+
+<a
+href="https://www.instagram.com/cafe.reggio/"
+target="_blank"
+class="card-link"
+>
+Visit Instagram
+</a>
+
+</div>
+
+
+
+<!-- TETE CONCEPT -->
+
+<div class="resource-card">
+
+<h3>Tete Concept</h3>
+
+<p>
+Design-driven children's spaces combining creativity,
+education and modern aesthetics.
+</p>
+
+<a
+href="https://teteconcept.es/?srsltid=AfmBOoqrP8hyp22THMXBkByvFy0AheZZJxzWWOXR-Rhs-wDfFkhfMj4b"
+target="_blank"
+class="card-link"
+>
+Visit Website
 </a>
 
 </div>
@@ -86,140 +169,144 @@ Explore Programs
 </template>
 
 
+
 <style scoped>
 
 .resources-wrapper{
 padding:140px 40px;
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 }
 
-.intro{
+
+/* PAGE HEADER */
+
+.page-title{
+font-size:48px;
+margin-bottom:12px;
+}
+
+.page-intro{
 font-size:18px;
 opacity:.7;
-max-width:620px;
-margin-bottom:80px;
+max-width:640px;
 line-height:1.6;
+margin-bottom:80px;
 }
 
 
 /* SECTION TITLES */
 
 .section-title{
-letter-spacing:6px;
-font-size:12px;
+font-size:32px;
+margin-top:60px;
 margin-bottom:30px;
-opacity:.6;
 }
 
 
-/* ADVISOR CARD */
+/* HERO CARDS */
 
-.advisor-card{
+.hero-card{
+height:340px;
+border-radius:18px;
+margin-bottom:60px;
 display:flex;
 align-items:center;
-gap:40px;
-margin-bottom:100px;
-}
-
-.advisor-photo{
-width:160px;
-height:160px;
-border-radius:50%;
-object-fit:cover;
-}
-
-.advisor-content{
-max-width:520px;
-}
-
-.advisor-label{
-letter-spacing:4px;
-font-size:12px;
-opacity:.6;
-margin-bottom:10px;
-}
-
-.advisor-content h2{
-margin-bottom:10px;
-}
-
-.advisor-contact{
-font-size:16px;
-opacity:.7;
-line-height:1.6;
-margin-bottom:20px;
-}
-
-.advisor-button{
-background:#A8985F;
+padding:60px;
 color:white;
-padding:14px 26px;
-border-radius:40px;
-text-decoration:none;
-font-size:14px;
-letter-spacing:1px;
-display:inline-block;
-}
-
-
-/* SUMMER CARD */
-
-.summer-card{
-height:420px;
-border-radius:20px;
-padding:70px;
-display:flex;
-align-items:center;
-background-image:url('/images/european-summer.jpg');
 background-size:cover;
 background-position:center;
-color:white;
 position:relative;
-margin-bottom:40px;
 }
 
-.summer-card::after{
+.hero-card::after{
 content:"";
 position:absolute;
 inset:0;
 background:rgba(0,0,0,0.35);
-border-radius:20px;
+border-radius:18px;
 }
 
-.summer-content{
+.card-content{
 position:relative;
 z-index:2;
-max-width:520px;
+max-width:480px;
 }
 
-.summer-label{
+.card-label{
 letter-spacing:4px;
 font-size:12px;
+margin-bottom:12px;
 opacity:.8;
+}
+
+.hero-card h2{
+font-size:34px;
 margin-bottom:14px;
 }
 
-.summer-card h2{
-font-size:36px;
-margin-bottom:16px;
-}
-
-.summer-card p{
+.hero-card p{
 line-height:1.6;
-margin-bottom:26px;
+margin-bottom:22px;
 opacity:.9;
 }
 
-.summer-button{
+
+/* BUTTON */
+
+.card-button{
+display:inline-block;
 background:white;
 color:black;
-padding:14px 26px;
-border-radius:40px;
-text-decoration:none;
-font-size:13px;
+padding:12px 22px;
+border-radius:30px;
+font-size:12px;
 letter-spacing:2px;
-display:inline-block;
+text-decoration:none;
+}
+
+
+/* CHILDREN SPACE CARDS */
+
+.card-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:28px;
+margin-top:20px;
+}
+
+.resource-card{
+background:white;
+padding:28px;
+border-radius:16px;
+box-shadow:0 4px 20px rgba(0,0,0,0.04);
+}
+
+.resource-card h3{
+font-size:20px;
+margin-bottom:12px;
+}
+
+.resource-card p{
+font-size:15px;
+opacity:.7;
+margin-bottom:16px;
+}
+
+.card-link{
+text-decoration:underline;
+font-size:14px;
+}
+
+
+/* BACKGROUNDS */
+
+.advisor{
+background-image:url('/images/education-advisor.jpg');
+}
+
+.summer{
+background-image:url('/images/european-summer.jpg');
 }
 
 </style>
