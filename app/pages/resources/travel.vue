@@ -118,8 +118,15 @@ const { data: partners } = await supabase
 /* MERGE DATA */
 
 const combined = [
-...(resources || []),
-...(partners || [])
+...(resources || []).map(item => ({
+...item,
+website: item.website || item.website_url || item.url
+})),
+
+...(partners || []).map(item => ({
+...item,
+website: item.website || item.website_url || item.url
+}))
 ]
 
 
