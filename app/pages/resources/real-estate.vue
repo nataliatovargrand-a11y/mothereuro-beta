@@ -5,13 +5,13 @@
 <h1>Real Estate</h1>
 
 <p class="intro">
-Trusted real estate partners helping women and families find exceptional homes and investments across Europe.
+Trusted real estate partners helping families find and invest in exceptional homes across Europe.
 </p>
 
 
 <!-- ICONIC LIVING -->
 
-<div class="realestate-card iconic">
+<div class="hero-card iconic">
 
 <div class="card-content">
 
@@ -21,15 +21,13 @@ Real Estate Partner
 
 <h2>ICONIC Living</h2>
 
-<p class="agents">
-Rossana Jaramillo<br>
-Claudia Razabal
+<p>
+Rossana Jaramillo & Claudia Razabal
 </p>
 
 <a
 href="https://www.iconicliving.site/en"
 target="_blank"
-rel="noopener noreferrer"
 class="card-button"
 >
 Explore ICONIC Living
@@ -40,9 +38,10 @@ Explore ICONIC Living
 </div>
 
 
+
 <!-- PERSEPOLIS -->
 
-<div class="realestate-card persepolis">
+<div class="hero-card persepolis">
 
 <div class="card-content">
 
@@ -52,14 +51,13 @@ Investment Partner
 
 <h2>Persepolis Investments</h2>
 
-<p class="agents">
+<p>
 Elana Lowenthal
 </p>
 
 <a
 href="https://persepolis-investments.com/"
 target="_blank"
-rel="noopener noreferrer"
 class="card-button"
 >
 Explore Persepolis
@@ -68,6 +66,8 @@ Explore Persepolis
 </div>
 
 </div>
+
+
 
 <!-- PRACTICA -->
 
@@ -79,13 +79,10 @@ Explore Persepolis
 Architectural & Design Studio
 </div>
 
-<h2>
-Practica
-</h2>
+<h2>Practica</h2>
 
 <p>
-Practica is an architectural and design studio known for refined,
-modern spaces and thoughtful residential design across Europe.
+Practica is an architectural and design studio known for refined modern spaces and thoughtful residential design across Europe.
 </p>
 
 <a
@@ -100,7 +97,10 @@ Visit Website
 
 </div>
 
+</div>
+
 </template>
+
 
 
 <style scoped>
@@ -122,31 +122,31 @@ line-height:1.6;
 
 /* HERO CARDS */
 
-.realestate-card{
-height:420px;
-border-radius:20px;
-padding:70px;
+.hero-card{
+height:360px;
+border-radius:18px;
+margin-bottom:60px;
 display:flex;
 align-items:center;
+padding:60px;
 color:white;
 background-size:cover;
 background-position:center;
 position:relative;
-margin-bottom:60px;
 }
 
-.realestate-card::after{
+.hero-card::after{
 content:"";
 position:absolute;
 inset:0;
 background:rgba(0,0,0,0.35);
-border-radius:20px;
+border-radius:18px;
 }
 
 .card-content{
 position:relative;
 z-index:2;
-max-width:520px;
+max-width:480px;
 }
 
 .card-label{
@@ -156,31 +156,31 @@ margin-bottom:14px;
 opacity:.8;
 }
 
-.realestate-card h2{
-font-size:36px;
+.hero-card h2{
+font-size:34px;
 margin-bottom:16px;
 }
 
-.agents{
-line-height:1.7;
-margin-bottom:26px;
+.hero-card p{
+line-height:1.6;
+margin-bottom:24px;
 opacity:.9;
 }
 
+
+/* BUTTON */
+
 .card-button{
+display:inline-block;
 background:white;
 color:black;
-padding:14px 26px;
-border-radius:40px;
-text-decoration:none;
-font-size:13px;
+padding:12px 22px;
+border-radius:30px;
+font-size:12px;
 letter-spacing:2px;
-display:inline-block;
+text-decoration:none;
 }
 
-.practica{
-background-image:url('/images/practica.jpg');
-}
 
 /* BACKGROUNDS */
 
@@ -190,6 +190,10 @@ background-image:url('/images/iconic-living.jpg');
 
 .persepolis{
 background-image:url('/images/persepolis.jpg');
+}
+
+.practica{
+background-image:url('/images/practica.jpg');
 }
 
 </style>
