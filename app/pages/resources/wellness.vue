@@ -149,10 +149,14 @@ const { data } = await supabase
 .from('resources')
 .select('*')
 .eq('category','wellness')
-.eq('subcategory','woo')
-.eq('active',true)
+.eq('active', true)
 
-woo.value = data || []
+if(!data) return
+
+// filter client-side so case issues don't break it
+woo.value = data.filter(item => 
+item.subcategory && item.subcategory.toLowerCase() === 'woo'
+)
 
 })
 
