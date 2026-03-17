@@ -168,10 +168,11 @@ spas.value = data.filter(r => r.subcategory === 'Spas')
 studios.value = data.filter(r => r.subcategory === 'Studios')
 woo.value = data.filter(r => r.subcategory === 'Woo')
 
+console.log('wellness data', data)
+
 })
 
 </script>
-
 
 
 <style scoped>
