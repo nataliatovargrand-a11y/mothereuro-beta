@@ -144,24 +144,29 @@ import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const clinics = ref([])
-const spa = ref([])
+const spas = ref([])
 const studios = ref([])
 const woo = ref([])
 
 onMounted(async () => {
 
-const { data } = await supabase
+const { data, error } = await supabase
 .from('resources')
 .select('*')
 .eq('category','wellness')
 .eq('active', true)
 
+if(error){
+console.error(error)
+return
+}
+
 if(!data) return
 
-clinics.value = data.filter(r => r.subcategory === 'clinics')
-spa.value = data.filter(r => r.subcategory === 'spa')
-studios.value = data.filter(r => r.subcategory === 'studios')
-woo.value = data.filter(r => r.subcategory === 'woo')
+clinics.value = data.filter(r => r.subcategory === 'Clinics')
+spas.value = data.filter(r => r.subcategory === 'Spas')
+studios.value = data.filter(r => r.subcategory === 'Studios')
+woo.value = data.filter(r => r.subcategory === 'Woo')
 
 })
 
