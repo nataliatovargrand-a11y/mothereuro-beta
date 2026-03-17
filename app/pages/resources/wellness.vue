@@ -15,15 +15,17 @@ A curated selection of trusted clinics, restorative spas and wellness spaces acr
 Clinics
 </div>
 
-<div class="hero-card">
+<div class="carousel">
+
+<div class="wellness-card">
+
+<img src="/images/iwhc.jpg" class="card-image"/>
 
 <div class="card-content">
 
-<h2>International Women's Health Center</h2>
+<h3>International Women's Health Center</h3>
 
-<p class="location">
-Madrid
-</p>
+<p class="location">Madrid</p>
 
 <a
 href="https://iwhcm.com/"
@@ -38,15 +40,15 @@ Visit Website
 </div>
 
 
-<div class="hero-card">
+<div class="wellness-card">
+
+<img src="/images/clinica-cloe.jpg" class="card-image"/>
 
 <div class="card-content">
 
-<h2>Clinica Cloe</h2>
+<h3>Clinica Cloe</h3>
 
-<p class="location">
-Odontología Especializada • Madrid
-</p>
+<p class="location">Odontología Especializada • Madrid</p>
 
 <a
 href="https://www.clinicacloe.com/en/clinica-cloe-english/"
@@ -60,6 +62,8 @@ Visit Website
 
 </div>
 
+</div>
+
 
 
 <!-- SPAS -->
@@ -68,11 +72,15 @@ Visit Website
 Spas
 </div>
 
-<div class="hero-card">
+<div class="carousel">
+
+<div class="wellness-card">
+
+<img src="/images/eva-ometz.jpg" class="card-image"/>
 
 <div class="card-content">
 
-<h2>Eva Ometz</h2>
+<h3>Eva Ometz</h3>
 
 <a
 href="https://www.evaometz.com/"
@@ -87,11 +95,13 @@ Visit Website
 </div>
 
 
-<div class="hero-card">
+<div class="wellness-card">
+
+<img src="/images/six-harmonies.jpg" class="card-image"/>
 
 <div class="card-content">
 
-<h2>Six Harmonies</h2>
+<h3>Six Harmonies</h3>
 
 <a
 href="https://www.sixharmonies.es/es"
@@ -105,6 +115,8 @@ Visit Website
 
 </div>
 
+</div>
+
 
 
 <!-- STUDIOS -->
@@ -113,8 +125,8 @@ Visit Website
 Studios
 </div>
 
-<p class="empty">
-Coming soon.
+<p class="coming-soon">
+Coming soon
 </p>
 
 
@@ -125,8 +137,8 @@ Coming soon.
 Woo
 </div>
 
-<p class="empty">
-Coming soon.
+<p class="coming-soon">
+Coming soon
 </p>
 
 
@@ -140,7 +152,7 @@ Coming soon.
 
 .resources-wrapper{
 padding:140px 40px;
-max-width:900px;
+max-width:1200px;
 margin:auto;
 }
 
@@ -156,37 +168,66 @@ line-height:1.6;
 /* SECTION TITLES */
 
 .section-title{
-font-size:18px;
+letter-spacing:2px;
+font-size:16px;
+margin-bottom:24px;
 margin-top:60px;
-margin-bottom:20px;
-opacity:.7;
+opacity:.8;
 }
 
 
-/* HERO CARD */
+/* CAROUSEL */
 
-.hero-card{
+.carousel{
+display:flex;
+gap:24px;
+overflow-x:auto;
+padding-bottom:10px;
+margin-bottom:60px;
+}
+
+.carousel::-webkit-scrollbar{
+display:none;
+}
+
+
+/* CARD */
+
+.wellness-card{
+min-width:260px;
 background:white;
 border-radius:16px;
-padding:40px;
-margin-bottom:24px;
-box-shadow:0 6px 20px rgba(0,0,0,0.05);
+overflow:hidden;
+flex-shrink:0;
+box-shadow:0 8px 24px rgba(0,0,0,0.05);
 }
+
+
+/* IMAGE */
+
+.card-image{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+
+/* CONTENT */
 
 .card-content{
-display:flex;
-flex-direction:column;
-gap:12px;
+padding:20px;
 }
 
-.hero-card h2{
-font-size:22px;
+.wellness-card h3{
+font-size:18px;
 font-weight:600;
+margin-bottom:8px;
 }
 
 .location{
-opacity:.6;
 font-size:14px;
+opacity:.6;
+margin-bottom:16px;
 }
 
 
@@ -194,23 +235,22 @@ font-size:14px;
 
 .card-button{
 display:inline-block;
-margin-top:10px;
 background:black;
 color:white;
-padding:12px 22px;
+padding:10px 18px;
 border-radius:30px;
-font-size:12px;
+font-size:11px;
 letter-spacing:1px;
 text-decoration:none;
-width:fit-content;
 }
 
 
-/* EMPTY */
+/* COMING SOON */
 
-.empty{
+.coming-soon{
 opacity:.5;
 font-size:14px;
+margin-bottom:60px;
 }
 
 </style>
