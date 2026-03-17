@@ -5,132 +5,130 @@
 <h1>Wellness</h1>
 
 <p class="intro">
-A curated guide to trusted wellness spaces across Europe — from clinics and restorative spas to exceptional studios and holistic practitioners.
+A curated selection of trusted clinics, restorative spas and wellness spaces across Europe.
 </p>
 
 
 <!-- CLINICS -->
 
-<div class="section-title">Clinics</div>
+<div class="section-title">
+Clinics
+</div>
 
-<div class="carousel">
+<div class="hero-card">
 
-<div
-v-for="item in clinics"
-:key="item.id"
-class="wellness-card"
->
+<div class="card-content">
 
-<h3>{{ item.name }}</h3>
+<h2>International Women's Health Center</h2>
 
 <p class="location">
-{{ item.city }}
+Madrid
 </p>
 
 <a
-:href="item.website_url"
+href="https://iwhcm.com/"
 target="_blank"
-class="link"
+class="card-button"
 >
-View Website
+Visit Website
 </a>
 
 </div>
 
 </div>
+
+
+<div class="hero-card">
+
+<div class="card-content">
+
+<h2>Clinica Cloe</h2>
+
+<p class="location">
+Odontología Especializada • Madrid
+</p>
+
+<a
+href="https://www.clinicacloe.com/en/clinica-cloe-english/"
+target="_blank"
+class="card-button"
+>
+Visit Website
+</a>
+
+</div>
+
+</div>
+
 
 
 <!-- SPAS -->
 
-<div class="section-title">Spas</div>
+<div class="section-title">
+Spas
+</div>
 
-<div class="carousel">
+<div class="hero-card">
 
-<div
-v-for="item in spas"
-:key="item.id"
-class="wellness-card"
->
+<div class="card-content">
 
-<h3>{{ item.name }}</h3>
-
-<p class="location">
-{{ item.city }}
-</p>
+<h2>Eva Ometz</h2>
 
 <a
-:href="item.website_url"
+href="https://www.evaometz.com/"
 target="_blank"
-class="link"
+class="card-button"
 >
-View Website
+Visit Website
 </a>
 
 </div>
 
 </div>
+
+
+<div class="hero-card">
+
+<div class="card-content">
+
+<h2>Six Harmonies</h2>
+
+<a
+href="https://www.sixharmonies.es/es"
+target="_blank"
+class="card-button"
+>
+Visit Website
+</a>
+
+</div>
+
+</div>
+
 
 
 <!-- STUDIOS -->
 
-<div class="section-title">Studios</div>
+<div class="section-title">
+Studios
+</div>
 
-<div class="carousel">
-
-<div
-v-for="item in studios"
-:key="item.id"
-class="wellness-card"
->
-
-<h3>{{ item.name }}</h3>
-
-<p class="location">
-{{ item.city }}
+<p class="empty">
+Coming soon.
 </p>
 
-<a
-:href="item.website_url"
-target="_blank"
-class="link"
->
-View Website
-</a>
-
-</div>
-
-</div>
 
 
 <!-- WOO -->
 
-<div class="section-title">Woo</div>
+<div class="section-title">
+Woo
+</div>
 
-<div class="carousel">
-
-<div
-v-for="item in woo"
-:key="item.id"
-class="wellness-card"
->
-
-<h3>{{ item.name }}</h3>
-
-<p class="location">
-{{ item.city }}
+<p class="empty">
+Coming soon.
 </p>
 
-<a
-:href="item.website_url"
-target="_blank"
-class="link"
->
-View Website
-</a>
-
-</div>
-
-</div>
 
 </div>
 
@@ -138,72 +136,11 @@ View Website
 
 
 
-<script setup>
-
-import { ref, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-
-const clinics = ref([])
-const spas = ref([])
-const studios = ref([])
-const woo = ref([])
-
-onMounted(async () => {
-
-/* CLINICS */
-
-const { data: clinicData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','wellness')
-.eq('subcategory','Clinics')
-
-clinics.value = clinicData || []
-
-
-/* SPAS */
-
-const { data: spaData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','wellness')
-.eq('subcategory','Spas')
-
-spas.value = spaData || []
-
-
-/* STUDIOS */
-
-const { data: studioData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','wellness')
-.eq('subcategory','Studios')
-
-studios.value = studioData || []
-
-
-/* WOO */
-
-const { data: wooData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','wellness')
-.eq('subcategory','Woo')
-
-woo.value = wooData || []
-
-})
-
-</script>
-
-
-
 <style scoped>
 
 .resources-wrapper{
 padding:140px 40px;
-max-width:1200px;
+max-width:900px;
 margin:auto;
 }
 
@@ -215,57 +152,64 @@ margin-bottom:80px;
 line-height:1.6;
 }
 
+
 /* SECTION TITLES */
 
 .section-title{
-font-family:'Inter', sans-serif;
 font-size:18px;
-font-weight:400;
-color:var(--me-text);
 margin-top:60px;
-margin-bottom:24px;
+margin-bottom:20px;
 opacity:.7;
 }
 
-/* CAROUSEL */
 
-.carousel{
-display:flex;
-gap:24px;
-overflow-x:auto;
-padding-bottom:20px;
-margin-bottom:60px;
-}
+/* HERO CARD */
 
-.carousel::-webkit-scrollbar{
-display:none;
-}
-
-/* CARDS */
-
-.wellness-card{
-min-width:320px;
+.hero-card{
 background:white;
-padding:34px;
-border-radius:18px;
-flex-shrink:0;
-box-shadow:0 4px 18px rgba(0,0,0,0.04);
+border-radius:16px;
+padding:40px;
+margin-bottom:24px;
+box-shadow:0 6px 20px rgba(0,0,0,0.05);
 }
 
-.wellness-card h3{
+.card-content{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.hero-card h2{
 font-size:22px;
 font-weight:600;
-margin-bottom:10px;
 }
 
 .location{
-opacity:.55;
-margin-bottom:20px;
-font-size:15px;
+opacity:.6;
+font-size:14px;
 }
 
-.link{
-text-decoration:underline;
+
+/* BUTTON */
+
+.card-button{
+display:inline-block;
+margin-top:10px;
+background:black;
+color:white;
+padding:12px 22px;
+border-radius:30px;
+font-size:12px;
+letter-spacing:1px;
+text-decoration:none;
+width:fit-content;
+}
+
+
+/* EMPTY */
+
+.empty{
+opacity:.5;
 font-size:14px;
 }
 
