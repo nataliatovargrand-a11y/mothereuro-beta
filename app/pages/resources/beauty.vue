@@ -64,7 +64,7 @@ v-for="item in skincare"
 class="beauty-card"
 >
 
-<h3>{{ item.name }}</h3>
+<h3>{{ item.title }}</h3>
 
 <p class="description">
 {{ item.description }}
@@ -98,7 +98,7 @@ v-for="item in hair"
 class="beauty-card"
 >
 
-<h3>{{ item.name }}</h3>
+<h3>{{ item.title }}</h3>
 
 <p class="description">
 {{ item.description }}
@@ -132,7 +132,7 @@ v-for="item in makeup"
 class="beauty-card"
 >
 
-<h3>{{ item.name }}</h3>
+<h3>{{ item.title }}</h3>
 
 <p class="description">
 {{ item.description }}
@@ -166,7 +166,7 @@ v-for="item in supplements"
 class="beauty-card"
 >
 
-<h3>{{ item.name }}</h3>
+<h3>{{ item.title }}</h3>
 
 <p class="description">
 {{ item.description }}
@@ -209,7 +209,7 @@ const { data } = await supabase
 
 if(!data) return
 
-// separa los resultados en memoria
+// separate results
 skincare.value = data.filter(i => i.subcategory === 'skincare' || !i.subcategory)
 hair.value = data.filter(i => i.subcategory === 'hair')
 makeup.value = data.filter(i => i.subcategory === 'makeup')
