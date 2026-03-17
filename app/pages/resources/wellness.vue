@@ -112,7 +112,9 @@ v-for="item in woo"
 class="wellness-card"
 >
 
-<h3>{{ item.name }}</h3>
+<h3 v-if="item.name">
+{{ item.name }}
+</h3>
 
 <p v-if="item.description">
 {{ item.description }}
@@ -127,7 +129,6 @@ Visit Website
 </a>
 
 </div>
-
 </div>
 
 </div>
