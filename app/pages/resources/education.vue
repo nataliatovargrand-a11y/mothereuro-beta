@@ -174,6 +174,30 @@ Visit Website
 
 .advisor-card{
 background:#f6f4f1;
+color:#1a1a1a;
+}
+
+.advisor-card h2{
+color:#1a1a1a;
+}
+
+.advisor-card p{
+color:#444;
+}
+
+.advisor-card .card-label{
+color:#777;
+}
+
+.advisor-card::after{
+display:none;
+}
+
+.advisor-card .card-button{
+background:#A8985F;
+color:white;
+}.advisor-card{
+background:#f6f4f1;
 color:black;
 }
 
