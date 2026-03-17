@@ -2,6 +2,8 @@
 
 <div class="resources-wrapper">
 
+<!-- PAGE TITLE -->
+
 <h1 class="page-title">
 Beauty
 </h1>
@@ -31,8 +33,8 @@ Sunnie's Recommendations
 </h2>
 
 <p class="hero-description">
-Celebrity hairstylist Sunnie Brook shares her curated beauty recommendations across
-<strong>@sunniebrook</strong>.
+Celebrity hairstylist Sunnie Brook shares her curated beauty recommendations across skincare, makeup, hair and supplements for European living.<br>
+<strong>@sunniebrook</strong>
 </p>
 
 <a
@@ -48,11 +50,11 @@ Visit Site
 </div>
 
 
-<!-- BEAUTY RECOMMENDATIONS -->
+<!-- SKINCARE -->
 
-<div class="category-title">
+<h2 class="category-title">
 Skincare
-</div>
+</h2>
 
 <div class="card-grid">
 
@@ -81,9 +83,12 @@ View Product
 </div>
 
 
-<div class="category-title">
+
+<!-- HAIR -->
+
+<h2 class="category-title">
 Hair
-</div>
+</h2>
 
 <div class="card-grid">
 
@@ -112,9 +117,12 @@ View Product
 </div>
 
 
-<div class="category-title">
+
+<!-- MAKEUP -->
+
+<h2 class="category-title">
 Makeup
-</div>
+</h2>
 
 <div class="card-grid">
 
@@ -143,9 +151,12 @@ View Product
 </div>
 
 
-<div class="category-title">
+
+<!-- SUPPLEMENTS -->
+
+<h2 class="category-title">
 Supplements
-</div>
+</h2>
 
 <div class="card-grid">
 
@@ -249,6 +260,22 @@ margin:auto;
 }
 
 
+/* PAGE HEADER */
+
+.page-title{
+font-size:48px;
+margin-bottom:10px;
+}
+
+.page-intro{
+font-size:18px;
+opacity:.7;
+max-width:640px;
+line-height:1.6;
+margin-bottom:80px;
+}
+
+
 /* HERO */
 
 .hero-card{
@@ -283,7 +310,7 @@ margin-bottom:10px;
 .hero-description{
 font-size:18px;
 opacity:.7;
-max-width:500px;
+max-width:520px;
 margin-bottom:20px;
 }
 
@@ -298,15 +325,13 @@ letter-spacing:1px;
 }
 
 
-
 /* CATEGORY TITLES */
 
 .category-title{
-font-size:34px;
+font-size:36px;
+margin-top:70px;
 margin-bottom:30px;
-margin-top:60px;
 }
-
 
 
 /* CARDS */
@@ -340,16 +365,4 @@ text-decoration:underline;
 font-size:14px;
 }
 
-.page-title{
-font-size:48px;
-margin-bottom:10px;
-}
-
-.page-intro{
-font-size:18px;
-opacity:.7;
-max-width:640px;
-line-height:1.6;
-margin-bottom:80px;
-}
 </style>
