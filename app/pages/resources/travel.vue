@@ -2,8 +2,6 @@
 
 <div class="resources-wrapper">
 
-<!-- PAGE TITLE -->
-
 <h1 class="page-title">
 Travel
 </h1>
@@ -48,7 +46,6 @@ Visit Website
 </div>
 
 
-
 <!-- EXPERIENCES -->
 
 <h2 class="section-title">
@@ -88,7 +85,6 @@ Visit Website
 </template>
 
 
-
 <script setup>
 
 import { ref, onMounted } from 'vue'
@@ -109,18 +105,17 @@ if(!data) return
 
 hotels.value = data.filter(item =>
 item.subcategory &&
-item.subcategory.toLowerCase() === 'hotels'
+item.subcategory.toLowerCase().includes('hotel')
 )
 
 experiences.value = data.filter(item =>
 item.subcategory &&
-item.subcategory.toLowerCase() === 'experiences'
+item.subcategory.toLowerCase().includes('experience')
 )
 
 })
 
 </script>
-
 
 
 <style scoped>
@@ -130,8 +125,6 @@ padding:140px 40px;
 max-width:1200px;
 margin:auto;
 }
-
-/* PAGE */
 
 .page-title{
 font-size:48px;
@@ -146,8 +139,6 @@ line-height:1.6;
 margin-bottom:80px;
 }
 
-/* SECTION TITLES */
-
 .section-title{
 font-size:18px;
 letter-spacing:2px;
@@ -156,8 +147,6 @@ opacity:.7;
 margin-top:70px;
 margin-bottom:30px;
 }
-
-/* CARDS */
 
 .card-grid{
 display:grid;
