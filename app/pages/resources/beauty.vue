@@ -202,48 +202,18 @@ const supplements = ref([])
 
 onMounted(async () => {
 
-/* SKINCARE */
-
-const { data: skincareData } = await supabase
+const { data } = await supabase
 .from('resources')
 .select('*')
 .eq('category','beauty')
-.eq('subcategory','skincare')
 
-skincare.value = skincareData || []
+if(!data) return
 
-
-/* HAIR */
-
-const { data: hairData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','beauty')
-.eq('subcategory','hair')
-
-hair.value = hairData || []
-
-
-/* MAKEUP */
-
-const { data: makeupData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','beauty')
-.eq('subcategory','makeup')
-
-makeup.value = makeupData || []
-
-
-/* SUPPLEMENTS */
-
-const { data: supplementData } = await supabase
-.from('resources')
-.select('*')
-.eq('category','beauty')
-.eq('subcategory','supplements')
-
-supplements.value = supplementData || []
+// separa los resultados en memoria
+skincare.value = data.filter(i => i.subcategory === 'skincare' || !i.subcategory)
+hair.value = data.filter(i => i.subcategory === 'hair')
+makeup.value = data.filter(i => i.subcategory === 'makeup')
+supplements.value = data.filter(i => i.subcategory === 'supplements')
 
 })
 
