@@ -21,14 +21,14 @@ v-for="item in clinics"
 class="wellness-card"
 >
 
-<h3>{{ item.title }}</h3>
+<h3>{{ item.name }}</h3>
 
 <p class="location">
 {{ item.city }}
 </p>
 
 <a
-:href="item.website"
+:href="item.website_url"
 target="_blank"
 class="link"
 >
@@ -40,26 +40,26 @@ View Website
 </div>
 
 
-<!-- SPA -->
+<!-- SPAS -->
 
 <div class="section-title">Spas</div>
 
 <div class="carousel">
 
 <div
-v-for="item in spa"
+v-for="item in spas"
 :key="item.id"
 class="wellness-card"
 >
 
-<h3>{{ item.title }}</h3>
+<h3>{{ item.name }}</h3>
 
 <p class="location">
 {{ item.city }}
 </p>
 
 <a
-:href="item.website"
+:href="item.website_url"
 target="_blank"
 class="link"
 >
@@ -83,14 +83,14 @@ v-for="item in studios"
 class="wellness-card"
 >
 
-<h3>{{ item.title }}</h3>
+<h3>{{ item.name }}</h3>
 
 <p class="location">
 {{ item.city }}
 </p>
 
 <a
-:href="item.website"
+:href="item.website_url"
 target="_blank"
 class="link"
 >
@@ -114,14 +114,14 @@ v-for="item in woo"
 class="wellness-card"
 >
 
-<h3>{{ item.title }}</h3>
+<h3>{{ item.name }}</h3>
 
 <p class="location">
 {{ item.city }}
 </p>
 
 <a
-:href="item.website"
+:href="item.website_url"
 target="_blank"
 class="link"
 >
@@ -150,29 +150,53 @@ const woo = ref([])
 
 onMounted(async () => {
 
-const { data, error } = await supabase
+/* CLINICS */
+
+const { data: clinicData } = await supabase
 .from('resources')
 .select('*')
 .eq('category','wellness')
-.eq('active', true)
+.eq('subcategory','Clinics')
 
-if(error){
-console.error(error)
-return
-}
+clinics.value = clinicData || []
 
-if(!data) return
 
-clinics.value = data.filter(r => r.subcategory === 'Clinics')
-spas.value = data.filter(r => r.subcategory === 'Spas')
-studios.value = data.filter(r => r.subcategory === 'Studios')
-woo.value = data.filter(r => r.subcategory === 'Woo')
+/* SPAS */
 
-console.log('wellness data', data)
+const { data: spaData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','wellness')
+.eq('subcategory','Spas')
+
+spas.value = spaData || []
+
+
+/* STUDIOS */
+
+const { data: studioData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','wellness')
+.eq('subcategory','Studios')
+
+studios.value = studioData || []
+
+
+/* WOO */
+
+const { data: wooData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','wellness')
+.eq('subcategory','Woo')
+
+woo.value = wooData || []
 
 })
 
 </script>
+
 
 
 <style scoped>
@@ -191,7 +215,6 @@ margin-bottom:80px;
 line-height:1.6;
 }
 
-
 /* SECTION TITLES */
 
 .section-title{
@@ -203,7 +226,6 @@ margin-top:60px;
 margin-bottom:24px;
 opacity:.7;
 }
-
 
 /* CAROUSEL */
 
@@ -218,7 +240,6 @@ margin-bottom:60px;
 .carousel::-webkit-scrollbar{
 display:none;
 }
-
 
 /* CARDS */
 
