@@ -112,8 +112,8 @@ v-for="item in woo"
 class="wellness-card"
 >
 
-<h3 v-if="item.name">
-{{ item.name }}
+<h3>
+{{ item.name || item.title }}
 </h3>
 
 <p v-if="item.description">
@@ -129,6 +129,7 @@ Visit Website
 </a>
 
 </div>
+
 </div>
 
 </div>
@@ -154,9 +155,9 @@ const { data } = await supabase
 
 if(!data) return
 
-// filter client-side so case issues don't break it
-woo.value = data.filter(item => 
-item.subcategory && item.subcategory.toLowerCase() === 'woo'
+woo.value = data.filter(item =>
+item.subcategory &&
+item.subcategory.toLowerCase() === 'woo'
 )
 
 })
