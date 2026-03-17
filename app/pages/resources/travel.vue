@@ -34,9 +34,10 @@ class="travel-card"
 </p>
 
 <a
-v-if="item.website || item.website_url"
-:href="item.website || item.website_url"
+v-if="item.website || item.website_url || item.url"
+:href="item.website || item.website_url || item.url"
 target="_blank"
+class="card-link"
 >
 Visit Website
 </a>
