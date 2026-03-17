@@ -1,74 +1,78 @@
 <template>
 
-<div class="beauty-page">
+<div class="resources-wrapper">
 
-<h1>Beauty</h1>
+<h1 class="page-title">
+Beauty
+</h1>
 
-<p class="intro">
+<p class="page-intro">
 Private recommendations across skincare, makeup, hair, and supplements curated for European living.
 </p>
 
 
-<!-- FEATURED CURATOR -->
+<!-- HERO CURATOR -->
 
-<div class="featured-curator">
+<div class="hero-card">
 
-  <div class="curator-inner">
+<img
+src="/images/sunnie.jpg"
+class="curator-photo"
+/>
 
-    <div class="curator-image">
-      <img src="/images/sunnie.jpg" alt="Sunnie"/>
-    </div>
+<div class="hero-content">
 
-    <div class="curator-text">
+<div class="hero-label">
+Featured Curator
+</div>
 
-      <div class="curator-label">
-        FEATURED CURATOR
-      </div>
+<h2>
+Sunnie's Recommendations
+</h2>
 
-      <h2>
-        Sunnie's Recommendations
-      </h2>
+<p class="hero-description">
+Celebrity hairstylist Sunnie Brook shares her curated beauty recommendations across
+<strong>@sunniebrook</strong>.
+</p>
 
-      <p>
-        Discover Sunnie's private beauty recommendations for skincare,
-        makeup, hair and supplements.
-      </p>
+<a
+href="https://sunniebrook.substack.com/"
+target="_blank"
+class="hero-button"
+>
+Visit Site
+</a>
 
-      <NuxtLink
-        to="/curators/sunnie"
-        class="sunnie-btn"
-      >
-        Explore Sunnie's Library
-      </NuxtLink>
-
-    </div>
-
-  </div>
+</div>
 
 </div>
 
 
-<!-- SKINCARE -->
+<!-- BEAUTY RECOMMENDATIONS -->
 
-<div class="section">
+<div class="category-title">
+Skincare
+</div>
 
-<h2>Skincare</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in skincare"
-:key="r.id"
-class="resource-card"
+v-for="item in skincare"
+:key="item.id"
+class="beauty-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.name }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
+<a
+:href="item.website_url"
+target="_blank"
+class="product-link"
+>
 View Product
 </a>
 
@@ -76,31 +80,30 @@ View Product
 
 </div>
 
+
+<div class="category-title">
+Hair
 </div>
 
-
-
-<!-- MAKEUP -->
-
-<div class="section">
-
-<h2>Makeup</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in makeup"
-:key="r.id"
-class="resource-card"
+v-for="item in hair"
+:key="item.id"
+class="beauty-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.name }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
+<a
+:href="item.website_url"
+target="_blank"
+class="product-link"
+>
 View Product
 </a>
 
@@ -108,31 +111,30 @@ View Product
 
 </div>
 
+
+<div class="category-title">
+Makeup
 </div>
 
-
-
-<!-- HAIR -->
-
-<div class="section">
-
-<h2>Hair</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in hair"
-:key="r.id"
-class="resource-card"
+v-for="item in makeup"
+:key="item.id"
+class="beauty-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.name }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
+<a
+:href="item.website_url"
+target="_blank"
+class="product-link"
+>
 View Product
 </a>
 
@@ -140,40 +142,36 @@ View Product
 
 </div>
 
+
+<div class="category-title">
+Supplements
 </div>
 
-
-
-<!-- SUPPLEMENTS -->
-
-<div class="section">
-
-<h2>Supplements</h2>
-
-<div class="grid">
+<div class="card-grid">
 
 <div
-v-for="r in supplements"
-:key="r.id"
-class="resource-card"
+v-for="item in supplements"
+:key="item.id"
+class="beauty-card"
 >
 
-<img v-if="r.image_url" :src="r.image_url"/>
+<h3>{{ item.name }}</h3>
 
-<h3>{{ r.title }}</h3>
+<p class="description">
+{{ item.description }}
+</p>
 
-<p>{{ r.description }}</p>
-
-<a :href="r.link_url" target="_blank">
+<a
+:href="item.website_url"
+target="_blank"
+class="product-link"
+>
 View Product
 </a>
 
 </div>
 
 </div>
-
-</div>
-
 
 </div>
 
@@ -183,39 +181,60 @@ View Product
 
 <script setup>
 
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
-const resources = ref([])
+const skincare = ref([])
+const hair = ref([])
+const makeup = ref([])
+const supplements = ref([])
 
-onMounted(async()=>{
+onMounted(async () => {
 
-const { data } = await supabase
+/* SKINCARE */
+
+const { data: skincareData } = await supabase
 .from('resources')
 .select('*')
-.in('category', ['skincare','makeup','hair','supplements'])
-.eq('active', true)
+.eq('category','beauty')
+.eq('subcategory','skincare')
 
-resources.value = data || []
+skincare.value = skincareData || []
+
+
+/* HAIR */
+
+const { data: hairData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','beauty')
+.eq('subcategory','hair')
+
+hair.value = hairData || []
+
+
+/* MAKEUP */
+
+const { data: makeupData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','beauty')
+.eq('subcategory','makeup')
+
+makeup.value = makeupData || []
+
+
+/* SUPPLEMENTS */
+
+const { data: supplementData } = await supabase
+.from('resources')
+.select('*')
+.eq('category','beauty')
+.eq('subcategory','supplements')
+
+supplements.value = supplementData || []
 
 })
-
-
-const skincare = computed(() =>
-resources.value.filter(r => r.category === 'skincare')
-)
-
-const makeup = computed(() =>
-resources.value.filter(r => r.category === 'makeup')
-)
-
-const hair = computed(() =>
-resources.value.filter(r => r.category === 'hair')
-)
-
-const supplements = computed(() =>
-resources.value.filter(r => r.category === 'supplements')
-)
 
 </script>
 
@@ -223,137 +242,114 @@ resources.value.filter(r => r.category === 'supplements')
 
 <style scoped>
 
-.beauty-page{
+.resources-wrapper{
 padding:140px 40px;
-max-width:1100px;
+max-width:1200px;
 margin:auto;
 }
 
-.intro{
-opacity:.7;
-margin-bottom:60px;
-font-size:16px;
-line-height:1.6;
-}
 
+/* HERO */
 
-
-/* FEATURED CURATOR */
-
-.featured-curator{
-margin-bottom:90px;
-}
-
-.curator-inner{
+.hero-card{
 display:flex;
+gap:40px;
 align-items:center;
-gap:50px;
-background:rgba(255,255,255,0.4);
-backdrop-filter:blur(20px);
+background:#f6f4f1;
+padding:50px;
 border-radius:20px;
-padding:40px;
-border:1px solid rgba(255,255,255,0.6);
+margin-bottom:80px;
 }
 
-.curator-image img{
-width:140px;
-height:140px;
+.curator-photo{
+width:160px;
+height:160px;
 border-radius:50%;
 object-fit:cover;
 }
 
-.curator-label{
-font-size:11px;
-letter-spacing:3px;
+.hero-label{
+letter-spacing:4px;
+font-size:12px;
+margin-bottom:10px;
 opacity:.6;
+}
+
+.hero-content h2{
+font-size:40px;
 margin-bottom:10px;
 }
 
-.curator-text h2{
-font-size:28px;
-margin-bottom:10px;
-}
-
-.curator-text p{
-opacity:.75;
-max-width:420px;
+.hero-description{
+font-size:18px;
+opacity:.7;
+max-width:500px;
 margin-bottom:20px;
 }
 
-
-
-/* BUTTON */
-
-.sunnie-btn{
-display:inline-block;
-padding:12px 28px;
-border-radius:30px;
+.hero-button{
 background:#A8985F;
 color:white;
+padding:14px 28px;
+border-radius:30px;
 text-decoration:none;
-font-size:13px;
-letter-spacing:.5px;
-transition:.25s;
-}
-
-.sunnie-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 10px 24px rgba(0,0,0,0.15);
+font-size:14px;
+letter-spacing:1px;
 }
 
 
 
-/* SECTIONS */
+/* CATEGORY TITLES */
 
-.section{
-margin-bottom:90px;
+.category-title{
+font-size:34px;
+margin-bottom:30px;
+margin-top:60px;
 }
 
-.grid{
+
+
+/* CARDS */
+
+.card-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+grid-template-columns:repeat(3,1fr);
 gap:30px;
 }
 
-.resource-card{
+.beauty-card{
 background:white;
-padding:22px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.06);
-transition:.25s;
+padding:30px;
+border-radius:18px;
+box-shadow:0 4px 20px rgba(0,0,0,0.04);
 }
 
-.resource-card:hover{
-transform:translateY(-4px);
-box-shadow:0 20px 40px rgba(0,0,0,0.08);
-}
-
-.resource-card img{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:10px;
+.beauty-card h3{
+font-size:20px;
 margin-bottom:12px;
 }
 
-.resource-card h3{
-font-size:16px;
-margin-bottom:6px;
-}
-
-.resource-card p{
-font-size:14px;
+.description{
+font-size:15px;
 opacity:.7;
+margin-bottom:16px;
 }
 
-.resource-card a{
-display:inline-block;
-margin-top:10px;
-font-size:13px;
-letter-spacing:1px;
-text-decoration:none;
-color:black;
-border-bottom:1px solid black;
+.product-link{
+text-decoration:underline;
+font-size:14px;
 }
 
+.page-title{
+font-size:48px;
+margin-bottom:10px;
+}
+
+.page-intro{
+font-size:18px;
+opacity:.7;
+max-width:640px;
+line-height:1.6;
+margin-bottom:80px;
+}
 </style>
