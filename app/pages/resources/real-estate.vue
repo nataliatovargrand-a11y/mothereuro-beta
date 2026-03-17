@@ -100,8 +100,6 @@ Visit Website
 
 </div>
 
-</div>
-
 </template>
 
 
