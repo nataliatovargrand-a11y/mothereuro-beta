@@ -162,6 +162,8 @@ const redeemPartner = async (partner) => {
 </script>
 
 
+<style scoped>
+
 .partners-wrapper{
   padding:120px 24px;
   max-width:1200px;
@@ -172,49 +174,44 @@ const redeemPartner = async (partner) => {
 /* HEADER */
 
 .partners-header{
-  margin-bottom:70px;
+  margin-bottom:60px;
 }
 
 .partners-title{
-  font-size:13px;
-  letter-spacing:4px;
+  font-size:14px;
+  letter-spacing:3px;
   text-transform:uppercase;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .partners-subtitle{
-  font-size:15px;
+  font-size:14px;
   opacity:.6;
-  max-width:420px;
-  line-height:1.5;
 }
 
 
 /* CATEGORY */
 
 .category-section{
-  margin-bottom:80px;
+  margin-bottom:60px;
 }
 
 .category-title{
-  font-size:13px;
-  letter-spacing:4px;
+  font-size:14px;
+  letter-spacing:3px;
   text-transform:uppercase;
-  opacity:.5;
-  margin-bottom:24px;
+  opacity:.6;
+  margin-bottom:20px;
 }
 
 
-/* CAROUSEL — LUXURY SCROLL */
+/* CAROUSEL */
 
 .partners-carousel{
   display:flex;
-  gap:24px;
+  gap:20px;
   overflow-x:auto;
-  padding-bottom:12px;
-
-  scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;
+  padding-bottom:10px;
 }
 
 .partners-carousel::-webkit-scrollbar{
@@ -222,74 +219,59 @@ const redeemPartner = async (partner) => {
 }
 
 
-/* CARD — PREMIUM */
+/* CARD — FIXED SIZE */
 
 .partner-card{
-  min-width:260px;
-  max-width:260px;
-  height:320px;
+  min-width:240px;
+  max-width:240px;
+  height:300px;
 
   background:white;
-  border-radius:20px;
-  padding:22px;
+  border-radius:18px;
+  padding:20px;
 
   display:flex;
   flex-direction:column;
   justify-content:space-between;
 
-  scroll-snap-align:start;
-
-  box-shadow:0 8px 30px rgba(0,0,0,0.04);
-  transition:all .25s ease;
-}
-
-
-/* HOVER (DESKTOP ONLY) */
-
-@media (hover:hover){
-  .partner-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 20px 50px rgba(0,0,0,0.08);
-  }
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
 
 
 /* LOGO */
 
 .partner-logo{
-  width:85px;
-  margin-bottom:12px;
+  width:80px;
+  margin-bottom:10px;
 }
 
 
 /* NAME */
 
 .partner-name{
-  font-size:17px;
-  margin-bottom:12px;
-  line-height:1.2;
+  font-size:16px;
+  margin-bottom:10px;
 }
 
 
 /* BENEFIT */
 
 .benefit-box{
-  background:#f7f6f4;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:14px;
+  background:#f6f6f6;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
 }
 
 .benefit-title{
   font-size:10px;
-  letter-spacing:1.5px;
-  opacity:.5;
+  letter-spacing:1px;
+  opacity:.6;
   margin-bottom:4px;
 }
 
 .benefit-text{
   font-size:13px;
-  line-height:1.4;
 }
 
 
@@ -299,28 +281,19 @@ const redeemPartner = async (partner) => {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
 }
 
 .discount-code{
-  font-family:'IBM Plex Mono', monospace;
+  font-family:monospace;
   font-size:12px;
-  opacity:.8;
 }
 
 .copy-btn{
-  border:1px solid rgba(0,0,0,0.15);
+  border:1px solid black;
   background:white;
-  padding:5px 12px;
-  border-radius:999px;
+  padding:5px 10px;
+  border-radius:6px;
   font-size:11px;
-  transition:.2s;
-}
-
-.copy-btn:hover{
-  background:black;
-  color:white;
-  border-color:black;
 }
 
 
@@ -328,13 +301,7 @@ const redeemPartner = async (partner) => {
 
 .visit-btn{
   font-size:12px;
-  letter-spacing:1px;
-  opacity:.7;
-  transition:.2s;
-}
-
-.visit-btn:hover{
-  opacity:1;
+  margin-top:8px;
 }
 
 
@@ -342,14 +309,12 @@ const redeemPartner = async (partner) => {
 
 @media (max-width:768px){
 
-  .partners-wrapper{
-    padding:90px 20px;
-  }
-
   .partner-card{
-    min-width:220px;
-    max-width:220px;
-    height:300px;
+    min-width:200px;
+    max-width:200px;
+    height:280px;
   }
 
 }
+
+</style>
