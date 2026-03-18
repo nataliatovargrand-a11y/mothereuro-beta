@@ -31,11 +31,12 @@
         </div>
 
         <div class="travel-location">
-          {{ item.city || item.location }}
+          {{ item.city || item.location || '—' }}
         </div>
 
         <a
-          :href="item.website || item.website_url || item.url"
+          v-if="getLink(item)"
+          :href="getLink(item)"
           target="_blank"
           class="travel-link"
         >
@@ -64,11 +65,12 @@
         </div>
 
         <div class="travel-location">
-          {{ item.city || item.location }}
+          {{ item.city || item.location || '—' }}
         </div>
 
         <a
-          :href="item.website || item.website_url || item.url"
+          v-if="getLink(item)"
+          :href="getLink(item)"
           target="_blank"
           class="travel-link"
         >
@@ -93,6 +95,17 @@ import { supabase } from '~/utils/supabase'
 const hotels = ref([])
 const experiences = ref([])
 
+
+const normalize = (value) => {
+  return value?.toLowerCase().trim() || ''
+}
+
+
+const getLink = (item) => {
+  return item.website || item.website_url || item.url || item.link_url || null
+}
+
+
 onMounted(async () => {
 
   const { data: resources } = await supabase
@@ -104,20 +117,27 @@ onMounted(async () => {
   const { data: partners } = await supabase
     .from('partners')
     .select('*')
-    .eq('category', 'travel')
     .eq('active', true)
+
+  /* merge + normalize */
 
   const combined = [
     ...(resources || []),
     ...(partners || [])
-  ]
+  ].map(item => ({
+    ...item,
+    sub: normalize(item.subcategory)
+  }))
+
+
+  /* FILTER (robust) */
 
   hotels.value = combined.filter(item =>
-    item.subcategory?.toLowerCase().includes('hotel')
+    item.sub.includes('hotel')
   )
 
   experiences.value = combined.filter(item =>
-    item.subcategory?.toLowerCase().includes('experience')
+    item.sub.includes('experience') || item.sub.includes('activity')
   )
 
 })
@@ -151,7 +171,7 @@ onMounted(async () => {
   text-transform:uppercase;
   opacity:.6;
   margin-bottom:20px;
-  margin-top:40px;
+  margin-top:50px;
 }
 
 
@@ -162,6 +182,7 @@ onMounted(async () => {
   gap:20px;
   overflow-x:auto;
   padding-bottom:10px;
+  scroll-snap-type:x mandatory;
 }
 
 .carousel::-webkit-scrollbar{
@@ -172,9 +193,11 @@ onMounted(async () => {
 /* CARD */
 
 .travel-card{
+  flex:0 0 auto;
+
   min-width:240px;
   max-width:240px;
-  height:140px;
+  height:150px;
 
   background:white;
   border-radius:16px;
@@ -185,6 +208,8 @@ onMounted(async () => {
   justify-content:space-between;
 
   box-shadow:0 8px 25px rgba(0,0,0,0.04);
+
+  scroll-snap-align:start;
 }
 
 
@@ -216,6 +241,7 @@ onMounted(async () => {
   .travel-card{
     min-width:200px;
     max-width:200px;
+    height:140px;
   }
 
 }
