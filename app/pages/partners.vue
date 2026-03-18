@@ -29,7 +29,6 @@
       {{ formatCategory(category) }}
     </h2>
 
-
     <div class="partners-carousel">
 
       <div
@@ -48,10 +47,6 @@
           {{ partner.name }}
         </div>
 
-        <p class="partner-description">
-          {{ partner.description }}
-        </p>
-
         <div class="benefit-box">
 
           <div class="benefit-title">
@@ -63,7 +58,6 @@
           </div>
 
         </div>
-
 
         <div class="code-section">
 
@@ -79,7 +73,6 @@
           </button>
 
         </div>
-
 
         <a
           :href="partner.link_url"
@@ -141,11 +134,7 @@ const groupedPartners = computed(() => {
 
 
 const formatCategory = (category) => {
-
-  if (!category) return ''
-
-  return category.toUpperCase()
-
+  return category ? category.toUpperCase() : ''
 }
 
 
@@ -173,59 +162,59 @@ const redeemPartner = async (partner) => {
 </script>
 
 
-<style scoped>
-
 .partners-wrapper{
   padding:120px 24px;
   max-width:1200px;
   margin:auto;
-  overflow-x:hidden;
 }
 
 
 /* HEADER */
 
 .partners-header{
-  margin-bottom:60px;
+  margin-bottom:70px;
 }
 
 .partners-title{
-  font-size:18px;
-  letter-spacing:3px;
+  font-size:13px;
+  letter-spacing:4px;
   text-transform:uppercase;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .partners-subtitle{
-  font-size:14px;
+  font-size:15px;
   opacity:.6;
-  max-width:480px;
+  max-width:420px;
+  line-height:1.5;
 }
 
 
 /* CATEGORY */
 
 .category-section{
-  margin-bottom:70px;
+  margin-bottom:80px;
 }
 
 .category-title{
-  font-size:14px;
-  letter-spacing:3px;
+  font-size:13px;
+  letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.6;
-  margin-bottom:20px;
+  opacity:.5;
+  margin-bottom:24px;
 }
 
 
-/* CAROUSEL */
+/* CAROUSEL — LUXURY SCROLL */
 
 .partners-carousel{
   display:flex;
-  gap:20px;
+  gap:24px;
   overflow-x:auto;
-  padding-bottom:10px;
+  padding-bottom:12px;
+
   scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
 }
 
 .partners-carousel::-webkit-scrollbar{
@@ -233,59 +222,74 @@ const redeemPartner = async (partner) => {
 }
 
 
-/* CARD */
+/* CARD — PREMIUM */
 
 .partner-card{
   min-width:260px;
+  max-width:260px;
+  height:320px;
+
   background:white;
-  border-radius:18px;
-  padding:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  transition:.25s ease;
+  border-radius:20px;
+  padding:22px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
   scroll-snap-align:start;
+
+  box-shadow:0 8px 30px rgba(0,0,0,0.04);
+  transition:all .25s ease;
 }
 
-.partner-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+
+/* HOVER (DESKTOP ONLY) */
+
+@media (hover:hover){
+  .partner-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.08);
+  }
 }
+
+
+/* LOGO */
 
 .partner-logo{
-  width:100px;
-  margin-bottom:16px;
+  width:85px;
+  margin-bottom:12px;
 }
+
+
+/* NAME */
 
 .partner-name{
-  font-size:18px;
-  font-weight:500;
-  margin-bottom:8px;
-}
-
-.partner-description{
-  font-size:14px;
-  margin-bottom:18px;
-  opacity:.8;
+  font-size:17px;
+  margin-bottom:12px;
+  line-height:1.2;
 }
 
 
 /* BENEFIT */
 
 .benefit-box{
-  background:#f6f6f6;
-  padding:14px;
+  background:#f7f6f4;
+  padding:12px;
   border-radius:12px;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 
 .benefit-title{
-  font-size:11px;
-  letter-spacing:1px;
-  opacity:.6;
+  font-size:10px;
+  letter-spacing:1.5px;
+  opacity:.5;
   margin-bottom:4px;
 }
 
 .benefit-text{
-  font-size:14px;
+  font-size:13px;
+  line-height:1.4;
 }
 
 
@@ -295,35 +299,42 @@ const redeemPartner = async (partner) => {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:16px;
+  margin-bottom:10px;
 }
 
 .discount-code{
-  font-family:monospace;
-  font-size:14px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  opacity:.8;
 }
 
 .copy-btn{
-  border:1px solid black;
+  border:1px solid rgba(0,0,0,0.15);
   background:white;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:12px;
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:11px;
+  transition:.2s;
 }
 
 .copy-btn:hover{
   background:black;
   color:white;
+  border-color:black;
 }
 
 
 /* LINK */
 
 .visit-btn{
-  text-decoration:none;
-  font-size:13px;
+  font-size:12px;
   letter-spacing:1px;
+  opacity:.7;
+  transition:.2s;
+}
+
+.visit-btn:hover{
+  opacity:1;
 }
 
 
@@ -331,11 +342,14 @@ const redeemPartner = async (partner) => {
 
 @media (max-width:768px){
 
+  .partners-wrapper{
+    padding:90px 20px;
+  }
+
   .partner-card{
     min-width:220px;
-    padding:20px;
+    max-width:220px;
+    height:300px;
   }
 
 }
-
-</style>
