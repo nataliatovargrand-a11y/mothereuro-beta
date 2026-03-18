@@ -281,3 +281,102 @@ section,
 div{
   max-width:100%;
 }
+/* MOBILE LAYOUT FIXES */
+
+@media (max-width:768px){
+
+/* GLOBAL PAGE SPACING */
+.page-container{
+  padding: 80px 20px 40px !important;
+}
+
+/* HEADER */
+.account-header{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:40px;
+}
+
+/* TITLE SCALE */
+.greeting{
+  font-size:32px !important;
+  line-height:1.2;
+}
+
+.welcome{
+  font-size:14px;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn{
+  padding:8px 14px;
+  font-size:13px;
+}
+
+/* CARD */
+.card{
+  padding:22px !important;
+  border-radius:18px;
+}
+
+/* PROFILE CARD STACK */
+.profile-content{
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:24px;
+}
+
+/* AVATAR */
+.avatar,
+.avatar-placeholder{
+  width:90px;
+  height:90px;
+}
+
+/* UPLOAD BUTTON */
+.upload-btn{
+  font-size:11px;
+  padding:6px 10px;
+}
+
+/* GRID → SINGLE COLUMN */
+.profile-grid{
+  grid-template-columns:1fr !important;
+  gap:16px;
+  text-align:left;
+  width:100%;
+}
+
+/* LABELS */
+label{
+  font-size:10px;
+}
+
+/* VALUES */
+span{
+  font-size:15px;
+}
+
+/* SECTION TITLES */
+.section-title{
+  font-size:22px !important;
+  margin-bottom:16px;
+}
+
+/* RESOURCE + EVENT ITEMS */
+.resource-card,
+.event-card{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+}
+
+/* BUTTONS INSIDE CARDS */
+.view-btn{
+  font-size:12px;
+  padding:5px 10px;
+}
+
+}
