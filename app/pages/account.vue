@@ -280,10 +280,10 @@ return
 
 user.value = session.user
 
-// detect invite / recovery flow
-const hash = window.location.hash
+// 🔥 BULLETPROOF: detect if user still needs password
+const { data: userData } = await supabase.auth.getUser()
 
-if (hash.includes('type=invite') || hash.includes('type=recovery')) {
+if (!userData.user?.user_metadata?.password_set) {
   needsPassword.value = true
 }
 
@@ -315,7 +315,10 @@ const setPassword = async () => {
 if(!password.value) return
 
 const { error } = await supabase.auth.updateUser({
-  password: password.value
+  password: password.value,
+  data: {
+    password_set: true
+  }
 })
 
 if(!error){
