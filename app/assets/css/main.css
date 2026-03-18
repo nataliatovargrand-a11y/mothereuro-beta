@@ -75,6 +75,27 @@ img{
 
 
 /* ============================= */
+/* HERO LOGO (FIXED CENTERING) */
+/* ============================= */
+
+.hero-logo{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.hero-logo img{
+  width:110px;
+  display:block;
+  margin:0 auto;
+
+  /* optical centering fix */
+  transform:translateX(8px);
+}
+
+
+/* ============================= */
 /* GLOBAL PAGE SYSTEM (FINAL) */
 /* ============================= */
 
@@ -258,6 +279,13 @@ h3{ font-size:18px; }
 .edit-btn{
   font-size:13px;
   padding:8px 14px;
+}
+
+/* HERO LOGO MOBILE FIX */
+
+.hero-logo img{
+  width:95px;
+  transform:translateX(5px);
 }
 
 }
