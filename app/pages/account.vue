@@ -8,6 +8,58 @@ Loading your account...
 
 <div v-else>
 
+<!-- SET PASSWORD -->
+
+<div v-if="needsPassword" class="password-wrapper">
+
+<div class="password-card">
+
+<div class="password-label">
+Private Access
+</div>
+
+<h2 class="password-title">
+Complete Your Access
+</h2>
+
+<p class="password-sub">
+Create your password to enter the Mother Euro platform
+</p>
+
+<input
+v-model="password"
+type="password"
+placeholder="Create password"
+class="password-input"
+/>
+
+<button @click="setPassword" class="password-btn">
+ENTER THE PLATFORM
+</button>
+
+</div>
+
+</div>
+
+<h2>Create your password</h2>
+
+<p class="password-sub">
+Complete your account to access Mother Euro
+</p>
+
+<input
+v-model="password"
+type="password"
+placeholder="New password"
+class="password-input"
+/>
+
+<button @click="setPassword" class="save-btn">
+Set Password
+</button>
+
+</div>
+
 <!-- HEADER -->
 
 <div class="account-header">
@@ -77,8 +129,6 @@ hidden
 
 <div class="profile-info">
 
-<!-- VIEW MODE -->
-
 <div v-if="!editing" class="profile-grid">
 
 <div>
@@ -113,9 +163,6 @@ hidden
 
 </div>
 
-
-<!-- EDIT MODE -->
-
 <div v-else class="edit-form">
 
 <input v-model="name" placeholder="Name" />
@@ -143,7 +190,7 @@ Cancel
 </div>
 
 
-<!-- RELOCATION FEATURE -->
+<!-- RELOCATION -->
 
 <div
 v-if="member?.membership_tier === 'aspiring'"
@@ -158,9 +205,7 @@ class="card relocation-feature"
 Aspiring Member Benefit
 </div>
 
-<h2>
-Relocation Library
-</h2>
+<h2>Relocation Library</h2>
 
 <p>
 Expert relocation guides designed to help you confidently plan your move to Europe.
@@ -182,7 +227,7 @@ Explore the Library
 </div>
 
 
-<!-- SAVED RESOURCES -->
+<!-- SAVED -->
 
 <div class="card">
 
@@ -254,13 +299,11 @@ class="event-card"
 
 </div>
 
-
 </div>
 
 </div>
 
 </template>
-
 
 
 <script setup>
@@ -284,6 +327,9 @@ const industry = ref('')
 const savedResources = ref([])
 const upcomingEvents = ref([])
 
+const needsPassword = ref(false)
+const password = ref('')
+
 const firstName = computed(() => {
   if (!member.value?.name) return 'Member'
   return member.value.name.split(' ')[0]
@@ -299,6 +345,11 @@ return
 }
 
 user.value = session.user
+
+// 🔥 detect invited users
+if (!user.value.last_sign_in_at) {
+  needsPassword.value = true
+}
 
 const { data } = await supabase
 .from('members')
@@ -323,9 +374,21 @@ loading.value = false
 
 })
 
+const setPassword = async () => {
+
+if(!password.value) return
+
+const { error } = await supabase.auth.updateUser({
+  password: password.value
+})
+
+if(!error){
+  needsPassword.value = false
+  window.location.reload()
+}
+}
 
 const removeSaved = async(id)=>{
-
 await supabase
 .from('saved_resources')
 .delete()
@@ -334,14 +397,12 @@ await supabase
 
 savedResources.value =
 savedResources.value.filter(r=>r.id!==id)
-
 }
 
 const startEdit = ()=> editing.value=true
 const cancelEdit = ()=> editing.value=false
 
 const saveProfile = async ()=>{
-
 await supabase
 .from('members')
 .update({
@@ -356,11 +417,9 @@ member.value.city=city.value
 member.value.industry=industry.value
 
 editing.value=false
-
 }
 
 const uploadAvatar = async(e)=>{
-
 const file=e.target.files[0]
 if(!file) return
 
@@ -379,7 +438,6 @@ await supabase
 .eq('id',user.value.id)
 
 member.value.avatar_url=data.publicUrl
-
 }
 
 const logout = async()=>{
@@ -392,7 +450,6 @@ return new Date(d).toLocaleDateString()
 }
 
 </script>
-
 
 
 <style scoped>
@@ -419,9 +476,6 @@ font-size:16px;
 opacity:.6;
 }
 
-
-/* CARD */
-
 .card{
 background: rgba(255,255,255,0.35);
 backdrop-filter: blur(18px);
@@ -431,20 +485,29 @@ padding:32px;
 margin-bottom:32px;
 }
 
+.password-card{
+text-align:center;
+margin-bottom:40px;
+}
 
-/* PROFILE CARD */
+.password-sub{
+opacity:.6;
+margin-bottom:20px;
+}
+
+.password-input{
+width:100%;
+max-width:320px;
+padding:12px;
+border:1px solid rgba(0,0,0,0.1);
+border-radius:10px;
+margin-bottom:16px;
+}
 
 .profile-card{
 display:flex;
 gap:40px;
 align-items:flex-start;
-}
-
-.avatar-block{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:12px;
 }
 
 .avatar{
@@ -459,14 +522,6 @@ width:120px;
 height:120px;
 border-radius:50%;
 background:#eee;
-}
-
-.profile-upload{
-font-size:12px;
-}
-
-.profile-info{
-flex:1;
 }
 
 .profile-grid{
@@ -487,9 +542,6 @@ display:block;
 margin-top:4px;
 font-size:15px;
 }
-
-
-/* BUTTONS */
 
 .logout-btn{
 border:1px solid rgba(0,0,0,0.08);
@@ -517,13 +569,6 @@ border-radius:10px;
 cursor:pointer;
 }
 
-.cancel-btn{
-margin-left:10px;
-}
-
-
-/* SAVED */
-
 .resource-card{
 border-top:1px solid rgba(0,0,0,0.05);
 padding:18px 0;
@@ -547,21 +592,11 @@ color:#c33;
 cursor:pointer;
 }
 
-
-/* RELOCATION */
-
 .relocation-content{
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:40px;
-}
-
-.relocation-label{
-font-size:12px;
-letter-spacing:2px;
-opacity:.6;
-margin-bottom:8px;
 }
 
 .relocation-btn{
@@ -583,37 +618,20 @@ background-size:cover;
 background-position:center;
 }
 
-
-/* MOBILE */
-
 @media (max-width:768px){
-
 .profile-card{
 flex-direction:column;
 align-items:center;
 text-align:center;
 }
-
 .profile-grid{
 grid-template-columns:1fr;
 }
-
 .account-header{
 flex-direction:column;
 align-items:flex-start;
 gap:16px;
 }
-
-.relocation-content{
-flex-direction:column;
-text-align:center;
-}
-
-.relocation-image{
-width:100%;
-height:160px;
-}
-
 }
 
 </style>
