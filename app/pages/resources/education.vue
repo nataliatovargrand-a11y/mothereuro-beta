@@ -47,7 +47,12 @@
 
     <h2 class="section-title">SUMMER CAMPS</h2>
 
-    <div class="hero-card">
+    <div class="hero-card split">
+
+      <img
+        src="/images/summer.jpg"
+        class="hero-image"
+      />
 
       <div class="hero-content">
 
@@ -91,6 +96,10 @@
           {{ item.description }}
         </div>
 
+        <div class="education-location">
+          {{ item.city || item.location }}
+        </div>
+
         <a
           :href="item.website || item.website_url || item.url"
           target="_blank"
@@ -104,7 +113,6 @@
     </div>
 
   </div>
-
 </div>
 
 </template>
@@ -125,9 +133,13 @@ onMounted(async () => {
     .eq('category', 'education')
     .eq('active', true)
 
-  childrenSpaces.value = data?.filter(item =>
-    item.subcategory?.toLowerCase().includes('children')
-  ) || []
+  childrenSpaces.value = data?.filter(item => {
+
+    const sub = item.subcategory?.toLowerCase() || ''
+
+    return sub.includes('children spaces') || sub.includes('children')
+
+  }) || []
 
 })
 
@@ -175,6 +187,21 @@ onMounted(async () => {
   margin-bottom:60px;
 }
 
+/* SPLIT HERO (IMAGE + TEXT) */
+
+.hero-card.split{
+  display:flex;
+  gap:30px;
+  align-items:center;
+}
+
+.hero-image{
+  width:160px;
+  height:160px;
+  object-fit:cover;
+  border-radius:16px;
+}
+
 .hero-content{
   max-width:520px;
 }
@@ -202,7 +229,7 @@ onMounted(async () => {
 }
 
 
-/* CAROUSEL (FIXED PROPERLY) */
+/* CAROUSEL */
 
 .carousel{
   display:flex;
@@ -223,7 +250,7 @@ onMounted(async () => {
   flex:0 0 auto;
   min-width:240px;
   max-width:240px;
-  height:160px;
+  height:180px;
 
   background:white;
   border-radius:16px;
@@ -250,6 +277,11 @@ onMounted(async () => {
   opacity:.7;
 }
 
+.education-location{
+  font-size:12px;
+  opacity:.5;
+}
+
 .education-link{
   font-size:12px;
 }
@@ -266,6 +298,16 @@ onMounted(async () => {
   .hero-card{
     padding:24px;
     max-width:100%;
+  }
+
+  .hero-card.split{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .hero-image{
+    width:120px;
+    height:120px;
   }
 
   .hero-title{
