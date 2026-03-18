@@ -183,8 +183,6 @@ const password = ref('')
 const confirmPassword = ref('')
 const passwordError = ref('')
 
-/* ✅ SSR SAFE COMPUTEDS */
-
 const safeSavedResources = computed(() => savedResources.value || [])
 const safeEvents = computed(() => upcomingEvents.value || [])
 
@@ -195,42 +193,63 @@ const firstName = computed(() => {
 
 onMounted(async () => {
 
-  const { data:{ session } } = await supabase.auth.getSession()
+  // 🔥 STEP 1: Handle invite / recovery FIRST
+  const hash = window.location.hash
 
-  if(!session){
-    router.push('/login')
-    return
-  }
-
-  user.value = session.user
-
-  const { data: userData } = await supabase.auth.getUser()
-
-  if (
-    !userData.user?.user_metadata?.password_set ||
-    window.location.hash.includes('type=recovery')
-  ) {
+  if (hash.includes('type=invite') || hash.includes('type=recovery')) {
     needsPassword.value = true
   }
 
-  const { data } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', user.value.id)
-    .single()
+  // 🔥 STEP 2: Let Supabase process session from URL
+  const { data: sessionData } = await supabase.auth.getSession()
 
-  member.value = data
+  // 🔥 CRITICAL: wait for session to hydrate
+  if (!sessionData.session) {
+    // try again (important for mobile + email flow)
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
 
-  name.value = data?.name
-  city.value = data?.city
-  industry.value = data?.industry
+  const { data:{ session } } = await supabase.auth.getSession()
 
-  const { data: saved } = await supabase
-    .from('saved_resources')
-    .select(`resources (*)`)
-    .eq('member_id', user.value.id)
+  if (!session) {
+    // ❌ ONLY redirect if NOT invite/recovery
+    if (!hash.includes('type=invite') && !hash.includes('type=recovery')) {
+      router.push('/login')
+      return
+    }
+  }
 
-  savedResources.value = saved?.map(s => s.resources) || []
+  user.value = session?.user
+
+  // 🔥 STEP 3: If already has password → skip setup
+  const { data: userData } = await supabase.auth.getUser()
+
+  if (userData?.user?.user_metadata?.password_set) {
+    needsPassword.value = false
+  }
+
+  // 🔥 STEP 4: Load profile ONLY if user exists
+  if (user.value) {
+
+    const { data } = await supabase
+      .from('members')
+      .select('*')
+      .eq('id', user.value.id)
+      .single()
+
+    member.value = data
+
+    name.value = data?.name
+    city.value = data?.city
+    industry.value = data?.industry
+
+    const { data: saved } = await supabase
+      .from('saved_resources')
+      .select(`resources (*)`)
+      .eq('member_id', user.value.id)
+
+    savedResources.value = saved?.map(s => s.resources) || []
+  }
 
   loading.value = false
 
@@ -265,7 +284,10 @@ const setPassword = async () => {
     return
   }
 
+  // ✅ SUCCESS
   needsPassword.value = false
+
+  // clean URL (removes token)
   window.history.replaceState({}, document.title, window.location.pathname)
 
 }
@@ -278,7 +300,7 @@ const removeSaved = async(id)=>{
     .eq('member_id', user.value.id)
 
   savedResources.value =
-    savedResources.value.filter(r=>r.id!==id)
+    safeSavedResources.value.filter(r=>r.id!==id)
 }
 
 const startEdit = ()=> editing.value=true
