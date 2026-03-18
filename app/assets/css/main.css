@@ -75,14 +75,21 @@ img{
 
 
 /* ============================= */
-/* HERO LOGO (FIXED CENTERING) */
+/* HERO (REAL CENTER FIX) */
 /* ============================= */
+
+.hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
 
 .hero-logo{
   display:flex;
   justify-content:center;
   align-items:center;
-  margin-bottom:30px;
+  margin-bottom:24px;
 }
 
 .hero-logo img{
@@ -90,8 +97,8 @@ img{
   display:block;
   margin:0 auto;
 
-  /* optical centering fix */
-  transform:translateX(8px);
+  /* FIXED: correct optical balance */
+  transform:translateX(3px);
 }
 
 
@@ -281,11 +288,11 @@ h3{ font-size:18px; }
   padding:8px 14px;
 }
 
-/* HERO LOGO MOBILE FIX */
+/* HERO MOBILE FIX */
 
 .hero-logo img{
   width:95px;
-  transform:translateX(5px);
+  transform:translateX(2px);
 }
 
 }
