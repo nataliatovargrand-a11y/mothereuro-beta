@@ -1,349 +1,282 @@
 <template>
 
-<div class="resources-wrapper">
+<div class="page-wrapper">
+  <div class="page-container">
 
-<!-- PAGE TITLE -->
+    <!-- HEADER -->
 
-<h1 class="page-title">
-Education
-</h1>
+    <h1 class="page-title-main">
+      EDUCATION
+    </h1>
 
-<p class="page-intro">
-Trusted education advisors, summer programs, and thoughtfully designed spaces for children across Europe.
-</p>
-
-
-<!-- EDUCATION ADVISOR -->
-
-<h2 class="section-title">
-Education
-</h2>
-
-<div class="hero-card advisor-card">
-
-<div class="card-content">
-
-<div class="card-label">
-Education Advisor
-</div>
-
-<h2>
-Personalized School & University Guidance
-</h2>
-
-<p>
-Our education advisor helps families navigate European school systems,
-international programs, and university pathways with personalized guidance.
-</p>
-
-<a
-href="mailto:emily@mothereuro.com"
-class="card-button"
->
-Contact Now
-</a>
-
-</div>
-
-</div>
+    <p class="page-subtitle">
+      Trusted education pathways, advisors, and programs for families living in Europe.
+    </p>
 
 
+    <!-- EDUCATION ADVISOR -->
 
-<!-- SUMMER CAMPS -->
+    <h2 class="section-title">EDUCATION</h2>
 
-<h2 class="section-title">
-Summer Camps
-</h2>
+    <div class="hero-card">
 
-<div class="hero-card summer">
+      <div class="hero-content">
 
-<div class="card-content">
+        <h2 class="hero-title">
+          Education Advisor
+        </h2>
 
-<div class="card-label">
-Summer Camps
-</div>
+        <p class="hero-description">
+          Personalized School Guidance<br><br>
+          Our education advisor helps families navigate European school systems, international programs, and university pathways with personalized guidance.
+        </p>
 
-<h2>
-European Summer Society
-</h2>
+        <a
+          href="mailto:emily@mothereuro.com"
+          class="hero-button"
+        >
+          Learn More
+        </a>
 
-<p>
-Immersive summer experiences across Europe where children build global friendships,
-discover new cultures, and return home with confidence and independence.
-</p>
+      </div>
 
-<a
-href="https://europeansummersociety.com"
-target="_blank"
-class="card-button"
->
-Explore Programs
-</a>
-
-</div>
-
-</div>
+    </div>
 
 
+    <!-- SUMMER CAMPS -->
 
-<!-- CHILDREN SPACES -->
+    <h2 class="section-title">SUMMER CAMPS</h2>
 
-<h2 class="section-title">
-Children Spaces
-</h2>
+    <div class="hero-card">
 
-<div class="card-grid">
+      <div class="hero-content">
 
+        <h2 class="hero-title">
+          European Summer Society
+        </h2>
 
-<!-- HOUSE OF MINI -->
+        <p class="hero-description">
+          Curated summer experiences across Europe designed for global families.
+        </p>
 
-<div class="resource-card">
+        <a
+          href="mailto:emily@mothereuro.com"
+          class="hero-button"
+        >
+          Learn More
+        </a>
 
-<h3>House of Mini</h3>
+      </div>
 
-<p>
-Creative children's concept space focused on imagination,
-learning and exploration.
-</p>
-
-<a
-href="https://museumofmini.com/"
-target="_blank"
-class="card-link"
->
-Visit Website
-</a>
-
-</div>
+    </div>
 
 
+    <!-- CHILDREN SPACES -->
 
-<!-- CAFE REGGIO -->
+    <h2 class="section-title">CHILDREN SPACES</h2>
 
-<div class="resource-card">
+    <div class="carousel">
 
-<h3>Cafe Reggio</h3>
+      <div
+        v-for="item in childrenSpaces"
+        :key="item.id"
+        class="education-card"
+      >
 
-<p>
-A playful café space designed for children and parents to relax,
-create and connect.
-</p>
+        <div class="education-name">
+          {{ item.name || item.title }}
+        </div>
 
-<a
-href="https://www.instagram.com/cafe.reggio/"
-target="_blank"
-class="card-link"
->
-Visit Instagram
-</a>
+        <div class="education-description">
+          {{ item.description }}
+        </div>
 
-</div>
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="education-link"
+        >
+          Visit →
+        </a>
 
+      </div>
 
+    </div>
 
-<!-- TETE CONCEPT -->
-
-<div class="resource-card">
-
-<h3>Tete Concept</h3>
-
-<p>
-Design-driven children's spaces combining creativity,
-education and modern aesthetics.
-</p>
-
-<a
-href="https://teteconcept.es/?srsltid=AfmBOoqrP8hyp22THMXBkByvFy0AheZZJxzWWOXR-Rhs-wDfFkhfMj4b"
-target="_blank"
-class="card-link"
->
-Visit Website
-</a>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 
 </template>
 
 
+<script setup>
+
+import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
+
+const childrenSpaces = ref([])
+
+onMounted(async () => {
+
+  const { data } = await supabase
+    .from('resources')
+    .select('*')
+    .eq('category', 'education')
+    .eq('active', true)
+
+  childrenSpaces.value = data?.filter(item =>
+    item.subcategory?.toLowerCase().includes('children')
+  ) || []
+
+})
+
+</script>
+
 
 <style scoped>
 
-.advisor-card{
-background:#f6f4f1;
-color:#1a1a1a;
+/* TITLE */
+
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
 }
 
-.advisor-card h2{
-color:#1a1a1a;
-}
-
-.advisor-card p{
-color:#444;
-}
-
-.advisor-card .card-label{
-color:#777;
-}
-
-.advisor-card::after{
-display:none;
-}
-
-.advisor-card .card-button{
-background:#A8985F;
-color:white;
-}.advisor-card{
-background:#f6f4f1;
-color:black;
-}
-
-.advisor-card::after{
-display:none;
-}
-
-.advisor-card .card-button{
-background:#A8985F;
-color:white;
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:50px;
+  max-width:500px;
 }
 
 
-
-
-/* PAGE HEADER */
-
-.page-title{
-font-size:48px;
-margin-bottom:12px;
-}
-
-.page-intro{
-font-size:18px;
-opacity:.7;
-max-width:640px;
-line-height:1.6;
-margin-bottom:80px;
-}
-
-
-/* SECTION TITLES */
+/* SECTION */
 
 .section-title{
-font-size:18px;
-opacity:.7;
-letter-spacing:2px;
-text-transform:uppercase;
-margin-top:70px;
-margin-bottom:30px;
+  font-size:14px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:20px;
+  margin-top:50px;
 }
 
 
-/* HERO CARDS */
+/* HERO */
 
 .hero-card{
-height:340px;
-border-radius:18px;
-margin-bottom:60px;
-display:flex;
-align-items:center;
-padding:60px;
-color:white;
-background-size:cover;
-background-position:center;
-position:relative;
+  width:100%;
+  max-width:720px;
+  background:#f6f4f1;
+  padding:40px;
+  border-radius:20px;
+  margin-bottom:60px;
 }
 
-.hero-card::after{
-content:"";
-position:absolute;
-inset:0;
-background:rgba(0,0,0,0.35);
-border-radius:18px;
+.hero-content{
+  max-width:520px;
 }
 
-.card-content{
-position:relative;
-z-index:2;
-max-width:480px;
+.hero-title{
+  font-size:28px;
+  margin-bottom:12px;
 }
 
-.card-label{
-letter-spacing:4px;
-font-size:12px;
-margin-bottom:12px;
-opacity:.8;
+.hero-description{
+  font-size:15px;
+  opacity:.7;
+  margin-bottom:20px;
+  line-height:1.6;
 }
 
-.hero-card h2{
-font-size:34px;
-margin-bottom:14px;
-}
-
-.hero-card p{
-line-height:1.6;
-margin-bottom:22px;
-opacity:.9;
+.hero-button{
+  background:#A8985F;
+  color:white;
+  padding:12px 24px;
+  border-radius:30px;
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:1px;
 }
 
 
-/* BUTTON */
+/* CAROUSEL (FIXED PROPERLY) */
 
-.card-button{
-display:inline-block;
-background:white;
-color:black;
-padding:12px 22px;
-border-radius:30px;
-font-size:12px;
-letter-spacing:2px;
-text-decoration:none;
+.carousel{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  scroll-snap-type:x mandatory;
+}
+
+.carousel::-webkit-scrollbar{
+  display:none;
 }
 
 
-/* CHILDREN SPACE CARDS */
+/* CARD */
 
-.card-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:28px;
-margin-top:20px;
-}
+.education-card{
+  flex:0 0 auto;
+  min-width:240px;
+  max-width:240px;
+  height:160px;
 
-.resource-card{
-background:white;
-padding:28px;
-border-radius:16px;
-box-shadow:0 4px 20px rgba(0,0,0,0.04);
-}
+  background:white;
+  border-radius:16px;
+  padding:18px;
 
-.resource-card h3{
-font-size:20px;
-margin-bottom:12px;
-}
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 
-.resource-card p{
-font-size:15px;
-opacity:.7;
-margin-bottom:16px;
-}
+  box-shadow:0 8px 25px rgba(0,0,0,0.04);
 
-.card-link{
-text-decoration:underline;
-font-size:14px;
+  scroll-snap-align:start;
 }
 
 
-/* BACKGROUNDS */
+/* TEXT */
 
-.advisor{
-background-image:url('/images/education-advisor.jpg');
+.education-name{
+  font-size:15px;
 }
 
-.summer{
-background-image:url('/images/european-summer.jpg');
+.education-description{
+  font-size:13px;
+  opacity:.7;
+}
+
+.education-link{
+  font-size:12px;
+}
+
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .page-title-main{
+    font-size:30px;
+  }
+
+  .hero-card{
+    padding:24px;
+    max-width:100%;
+  }
+
+  .hero-title{
+    font-size:22px;
+  }
+
+  .education-card{
+    min-width:200px;
+    max-width:200px;
+  }
+
 }
 
 </style>
