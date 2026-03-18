@@ -201,48 +201,66 @@ onMounted(async () => {
 
   const hash = window.location.hash
 
-  // Restore session from email link
-  if (hash.includes('access_token')) {
+  // detect special flows
+  const isInvite = hash.includes('type=invite')
+  const isRecovery = hash.includes('type=recovery')
+  const hasToken = hash.includes('access_token')
+
+  // STEP 1: restore session from email link
+  if (hasToken) {
     await supabase.auth.exchangeCodeForSession(window.location.href)
   }
 
-  const { data:{ session } } = await supabase.auth.getSession()
+  // STEP 2: wait for session to exist (CRITICAL)
+  let session = null
 
-  if (!session) {
+  for (let i = 0; i < 5; i++) {
+    const { data } = await supabase.auth.getSession()
+    if (data.session) {
+      session = data.session
+      break
+    }
+    await new Promise(r => setTimeout(r, 300))
+  }
+
+  // STEP 3: ONLY redirect if NOT invite/recovery
+  if (!session && !isInvite && !isRecovery) {
     router.push('/login')
     return
   }
 
-  user.value = session.user
+  user.value = session?.user
 
-  // Decide if password screen should show
+  // STEP 4: show password screen when needed
   if (
-    hash.includes('type=invite') ||
-    hash.includes('type=recovery') ||
-    !session.user.user_metadata?.password_set
+    isInvite ||
+    isRecovery ||
+    !session?.user?.user_metadata?.password_set
   ) {
     needsPassword.value = true
   }
 
-  // Load profile
-  const { data } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', user.value.id)
-    .single()
+  // STEP 5: load profile if user exists
+  if (user.value) {
+    const { data } = await supabase
+      .from('members')
+      .select('*')
+      .eq('id', user.value.id)
+      .single()
 
-  member.value = data
+    member.value = data
 
-  name.value = data?.name
-  city.value = data?.city
-  industry.value = data?.industry
+    name.value = data?.name
+    city.value = data?.city
+    industry.value = data?.industry
 
-  const { data: saved } = await supabase
-    .from('saved_resources')
-    .select(`resources (*)`)
-    .eq('member_id', user.value.id)
+    const { data: saved } = await supabase
+      .from('saved_resources')
+      .select(`resources (*)`)
+      .eq('member_id', user.value.id)
 
-  savedResources.value = saved?.map(s => s.resources) || []
+    savedResources.value = saved?.map(s => s.resources) || []
+  }
 
   loading.value = false
 
