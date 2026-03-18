@@ -75,43 +75,6 @@
 
     </div>
 
-
-    <!-- CHILDREN SPACES -->
-
-    <h2 class="section-title">CHILDREN SPACES</h2>
-
-    <div class="carousel">
-
-      <div
-        v-for="item in childrenSpaces"
-        :key="item.id"
-        class="education-card"
-      >
-
-        <div class="education-name">
-          {{ item.name || item.title }}
-        </div>
-
-        <div class="education-description">
-          {{ item.description }}
-        </div>
-
-        <div class="education-location">
-          {{ item.city || item.location }}
-        </div>
-
-        <a
-          :href="item.website || item.website_url || item.url"
-          target="_blank"
-          class="education-link"
-        >
-          Visit →
-        </a>
-
-      </div>
-
-    </div>
-
   </div>
 </div>
 
@@ -120,28 +83,7 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-
-const childrenSpaces = ref([])
-
-onMounted(async () => {
-
-  const { data } = await supabase
-    .from('resources')
-    .select('*')
-    .eq('category', 'education')
-    .eq('active', true)
-
-  childrenSpaces.value = data?.filter(item => {
-
-    const sub = item.subcategory?.toLowerCase() || ''
-
-    return sub.includes('children spaces') || sub.includes('children')
-
-  }) || []
-
-})
+// removed childrenSpaces logic completely
 
 </script>
 
@@ -229,64 +171,6 @@ onMounted(async () => {
 }
 
 
-/* CAROUSEL */
-
-.carousel{
-  display:flex;
-  gap:20px;
-  overflow-x:auto;
-  padding-bottom:10px;
-  scroll-snap-type:x mandatory;
-}
-
-.carousel::-webkit-scrollbar{
-  display:none;
-}
-
-
-/* CARD */
-
-.education-card{
-  flex:0 0 auto;
-  min-width:240px;
-  max-width:240px;
-  height:180px;
-
-  background:white;
-  border-radius:16px;
-  padding:18px;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-
-  box-shadow:0 8px 25px rgba(0,0,0,0.04);
-
-  scroll-snap-align:start;
-}
-
-
-/* TEXT */
-
-.education-name{
-  font-size:15px;
-}
-
-.education-description{
-  font-size:13px;
-  opacity:.7;
-}
-
-.education-location{
-  font-size:12px;
-  opacity:.5;
-}
-
-.education-link{
-  font-size:12px;
-}
-
-
 /* MOBILE */
 
 @media (max-width:768px){
@@ -312,11 +196,6 @@ onMounted(async () => {
 
   .hero-title{
     font-size:22px;
-  }
-
-  .education-card{
-    min-width:200px;
-    max-width:200px;
   }
 
 }
