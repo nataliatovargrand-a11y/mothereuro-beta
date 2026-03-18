@@ -50,34 +50,21 @@
 
     </div>
 
-    <!-- PROFILE CARD -->
+    <!-- PROFILE -->
 
     <div class="card">
 
       <div class="profile-top">
-
-        <button
-          v-if="!editing"
-          @click="startEdit"
-          class="edit-btn"
-        >
+        <button v-if="!editing" @click="startEdit" class="edit-btn">
           Edit Profile
         </button>
-
       </div>
 
       <div class="profile-card">
 
-        <!-- AVATAR -->
-
         <div class="avatar-block">
 
-          <img
-            v-if="member?.avatar_url"
-            :src="member.avatar_url"
-            class="avatar"
-          />
-
+          <img v-if="member?.avatar_url" :src="member.avatar_url" class="avatar"/>
           <div v-else class="avatar-placeholder"></div>
 
           <label class="upload-btn">
@@ -86,8 +73,6 @@
           </label>
 
         </div>
-
-        <!-- INFO -->
 
         <div class="profile-info">
 
@@ -124,31 +109,42 @@
     <!-- SAVED -->
 
     <div class="card">
+
       <h2 class="section-title">Saved Resources</h2>
 
-      <div v-if="savedResources.length === 0" class="empty">
+      <div v-if="!safeSavedResources.length" class="empty">
         No saved resources yet.
       </div>
 
-      <div v-for="resource in savedResources" :key="resource.id" class="resource-card">
+      <div
+        v-for="resource in safeSavedResources"
+        :key="resource.id"
+        class="resource-card"
+      >
         <div>{{ resource.title }}</div>
         <div>
           <a :href="resource.link_url" target="_blank" class="view-btn">View</a>
           <button @click="removeSaved(resource.id)" class="remove-btn">Remove</button>
         </div>
       </div>
+
     </div>
 
     <!-- EVENTS -->
 
     <div class="card">
+
       <h2 class="section-title">Your Upcoming Events</h2>
 
-      <div v-if="upcomingEvents.length === 0" class="empty">
+      <div v-if="!safeEvents.length" class="empty">
         No upcoming events yet.
       </div>
 
-      <div v-for="event in upcomingEvents" :key="event.id" class="event-card">
+      <div
+        v-for="event in safeEvents"
+        :key="event.id"
+        class="event-card"
+      >
         <div>{{ event.event_title }}</div>
         <div class="event-date">{{ formatDate(event.event_date) }}</div>
       </div>
@@ -161,206 +157,176 @@
 
 </template>
 
+<script setup>
 
-<style scoped>
+import { ref, computed, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
+import { useRouter } from 'vue-router'
 
-.account-wrapper{
-padding:120px 24px;
-max-width:900px;
-margin:auto;
+const router = useRouter()
+
+const loading = ref(true)
+const member = ref(null)
+const user = ref(null)
+
+const editing = ref(false)
+
+const name = ref('')
+const city = ref('')
+const industry = ref('')
+
+const savedResources = ref([])
+const upcomingEvents = ref([])
+
+const needsPassword = ref(false)
+const password = ref('')
+const confirmPassword = ref('')
+const passwordError = ref('')
+
+/* ✅ SSR SAFE COMPUTEDS */
+
+const safeSavedResources = computed(() => savedResources.value || [])
+const safeEvents = computed(() => upcomingEvents.value || [])
+
+const firstName = computed(() => {
+  if (!member.value?.name) return 'Member'
+  return member.value.name.split(' ')[0]
+})
+
+onMounted(async () => {
+
+  const { data:{ session } } = await supabase.auth.getSession()
+
+  if(!session){
+    router.push('/login')
+    return
+  }
+
+  user.value = session.user
+
+  const { data: userData } = await supabase.auth.getUser()
+
+  if (
+    !userData.user?.user_metadata?.password_set ||
+    window.location.hash.includes('type=recovery')
+  ) {
+    needsPassword.value = true
+  }
+
+  const { data } = await supabase
+    .from('members')
+    .select('*')
+    .eq('id', user.value.id)
+    .single()
+
+  member.value = data
+
+  name.value = data?.name
+  city.value = data?.city
+  industry.value = data?.industry
+
+  const { data: saved } = await supabase
+    .from('saved_resources')
+    .select(`resources (*)`)
+    .eq('member_id', user.value.id)
+
+  savedResources.value = saved?.map(s => s.resources) || []
+
+  loading.value = false
+
+})
+
+const setPassword = async () => {
+
+  passwordError.value = ''
+
+  if (!password.value || !confirmPassword.value) {
+    passwordError.value = 'Please fill both fields'
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    passwordError.value = 'Passwords do not match'
+    return
+  }
+
+  if (password.value.length < 6) {
+    passwordError.value = 'Password must be at least 6 characters'
+    return
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: password.value,
+    data: { password_set: true }
+  })
+
+  if (error) {
+    passwordError.value = error.message
+    return
+  }
+
+  needsPassword.value = false
+  window.history.replaceState({}, document.title, window.location.pathname)
+
 }
 
-/* HEADER */
+const removeSaved = async(id)=>{
+  await supabase
+    .from('saved_resources')
+    .delete()
+    .eq('resource_id', id)
+    .eq('member_id', user.value.id)
 
-.account-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:60px;
+  savedResources.value =
+    savedResources.value.filter(r=>r.id!==id)
 }
 
-.greeting{
-font-size:44px;
+const startEdit = ()=> editing.value=true
+const cancelEdit = ()=> editing.value=false
+
+const saveProfile = async ()=>{
+  await supabase
+    .from('members')
+    .update({
+      name:name.value,
+      city:city.value,
+      industry:industry.value
+    })
+    .eq('id',user.value.id)
+
+  member.value.name=name.value
+  member.value.city=city.value
+  member.value.industry=industry.value
+
+  editing.value=false
 }
 
-.welcome{
-opacity:.6;
+const uploadAvatar = async(e)=>{
+  const file=e.target.files[0]
+  if(!file) return
+
+  const path=`${user.value.id}/${file.name}`
+
+  await supabase.storage.from('avatars').upload(path,file,{upsert:true})
+
+  const { data } =
+    supabase.storage.from('avatars').getPublicUrl(path)
+
+  await supabase
+    .from('members')
+    .update({avatar_url:data.publicUrl})
+    .eq('id',user.value.id)
+
+  member.value.avatar_url=data.publicUrl
 }
 
-/* CARD */
-
-.card{
-background:white;
-border-radius:20px;
-padding:30px;
-margin-bottom:30px;
-box-shadow:0 10px 30px rgba(0,0,0,0.04);
+const logout = async()=>{
+  await supabase.auth.signOut()
+  router.push('/login')
 }
 
-/* PROFILE */
-
-.profile-top{
-display:flex;
-justify-content:flex-start;
-margin-bottom:20px;
+const formatDate=(d)=>{
+  return new Date(d).toLocaleDateString()
 }
 
-.profile-card{
-display:flex;
-gap:40px;
-}
-
-.avatar{
-width:110px;
-height:110px;
-border-radius:50%;
-object-fit:cover;
-}
-
-.avatar-placeholder{
-width:110px;
-height:110px;
-border-radius:50%;
-background:#eee;
-}
-
-.avatar-block{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:10px;
-}
-
-.profile-info{
-flex:1;
-}
-
-.profile-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-font-size:11px;
-letter-spacing:2px;
-opacity:.5;
-text-transform:uppercase;
-}
-
-span{
-font-size:16px;
-}
-
-/* BUTTONS */
-
-.logout-btn{
-padding:10px 18px;
-border-radius:999px;
-background:white;
-border:1px solid rgba(0,0,0,0.1);
-}
-
-.edit-btn{
-border:1px solid rgba(0,0,0,0.1);
-padding:8px 14px;
-border-radius:999px;
-background:white;
-}
-
-.upload-btn{
-font-size:12px;
-border:1px solid rgba(0,0,0,0.1);
-padding:6px 12px;
-border-radius:999px;
-cursor:pointer;
-}
-
-.save-btn{
-background:black;
-color:white;
-padding:10px 16px;
-border-radius:10px;
-border:none;
-}
-
-.section-title{
-font-size:28px;
-margin-bottom:20px;
-}
-
-.resource-card{
-display:flex;
-justify-content:space-between;
-padding:16px 0;
-border-top:1px solid rgba(0,0,0,0.05);
-}
-
-.view-btn{
-background:black;
-color:white;
-padding:6px 12px;
-border-radius:6px;
-text-decoration:none;
-margin-right:8px;
-}
-
-.remove-btn{
-color:#c33;
-background:none;
-border:none;
-}
-
-.event-card{
-padding:16px 0;
-border-top:1px solid rgba(0,0,0,0.05);
-}
-
-.event-date{
-opacity:.6;
-font-size:14px;
-}
-
-/* PASSWORD */
-
-.password-card{
-text-align:center;
-max-width:400px;
-margin:auto;
-}
-
-.password-input{
-width:100%;
-padding:14px;
-margin-bottom:12px;
-border-radius:10px;
-border:1px solid rgba(0,0,0,0.1);
-}
-
-.password-btn{
-background:#A8985F;
-color:white;
-padding:14px;
-border-radius:999px;
-width:100%;
-border:none;
-}
-
-.password-error{
-color:#c33;
-margin-bottom:10px;
-}
-
-/* MOBILE */
-
-@media (max-width:768px){
-.profile-card{
-flex-direction:column;
-align-items:center;
-text-align:center;
-}
-.profile-grid{
-grid-template-columns:1fr;
-}
-}
-</style>
+</script>
