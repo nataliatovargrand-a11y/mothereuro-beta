@@ -280,8 +280,10 @@ return
 
 user.value = session.user
 
-// 🔥 detect invited users
-if (!user.value.last_sign_in_at) {
+// detect invite / recovery flow
+const hash = window.location.hash
+
+if (hash.includes('type=invite') || hash.includes('type=recovery')) {
   needsPassword.value = true
 }
 
@@ -318,6 +320,10 @@ const { error } = await supabase.auth.updateUser({
 
 if(!error){
   needsPassword.value = false
+
+  // clean URL
+  window.history.replaceState({}, document.title, window.location.pathname)
+
   window.location.reload()
 }
 }
