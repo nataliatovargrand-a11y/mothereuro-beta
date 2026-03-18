@@ -182,15 +182,18 @@ const redeemPartner = async (partner) => {
 }
 
 .partners-title{
-  font-size:14px;
-  letter-spacing:3px;
+  font-size:42px;
+  letter-spacing:0.02em;
   text-transform:uppercase;
-  margin-bottom:10px;
+  margin-bottom:14px;
+  line-height:1.1;
 }
 
 .partners-subtitle{
-  font-size:14px;
-  opacity:.6;
+  font-size:16px;
+  opacity:.65;
+  max-width:420px;
+  line-height:1.5;
 }
 
 
@@ -313,10 +316,8 @@ const redeemPartner = async (partner) => {
 
 @media (max-width:768px){
 
-  .partner-card{
-    min-width:200px;
-    max-width:200px;
-    height:280px;
+  .partners-title{
+    font-size:30px;
   }
 
 }
