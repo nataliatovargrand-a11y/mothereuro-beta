@@ -33,6 +33,17 @@
           class="password-input"
         />
 
+        <input
+          v-model="confirmPassword"
+          type="password"
+          placeholder="Confirm password"
+          class="password-input"
+        />
+
+        <p v-if="passwordError" class="password-error">
+          {{ passwordError }}
+        </p>
+
         <button @click="setPassword" class="password-btn">
           ENTER THE PLATFORM
         </button>
@@ -263,6 +274,8 @@ const upcomingEvents = ref([])
 
 const needsPassword = ref(false)
 const password = ref('')
+const confirmPassword = ref('')
+const passwordError = ref('')
 
 const firstName = computed(() => {
   if (!member.value?.name) return 'Member'
@@ -280,10 +293,13 @@ return
 
 user.value = session.user
 
-// 🔥 BULLETPROOF: detect if user still needs password
+// 🔥 FIX: handles invite + reset password flows reliably
 const { data: userData } = await supabase.auth.getUser()
 
-if (!userData.user?.user_metadata?.password_set) {
+if (
+  !userData.user?.user_metadata?.password_set ||
+  window.location.hash.includes('type=recovery')
+) {
   needsPassword.value = true
 }
 
@@ -312,23 +328,39 @@ loading.value = false
 
 const setPassword = async () => {
 
-if(!password.value) return
+passwordError.value = ''
+
+if (!password.value || !confirmPassword.value) {
+  passwordError.value = 'Please fill both fields'
+  return
+}
+
+if (password.value !== confirmPassword.value) {
+  passwordError.value = 'Passwords do not match'
+  return
+}
+
+if (password.value.length < 6) {
+  passwordError.value = 'Password must be at least 6 characters'
+  return
+}
 
 const { error } = await supabase.auth.updateUser({
   password: password.value,
-  data: {
-    password_set: true
-  }
+  data: { password_set: true }
 })
 
-if(!error){
-  needsPassword.value = false
-
-  // clean URL
-  window.history.replaceState({}, document.title, window.location.pathname)
-
-  window.location.reload()
+if (error) {
+  passwordError.value = error.message
+  return
 }
+
+// ✅ FIX: no reload + clean state
+needsPassword.value = false
+
+// remove recovery hash if present
+window.history.replaceState({}, document.title, window.location.pathname)
+
 }
 
 const removeSaved = async(id)=>{
@@ -397,184 +429,10 @@ return new Date(d).toLocaleDateString()
 
 <style scoped>
 
-.account-wrapper{
-padding:120px 24px;
-max-width:900px;
-margin:auto;
-}
-
-.account-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:60px;
-}
-
-.greeting{
-font-size:38px;
-}
-
-.welcome{
-font-size:16px;
-opacity:.6;
-}
-
-.card{
-background: rgba(255,255,255,0.35);
-backdrop-filter: blur(18px);
-border: 1px solid rgba(255,255,255,0.55);
-border-radius:18px;
-padding:32px;
-margin-bottom:32px;
-}
-
-.password-card{
-text-align:center;
-margin-bottom:40px;
-}
-
-.password-sub{
-opacity:.6;
-margin-bottom:20px;
-}
-
-.password-input{
-width:100%;
-max-width:320px;
-padding:12px;
-border:1px solid rgba(0,0,0,0.1);
-border-radius:10px;
-margin-bottom:16px;
-}
-
-.profile-card{
-display:flex;
-gap:40px;
-align-items:flex-start;
-}
-
-.avatar{
-width:120px;
-height:120px;
-border-radius:50%;
-object-fit:cover;
-}
-
-.avatar-placeholder{
-width:120px;
-height:120px;
-border-radius:50%;
-background:#eee;
-}
-
-.profile-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:22px;
-}
-
-label{
-font-size:11px;
-letter-spacing:2px;
-opacity:.6;
-text-transform:uppercase;
-}
-
-span{
-display:block;
-margin-top:4px;
-font-size:15px;
-}
-
-.logout-btn{
-border:1px solid rgba(0,0,0,0.08);
-padding:10px 18px;
-border-radius:12px;
-cursor:pointer;
-background:white;
-}
-
-.upload-btn{
-padding:8px 14px;
-border-radius:12px;
-border:1px solid rgba(0,0,0,0.1);
-cursor:pointer;
-font-size:12px;
-background:white;
-}
-
-.save-btn{
-background:black;
-color:white;
-border:none;
-padding:10px 18px;
-border-radius:10px;
-cursor:pointer;
-}
-
-.resource-card{
-border-top:1px solid rgba(0,0,0,0.05);
-padding:18px 0;
-display:flex;
-justify-content:space-between;
-}
-
-.view-btn{
-background:black;
-color:white;
-padding:6px 12px;
-border-radius:6px;
-text-decoration:none;
-font-size:12px;
-}
-
-.remove-btn{
-border:none;
-background:none;
+.password-error{
 color:#c33;
-cursor:pointer;
-}
-
-.relocation-content{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:40px;
-}
-
-.relocation-btn{
-display:inline-block;
-margin-top:14px;
-padding:12px 24px;
-border-radius:30px;
-background:#A8985F;
-color:white;
-text-decoration:none;
-}
-
-.relocation-image{
-width:220px;
-height:130px;
-border-radius:14px;
-background-image:url('/images/relocation.jpg');
-background-size:cover;
-background-position:center;
-}
-
-@media (max-width:768px){
-.profile-card{
-flex-direction:column;
-align-items:center;
-text-align:center;
-}
-.profile-grid{
-grid-template-columns:1fr;
-}
-.account-header{
-flex-direction:column;
-align-items:flex-start;
-gap:16px;
-}
+font-size:13px;
+margin-bottom:12px;
 }
 
 </style>
