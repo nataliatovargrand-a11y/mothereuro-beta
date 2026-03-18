@@ -82,8 +82,105 @@ img{
 }
 
 
-/* PAGE WRAPPERS */
-/* prevents horizontal scroll bugs */
+/* =========================================
+   NEW: GLOBAL PAGE SYSTEM (KEY UPGRADE)
+========================================= */
+
+.page-wrapper{
+  min-height:100vh;
+  padding:100px 24px 80px;
+}
+
+.page-container{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+
+/* SECTION SPACING */
+
+.section{
+  margin-bottom:60px;
+}
+
+
+/* PAGE TITLES */
+
+.page-title{
+  font-size:48px;
+  margin-bottom:16px;
+}
+
+.page-subtitle{
+  font-size:18px;
+  opacity:.7;
+  max-width:600px;
+  margin-bottom:40px;
+}
+
+
+/* =========================================
+   NEW: GRID SYSTEM (FIXES BEAUTY/TRAVEL)
+========================================= */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:24px;
+}
+
+@media (max-width:900px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media (max-width:600px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================
+   NEW: CARD SYSTEM (PREMIUM LOOK)
+========================================= */
+
+.card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+}
+
+/* CARD IMAGE */
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+}
+
+/* CARD CONTENT */
+
+.card-content{
+  padding:16px;
+}
+
+.card-title{
+  font-size:18px;
+  margin-bottom:6px;
+}
+
+.card-sub{
+  font-size:14px;
+  opacity:.6;
+}
+
+
+/* =========================================
+   EXISTING WRAPPERS (UNCHANGED)
+========================================= */
 
 .explore-wrapper,
 .events-wrapper,
@@ -95,7 +192,6 @@ img{
 
 
 /* HERO LOGO FIX */
-/* keeps Mother Euro logo perfectly centered */
 
 .hero-logo{
   display:flex;
@@ -111,7 +207,7 @@ img{
 }
 
 
-/* HERO TEXT CENTERING */
+/* HERO TEXT */
 
 .hero{
   text-align:center;
@@ -121,7 +217,9 @@ img{
 }
 
 
-/* MOBILE TYPOGRAPHY */
+/* =========================================
+   MOBILE IMPROVEMENTS
+========================================= */
 
 @media (max-width:768px){
 
@@ -137,12 +235,13 @@ h3{
   font-size:20px;
 }
 
+/* page spacing */
+
+.page-wrapper{
+  padding:80px 16px 60px;
 }
 
-
-/* MOBILE PAGE SPACING */
-
-@media (max-width:768px){
+/* wrappers */
 
 .explore-wrapper,
 .events-wrapper,
@@ -153,15 +252,16 @@ h3{
   padding-right:20px !important;
 }
 
-}
-
-
-/* MOBILE HERO IMPROVEMENTS */
-
-@media (max-width:768px){
+/* hero */
 
 .hero-logo img{
   width:95px;
+}
+
+/* cards */
+
+.card img{
+  height:180px;
 }
 
 }

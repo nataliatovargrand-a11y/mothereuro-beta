@@ -1,6 +1,8 @@
 <template>
 
-<div class="resources-wrapper">
+<div class="page-wrapper">
+
+  <div class="page-container">
 
 <!-- PAGE TITLE -->
 
