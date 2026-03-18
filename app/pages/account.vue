@@ -98,8 +98,8 @@
 
               <div><label>Name</label><span>{{ member?.name }}</span></div>
               <div><label>Email</label><span>{{ member?.email }}</span></div>
-              <div><label>Membership</label><span>{{ member?.membership_tier }}</span></div>
-              <div><label>Renewal</label><span>{{ member?.renewal_date }}</span></div>
+              <div><label>Membership</label><span>{{ member?.membership_tier || '—' }}</span></div>
+              <div><label>Renewal</label><span>{{ formattedRenewal }}</span></div>
               <div><label>Industry</label><span>{{ member?.industry }}</span></div>
               <div><label>City</label><span>{{ member?.city }}</span></div>
 
@@ -202,6 +202,10 @@ const safeEvents = computed(() => upcomingEvents.value || [])
 
 const firstName = computed(() => {
   return member.value?.name?.split(' ')[0] || 'Member'
+})
+const formattedRenewal = computed(() => {
+  if (!member.value?.renewal_date) return '—'
+  return new Date(member.value.renewal_date).toLocaleDateString()
 })
 
 onMounted(async () => {
@@ -339,3 +343,205 @@ const formatDate=(d)=>{
 }
 
 </script>
+<style>
+
+.account-wrapper{
+padding:100px 20px;
+max-width:900px;
+margin:0 auto;
+background:#F7F3EE;
+min-height:100vh;
+}
+
+/* HEADER */
+
+.account-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:50px;
+}
+
+.greeting{
+font-size:48px;
+font-weight:400;
+margin-bottom:6px;
+}
+
+.welcome{
+font-size:16px;
+opacity:.6;
+}
+
+/* BUTTONS */
+
+.logout-btn{
+padding:10px 18px;
+border-radius:999px;
+border:1px solid rgba(0,0,0,0.1);
+background:white;
+cursor:pointer;
+}
+
+.edit-btn{
+padding:8px 16px;
+border-radius:999px;
+border:1px solid rgba(0,0,0,0.1);
+background:white;
+cursor:pointer;
+}
+
+.upload-btn{
+font-size:12px;
+padding:6px 12px;
+border-radius:999px;
+border:1px solid rgba(0,0,0,0.1);
+cursor:pointer;
+background:white;
+}
+
+.save-btn{
+background:black;
+color:white;
+padding:10px 16px;
+border-radius:10px;
+border:none;
+}
+
+.cancel-btn{
+margin-left:10px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:20px;
+padding:30px;
+margin-bottom:30px;
+box-shadow:0 8px 25px rgba(0,0,0,0.04);
+}
+
+/* PROFILE */
+
+.profile-top{
+margin-bottom:20px;
+}
+
+.profile-content{
+display:flex;
+gap:40px;
+align-items:flex-start;
+}
+
+.avatar-block{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
+}
+
+.avatar{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.avatar-placeholder{
+width:110px;
+height:110px;
+border-radius:50%;
+background:#eee;
+}
+
+.profile-info{
+flex:1;
+}
+
+.profile-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+font-size:11px;
+letter-spacing:1.5px;
+text-transform:uppercase;
+opacity:.5;
+display:block;
+margin-bottom:4px;
+}
+
+span{
+font-size:16px;
+}
+
+/* SECTIONS */
+
+.section-title{
+font-size:28px;
+margin-bottom:16px;
+}
+
+/* LISTS */
+
+.resource-card,
+.event-card{
+display:flex;
+justify-content:space-between;
+padding:14px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.view-btn{
+background:black;
+color:white;
+padding:6px 12px;
+border-radius:6px;
+text-decoration:none;
+margin-right:8px;
+}
+
+.remove-btn{
+background:none;
+border:none;
+color:#c33;
+cursor:pointer;
+}
+
+.event-date{
+opacity:.6;
+font-size:14px;
+}
+
+/* EMPTY */
+
+.empty{
+opacity:.6;
+padding:10px 0;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+.profile-content{
+flex-direction:column;
+align-items:center;
+text-align:center;
+}
+
+.profile-grid{
+grid-template-columns:1fr;
+}
+
+.account-header{
+flex-direction:column;
+gap:12px;
+}
+
+}
+
+</style>
