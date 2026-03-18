@@ -42,15 +42,6 @@
       Send me a login link
     </button>
 
-    <div class="forgot">
-      <button
-        class="forgot-btn"
-        @click="resetPassword"
-      >
-        Forgot password?
-      </button>
-    </div>
-
     <p v-if="message" class="message">
       {{ message }}
     </p>
@@ -131,30 +122,6 @@ const sendMagicLink = async () => {
   message.value = 'Login link sent to your email'
 }
 
-
-const resetPassword = async () => {
-
-  error.value = null
-  message.value = null
-
-  if (!email.value) {
-    error.value = 'Enter your email first'
-    return
-  }
-
-  const { error: resetError } =
-  await supabase.auth.resetPasswordForEmail(email.value, {
-    redirectTo: window.location.origin + '/account'
-  })
-
-  if (resetError) {
-    error.value = resetError.message
-    return
-  }
-
-  message.value = 'Password reset email sent'
-}
-
 </script>
 
 
@@ -215,23 +182,6 @@ h1{
   border-radius:999px;
   font-size:12px;
   cursor:pointer;
-}
-
-.forgot{
-  text-align:right;
-  margin-top:-6px;
-}
-
-.forgot-btn{
-  background:none;
-  border:none;
-  font-size:12px;
-  cursor:pointer;
-  opacity:.6;
-}
-
-.forgot-btn:hover{
-  opacity:1;
 }
 
 .error{
