@@ -35,67 +35,73 @@
 
     </div>
 
-    <!-- HEADER -->
+    <!-- ACCOUNT CONTENT -->
 
-    <div class="account-header">
+    <div v-else>
 
-      <div>
-        <h1 class="greeting">Hi, {{ firstName }}</h1>
-        <p class="welcome">Welcome back to Mother Euro</p>
-      </div>
+      <!-- HEADER -->
 
-      <button class="logout-btn" @click="logout">
-        Log Out
-      </button>
+      <div class="account-header">
 
-    </div>
-
-    <!-- PROFILE -->
-
-    <div class="card">
-
-      <div class="profile-top">
-        <button v-if="!editing" @click="startEdit" class="edit-btn">
-          Edit Profile
-        </button>
-      </div>
-
-      <div class="profile-card">
-
-        <div class="avatar-block">
-
-          <img v-if="member?.avatar_url" :src="member.avatar_url" class="avatar"/>
-          <div v-else class="avatar-placeholder"></div>
-
-          <label class="upload-btn">
-            Upload Photo
-            <input type="file" @change="uploadAvatar" hidden />
-          </label>
-
+        <div>
+          <h1 class="greeting">Hi, {{ firstName }}</h1>
+          <p class="welcome">Welcome back to Mother Euro</p>
         </div>
 
-        <div class="profile-info">
+        <button class="logout-btn" @click="logout">
+          Log Out
+        </button>
 
-          <div v-if="!editing" class="profile-grid">
+      </div>
 
-            <div><label>Name</label><span>{{ member?.name }}</span></div>
-            <div><label>Email</label><span>{{ member?.email }}</span></div>
-            <div><label>Membership</label><span>{{ member?.membership_tier }}</span></div>
-            <div><label>Renewal</label><span>{{ member?.renewal_date }}</span></div>
-            <div><label>Industry</label><span>{{ member?.industry }}</span></div>
-            <div><label>City</label><span>{{ member?.city }}</span></div>
+      <!-- PROFILE -->
+
+      <div class="card">
+
+        <div class="profile-top">
+          <button v-if="!editing" @click="startEdit" class="edit-btn">
+            Edit Profile
+          </button>
+        </div>
+
+        <div class="profile-card">
+
+          <div class="avatar-block">
+
+            <img v-if="member?.avatar_url" :src="member.avatar_url" class="avatar"/>
+            <div v-else class="avatar-placeholder"></div>
+
+            <label class="upload-btn">
+              Upload Photo
+              <input type="file" @change="uploadAvatar" hidden />
+            </label>
 
           </div>
 
-          <div v-else class="edit-form">
+          <div class="profile-info">
 
-            <input v-model="name" placeholder="Name" />
-            <input v-model="city" placeholder="City" />
-            <input v-model="industry" placeholder="Industry" />
+            <div v-if="!editing" class="profile-grid">
 
-            <div class="edit-actions">
-              <button @click="saveProfile" class="save-btn">Save</button>
-              <button @click="cancelEdit" class="cancel-btn">Cancel</button>
+              <div><label>Name</label><span>{{ member?.name }}</span></div>
+              <div><label>Email</label><span>{{ member?.email }}</span></div>
+              <div><label>Membership</label><span>{{ member?.membership_tier }}</span></div>
+              <div><label>Renewal</label><span>{{ member?.renewal_date }}</span></div>
+              <div><label>Industry</label><span>{{ member?.industry }}</span></div>
+              <div><label>City</label><span>{{ member?.city }}</span></div>
+
+            </div>
+
+            <div v-else class="edit-form">
+
+              <input v-model="name" placeholder="Name" />
+              <input v-model="city" placeholder="City" />
+              <input v-model="industry" placeholder="Industry" />
+
+              <div class="edit-actions">
+                <button @click="saveProfile" class="save-btn">Save</button>
+                <button @click="cancelEdit" class="cancel-btn">Cancel</button>
+              </div>
+
             </div>
 
           </div>
@@ -104,49 +110,49 @@
 
       </div>
 
-    </div>
+      <!-- SAVED -->
 
-    <!-- SAVED -->
+      <div class="card">
 
-    <div class="card">
+        <h2 class="section-title">Saved Resources</h2>
 
-      <h2 class="section-title">Saved Resources</h2>
-
-      <div v-if="!safeSavedResources.length" class="empty">
-        No saved resources yet.
-      </div>
-
-      <div
-        v-for="resource in safeSavedResources"
-        :key="resource.id"
-        class="resource-card"
-      >
-        <div>{{ resource.title }}</div>
-        <div>
-          <a :href="resource.link_url" target="_blank" class="view-btn">View</a>
-          <button @click="removeSaved(resource.id)" class="remove-btn">Remove</button>
+        <div v-if="!safeSavedResources.length" class="empty">
+          No saved resources yet.
         </div>
+
+        <div
+          v-for="resource in safeSavedResources"
+          :key="resource.id"
+          class="resource-card"
+        >
+          <div>{{ resource.title }}</div>
+          <div>
+            <a :href="resource.link_url" target="_blank" class="view-btn">View</a>
+            <button @click="removeSaved(resource.id)" class="remove-btn">Remove</button>
+          </div>
+        </div>
+
       </div>
 
-    </div>
+      <!-- EVENTS -->
 
-    <!-- EVENTS -->
+      <div class="card">
 
-    <div class="card">
+        <h2 class="section-title">Your Upcoming Events</h2>
 
-      <h2 class="section-title">Your Upcoming Events</h2>
+        <div v-if="!safeEvents.length" class="empty">
+          No upcoming events yet.
+        </div>
 
-      <div v-if="!safeEvents.length" class="empty">
-        No upcoming events yet.
-      </div>
+        <div
+          v-for="event in safeEvents"
+          :key="event.id"
+          class="event-card"
+        >
+          <div>{{ event.event_title }}</div>
+          <div class="event-date">{{ formatDate(event.event_date) }}</div>
+        </div>
 
-      <div
-        v-for="event in safeEvents"
-        :key="event.id"
-        class="event-card"
-      >
-        <div>{{ event.event_title }}</div>
-        <div class="event-date">{{ formatDate(event.event_date) }}</div>
       </div>
 
     </div>
@@ -193,63 +199,50 @@ const firstName = computed(() => {
 
 onMounted(async () => {
 
-  // 🔥 STEP 1: Handle invite / recovery FIRST
   const hash = window.location.hash
 
-  if (hash.includes('type=invite') || hash.includes('type=recovery')) {
-    needsPassword.value = true
-  }
-
-  // 🔥 STEP 2: Let Supabase process session from URL
-  const { data: sessionData } = await supabase.auth.getSession()
-
-  // 🔥 CRITICAL: wait for session to hydrate
-  if (!sessionData.session) {
-    // try again (important for mobile + email flow)
-    await new Promise(resolve => setTimeout(resolve, 500))
+  // Restore session from email link
+  if (hash.includes('access_token')) {
+    await supabase.auth.exchangeCodeForSession(window.location.href)
   }
 
   const { data:{ session } } = await supabase.auth.getSession()
 
   if (!session) {
-    // ❌ ONLY redirect if NOT invite/recovery
-    if (!hash.includes('type=invite') && !hash.includes('type=recovery')) {
-      router.push('/login')
-      return
-    }
+    router.push('/login')
+    return
   }
 
-  user.value = session?.user
+  user.value = session.user
 
-  // 🔥 STEP 3: If already has password → skip setup
-  const { data: userData } = await supabase.auth.getUser()
-
-  if (userData?.user?.user_metadata?.password_set) {
-    needsPassword.value = false
+  // Decide if password screen should show
+  if (
+    hash.includes('type=invite') ||
+    hash.includes('type=recovery') ||
+    !session.user.user_metadata?.password_set
+  ) {
+    needsPassword.value = true
   }
 
-  // 🔥 STEP 4: Load profile ONLY if user exists
-  if (user.value) {
+  // Load profile
+  const { data } = await supabase
+    .from('members')
+    .select('*')
+    .eq('id', user.value.id)
+    .single()
 
-    const { data } = await supabase
-      .from('members')
-      .select('*')
-      .eq('id', user.value.id)
-      .single()
+  member.value = data
 
-    member.value = data
+  name.value = data?.name
+  city.value = data?.city
+  industry.value = data?.industry
 
-    name.value = data?.name
-    city.value = data?.city
-    industry.value = data?.industry
+  const { data: saved } = await supabase
+    .from('saved_resources')
+    .select(`resources (*)`)
+    .eq('member_id', user.value.id)
 
-    const { data: saved } = await supabase
-      .from('saved_resources')
-      .select(`resources (*)`)
-      .eq('member_id', user.value.id)
-
-    savedResources.value = saved?.map(s => s.resources) || []
-  }
+  savedResources.value = saved?.map(s => s.resources) || []
 
   loading.value = false
 
@@ -284,10 +277,10 @@ const setPassword = async () => {
     return
   }
 
-  // ✅ SUCCESS
   needsPassword.value = false
+  password.value = ''
+  confirmPassword.value = ''
 
-  // clean URL (removes token)
   window.history.replaceState({}, document.title, window.location.pathname)
 
 }
