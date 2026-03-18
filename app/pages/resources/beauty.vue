@@ -1,196 +1,146 @@
 <template>
 
 <div class="page-wrapper">
-
   <div class="page-container">
 
-<!-- PAGE TITLE -->
+    <!-- HEADER -->
 
-<h1 class="page-title">
-Beauty
-</h1>
+    <h1 class="page-title-main">
+      BEAUTY
+    </h1>
 
-<p class="page-intro">
-Private recommendations across skincare, makeup, hair, and supplements curated for European living.
-</p>
+    <p class="page-subtitle">
+      Private recommendations across skincare, makeup, and hair curated for European living.
+    </p>
 
 
-<!-- HERO CURATOR -->
+    <!-- FEATURED CURATOR (UNCHANGED) -->
 
-<div class="hero-card">
+    <div class="hero-card">
 
-<img
-src="/images/sunnie.jpg"
-class="curator-photo"
-/>
+      <img
+        src="/images/sunnie.jpg"
+        class="curator-photo"
+      />
 
-<div class="hero-content">
+      <div class="hero-content">
 
-<div class="hero-label">
-Featured Curator
+        <div class="hero-label">
+          Featured Curator
+        </div>
+
+        <h2>
+          Sunnie's Recommendations
+        </h2>
+
+        <p class="hero-description">
+          Celebrity hairstylist Sunnie Brook shares her curated beauty recommendations across skincare, makeup, and hair for European living.<br>
+          <strong>@sunniebrook</strong>
+        </p>
+
+        <a
+          href="https://sunniebrook.substack.com/"
+          target="_blank"
+          class="hero-button"
+        >
+          Visit Site
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- SKINCARE -->
+
+    <h2 class="section-title">SKINCARE</h2>
+
+    <div class="carousel">
+
+      <div
+        v-for="item in skincare"
+        :key="item.id"
+        class="beauty-card"
+      >
+
+        <div class="beauty-name">
+          {{ item.title }}
+        </div>
+
+        <a
+          :href="item.website_url"
+          target="_blank"
+          class="beauty-link"
+        >
+          View →
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- HAIR -->
+
+    <h2 class="section-title">HAIR</h2>
+
+    <div class="carousel">
+
+      <div
+        v-for="item in hair"
+        :key="item.id"
+        class="beauty-card"
+      >
+
+        <div class="beauty-name">
+          {{ item.title }}
+        </div>
+
+        <a
+          :href="item.website_url"
+          target="_blank"
+          class="beauty-link"
+        >
+          View →
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- MAKEUP -->
+
+    <h2 class="section-title">MAKEUP</h2>
+
+    <div class="carousel">
+
+      <div
+        v-for="item in makeup"
+        :key="item.id"
+        class="beauty-card"
+      >
+
+        <div class="beauty-name">
+          {{ item.title }}
+        </div>
+
+        <a
+          :href="item.website_url"
+          target="_blank"
+          class="beauty-link"
+        >
+          View →
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
 </div>
-
-<h2>
-Sunnie's Recommendations
-</h2>
-
-<p class="hero-description">
-Celebrity hairstylist Sunnie Brook shares her curated beauty recommendations across skincare, makeup, hair and supplements for European living.<br>
-<strong>@sunniebrook</strong>
-</p>
-
-<a
-href="https://sunniebrook.substack.com/"
-target="_blank"
-class="hero-button"
->
-Visit Site
-</a>
-
-</div>
-
-</div>
-
-
-<!-- SKINCARE -->
-
-<h2 class="category-title">
-Skincare
-</h2>
-
-<div class="card-grid">
-
-<div
-v-for="item in skincare"
-:key="item.id"
-class="beauty-card"
->
-
-<h3>{{ item.title }}</h3>
-
-<p class="description">
-{{ item.description }}
-</p>
-
-<a
-:href="item.website_url"
-target="_blank"
-class="product-link"
->
-View Product
-</a>
-
-</div>
-
-</div>
-
-
-
-<!-- HAIR -->
-
-<h2 class="category-title">
-Hair
-</h2>
-
-<div class="card-grid">
-
-<div
-v-for="item in hair"
-:key="item.id"
-class="beauty-card"
->
-
-<h3>{{ item.title }}</h3>
-
-<p class="description">
-{{ item.description }}
-</p>
-
-<a
-:href="item.website_url"
-target="_blank"
-class="product-link"
->
-View Product
-</a>
-
-</div>
-
-</div>
-
-
-
-<!-- MAKEUP -->
-
-<h2 class="category-title">
-Makeup
-</h2>
-
-<div class="card-grid">
-
-<div
-v-for="item in makeup"
-:key="item.id"
-class="beauty-card"
->
-
-<h3>{{ item.title }}</h3>
-
-<p class="description">
-{{ item.description }}
-</p>
-
-<a
-:href="item.website_url"
-target="_blank"
-class="product-link"
->
-View Product
-</a>
-
-</div>
-
-</div>
-
-
-
-<!-- SUPPLEMENTS -->
-
-<h2 class="category-title">
-Supplements
-</h2>
-
-<div class="card-grid">
-
-<div
-v-for="item in supplements"
-:key="item.id"
-class="beauty-card"
->
-
-<h3>{{ item.title }}</h3>
-
-<p class="description">
-{{ item.description }}
-</p>
-
-<a
-:href="item.website_url"
-target="_blank"
-class="product-link"
->
-View Product
-</a>
-
-</div>
-
-</div>
-  </div> <!-- CLOSE page-container -->
-
-</div> <!-- CLOSE page-wrapper -->
 
 </template>
-
 
 
 <script setup>
@@ -201,164 +151,170 @@ import { supabase } from '~/utils/supabase'
 const skincare = ref([])
 const hair = ref([])
 const makeup = ref([])
-const supplements = ref([])
 
 onMounted(async () => {
 
-const { data } = await supabase
-.from('resources')
-.select('*')
-.eq('category','beauty')
+  const { data } = await supabase
+    .from('resources')
+    .select('*')
+    .eq('category', 'beauty')
+    .eq('active', true)
 
-if(!data) return
+  if (!data) return
 
-// separate results
-skincare.value = data.filter(i => i.subcategory === 'skincare' || !i.subcategory)
-hair.value = data.filter(i => i.subcategory === 'hair')
-makeup.value = data.filter(i => i.subcategory === 'makeup')
-supplements.value = data.filter(i => i.subcategory === 'supplements')
+  skincare.value = data.filter(i =>
+    i.subcategory === 'skincare' || !i.subcategory
+  )
+
+  hair.value = data.filter(i =>
+    i.subcategory === 'hair'
+  )
+
+  makeup.value = data.filter(i =>
+    i.subcategory === 'makeup'
+  )
 
 })
 
 </script>
 
 
-
 <style scoped>
-/* ============================= */
-/* GLOBAL PAGE SYSTEM */
-/* ============================= */
 
-/* MASTER WRAPPER */
-.page-wrapper{
-  width:100%;
-  display:flex;
-  justify-content:center;
+/* TITLE */
+
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
 }
 
-/* CONTENT CONTAINER (DESKTOP) */
-.page-container{
-  width:100%;
-  max-width:1000px;
-  padding:120px 24px 60px;
-}
-
-/* ============================= */
-/* MOBILE SYSTEM */
-/* ============================= */
-
-@media (max-width:768px){
-
-.page-container{
-  padding:80px 20px 40px !important;
-}
-
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:50px;
+  max-width:500px;
 }
 
 
-/* PAGE HEADER */
-
-.page-title{
-font-size:48px;
-margin-bottom:10px;
-}
-
-.page-intro{
-font-size:18px;
-opacity:.7;
-max-width:640px;
-line-height:1.6;
-margin-bottom:80px;
-}
-
-
-/* HERO */
+/* HERO (UNCHANGED STYLE) */
 
 .hero-card{
-display:flex;
-gap:40px;
-align-items:center;
-background:#f6f4f1;
-padding:50px;
-border-radius:20px;
-margin-bottom:80px;
+  display:flex;
+  gap:40px;
+  align-items:center;
+  background:#f6f4f1;
+  padding:50px;
+  border-radius:20px;
+  margin-bottom:80px;
 }
 
 .curator-photo{
-width:160px;
-height:160px;
-border-radius:50%;
-object-fit:cover;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
 .hero-label{
-letter-spacing:4px;
-font-size:12px;
-margin-bottom:10px;
-opacity:.6;
+  letter-spacing:4px;
+  font-size:12px;
+  margin-bottom:10px;
+  opacity:.6;
 }
 
 .hero-content h2{
-font-size:40px;
-margin-bottom:10px;
+  font-size:40px;
+  margin-bottom:10px;
 }
 
 .hero-description{
-font-size:18px;
-opacity:.7;
-max-width:520px;
-margin-bottom:20px;
+  font-size:18px;
+  opacity:.7;
+  max-width:520px;
+  margin-bottom:20px;
 }
 
 .hero-button{
-background:#A8985F;
-color:white;
-padding:14px 28px;
-border-radius:30px;
-text-decoration:none;
-font-size:14px;
-letter-spacing:1px;
+  background:#A8985F;
+  color:white;
+  padding:14px 28px;
+  border-radius:30px;
+  text-decoration:none;
+  font-size:14px;
 }
 
 
-/* CATEGORY TITLES */
+/* SECTION */
 
-.category-title{
-font-size:36px;
-margin-top:70px;
-margin-bottom:30px;
+.section-title{
+  font-size:14px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:20px;
+  margin-top:40px;
 }
 
 
-/* CARDS */
+/* CAROUSEL */
 
-.card-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:30px;
+.carousel{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
 }
+
+.carousel::-webkit-scrollbar{
+  display:none;
+}
+
+
+/* CARD */
 
 .beauty-card{
-background:white;
-padding:30px;
-border-radius:18px;
-box-shadow:0 4px 20px rgba(0,0,0,0.04);
+  min-width:220px;
+  max-width:220px;
+  height:120px;
+
+  background:white;
+  border-radius:16px;
+  padding:18px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  box-shadow:0 8px 25px rgba(0,0,0,0.04);
 }
 
-.beauty-card h3{
-font-size:20px;
-margin-bottom:12px;
+
+/* TEXT */
+
+.beauty-name{
+  font-size:15px;
 }
 
-.description{
-font-size:15px;
-opacity:.7;
-margin-bottom:16px;
+.beauty-link{
+  font-size:12px;
+  letter-spacing:1px;
 }
 
-.product-link{
-text-decoration:underline;
-font-size:14px;
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .page-title-main{
+    font-size:30px;
+  }
+
+  .hero-card{
+    flex-direction:column;
+    text-align:center;
+  }
+
 }
 
 </style>
