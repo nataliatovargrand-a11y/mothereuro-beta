@@ -225,11 +225,34 @@ supplements.value = data.filter(i => i.subcategory === 'supplements')
 
 
 <style scoped>
+/* ============================= */
+/* GLOBAL PAGE SYSTEM */
+/* ============================= */
 
-.resources-wrapper{
-padding:140px 40px;
-max-width:1200px;
-margin:auto;
+/* MASTER WRAPPER */
+.page-wrapper{
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+
+/* CONTENT CONTAINER (DESKTOP) */
+.page-container{
+  width:100%;
+  max-width:1000px;
+  padding:120px 24px 60px;
+}
+
+/* ============================= */
+/* MOBILE SYSTEM */
+/* ============================= */
+
+@media (max-width:768px){
+
+.page-container{
+  padding:80px 20px 40px !important;
+}
+
 }
 
 

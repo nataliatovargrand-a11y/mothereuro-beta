@@ -210,11 +210,7 @@ background:#A8985F;
 color:white;
 }
 
-.resources-wrapper{
-padding:140px 40px;
-max-width:1100px;
-margin:auto;
-}
+
 
 
 /* PAGE HEADER */

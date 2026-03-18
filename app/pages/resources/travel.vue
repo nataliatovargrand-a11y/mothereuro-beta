@@ -153,11 +153,6 @@ item.subcategory.toLowerCase().includes('experience')
 
 <style scoped>
 
-.resources-wrapper{
-padding:140px 40px;
-max-width:1200px;
-margin:auto;
-}
 
 .page-title{
 font-size:48px;

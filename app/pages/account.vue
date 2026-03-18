@@ -345,13 +345,7 @@ const formatDate=(d)=>{
 </script>
 <style>
 
-.account-wrapper{
-padding:100px 20px;
-max-width:900px;
-margin:0 auto;
-background:#F7F3EE;
-min-height:100vh;
-}
+
 
 /* HEADER */
 
