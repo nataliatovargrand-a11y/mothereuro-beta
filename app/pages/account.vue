@@ -2,304 +2,238 @@
 
 <div class="account-wrapper">
 
-<div v-if="loading" class="loading">
-Loading your account...
-</div>
+  <div v-if="loading" class="loading">
+    Loading your account...
+  </div>
 
-<div v-else>
+  <div v-else>
 
-<!-- SET PASSWORD -->
+    <!-- PASSWORD FLOW -->
 
-<div v-if="needsPassword" class="password-wrapper">
+    <div v-if="needsPassword" class="password-wrapper">
 
-<div class="password-card">
+      <div class="password-card">
 
-<div class="password-label">
-Private Access
-</div>
+        <div class="password-label">
+          Private Access
+        </div>
 
-<h2 class="password-title">
-Complete Your Access
-</h2>
+        <h2 class="password-title">
+          Complete Your Access
+        </h2>
 
-<p class="password-sub">
-Create your password to enter the Mother Euro platform
-</p>
+        <p class="password-sub">
+          Create your password to enter the Mother Euro platform
+        </p>
 
-<input
-v-model="password"
-type="password"
-placeholder="Create password"
-class="password-input"
-/>
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Create password"
+          class="password-input"
+        />
 
-<button @click="setPassword" class="password-btn">
-ENTER THE PLATFORM
-</button>
+        <button @click="setPassword" class="password-btn">
+          ENTER THE PLATFORM
+        </button>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
-<h2>Create your password</h2>
+    <!-- HEADER -->
 
-<p class="password-sub">
-Complete your account to access Mother Euro
-</p>
+    <div class="account-header">
 
-<input
-v-model="password"
-type="password"
-placeholder="New password"
-class="password-input"
-/>
+      <div class="header-left">
 
-<button @click="setPassword" class="save-btn">
-Set Password
-</button>
+        <h1 class="greeting">
+          Hi, {{ firstName }}
+        </h1>
 
-</div>
+        <p class="welcome">
+          Welcome back to Mother Euro
+        </p>
 
-<!-- HEADER -->
+      </div>
 
-<div class="account-header">
+      <button class="logout-btn" @click="logout">
+        Log Out
+      </button>
 
-<div class="header-left">
+    </div>
 
-<h1 class="greeting">
-Hi, {{ firstName }}
-</h1>
+    <!-- PROFILE -->
 
-<p class="welcome">
-Welcome back to Mother Euro
-</p>
+    <div class="card">
 
-</div>
+      <div class="card-header">
 
-<button class="logout-btn" @click="logout">
-Log Out
-</button>
+        <h2>Profile</h2>
 
-</div>
+        <button
+          v-if="!editing"
+          @click="startEdit"
+          class="upload-btn"
+        >
+          Edit Profile
+        </button>
 
+      </div>
 
-<!-- PROFILE CARD -->
+      <div class="profile-card">
 
-<div class="card">
+        <div class="avatar-block">
 
-<div class="card-header">
+          <img
+            v-if="member?.avatar_url"
+            :src="member.avatar_url"
+            class="avatar"
+          />
 
-<h2>Profile</h2>
+          <div v-else class="avatar-placeholder"></div>
 
-<button
-v-if="!editing"
-@click="startEdit"
-class="upload-btn"
->
-Edit Profile
-</button>
+          <label class="upload-btn profile-upload">
+            Upload Photo
+            <input type="file" @change="uploadAvatar" hidden />
+          </label>
 
-</div>
+        </div>
 
-<div class="profile-card">
+        <div class="profile-info">
 
-<div class="avatar-block">
+          <div v-if="!editing" class="profile-grid">
 
-<img
-v-if="member?.avatar_url"
-:src="member.avatar_url"
-class="avatar"
-/>
+            <div>
+              <label>Name</label>
+              <span>{{ member?.name }}</span>
+            </div>
 
-<div v-else class="avatar-placeholder"></div>
+            <div>
+              <label>Email</label>
+              <span>{{ member?.email }}</span>
+            </div>
 
-<label class="upload-btn profile-upload">
+            <div>
+              <label>Membership</label>
+              <span>{{ member?.membership_tier }}</span>
+            </div>
 
-Upload Photo
+            <div>
+              <label>Renewal</label>
+              <span>{{ member?.renewal_date }}</span>
+            </div>
 
-<input
-type="file"
-@change="uploadAvatar"
-hidden
-/>
+            <div>
+              <label>Industry</label>
+              <span>{{ member?.industry }}</span>
+            </div>
 
-</label>
+            <div>
+              <label>City</label>
+              <span>{{ member?.city }}</span>
+            </div>
 
-</div>
+          </div>
 
-<div class="profile-info">
+          <div v-else class="edit-form">
 
-<div v-if="!editing" class="profile-grid">
+            <input v-model="name" placeholder="Name" />
+            <input v-model="city" placeholder="City" />
+            <input v-model="industry" placeholder="Industry" />
 
-<div>
-<label>Name</label>
-<span>{{ member?.name }}</span>
-</div>
+            <div class="edit-actions">
 
-<div>
-<label>Email</label>
-<span>{{ member?.email }}</span>
-</div>
+              <button @click="saveProfile" class="save-btn">
+                Save
+              </button>
 
-<div>
-<label>Membership</label>
-<span>{{ member?.membership_tier }}</span>
-</div>
+              <button @click="cancelEdit" class="cancel-btn">
+                Cancel
+              </button>
 
-<div>
-<label>Renewal</label>
-<span>{{ member?.renewal_date }}</span>
-</div>
+            </div>
 
-<div>
-<label>Industry</label>
-<span>{{ member?.industry }}</span>
-</div>
+          </div>
 
-<div>
-<label>City</label>
-<span>{{ member?.city }}</span>
-</div>
+        </div>
 
-</div>
+      </div>
 
-<div v-else class="edit-form">
+    </div>
 
-<input v-model="name" placeholder="Name" />
-<input v-model="city" placeholder="City" />
-<input v-model="industry" placeholder="Industry" />
+    <!-- SAVED -->
 
-<div class="edit-actions">
+    <div class="card">
 
-<button @click="saveProfile" class="save-btn">
-Save
-</button>
+      <h2>Saved Resources</h2>
 
-<button @click="cancelEdit" class="cancel-btn">
-Cancel
-</button>
+      <div v-if="savedResources.length === 0" class="empty">
+        No saved resources yet.
+      </div>
 
-</div>
+      <div
+        v-for="resource in savedResources"
+        :key="resource.id"
+        class="resource-card"
+      >
 
-</div>
+        <div class="resource-title">
+          {{ resource.title }}
+        </div>
 
-</div>
+        <div class="resource-actions">
 
-</div>
+          <a
+            :href="resource.link_url"
+            target="_blank"
+            class="view-btn"
+          >
+            View Resource
+          </a>
 
-</div>
+          <button
+            @click="removeSaved(resource.id)"
+            class="remove-btn"
+          >
+            Remove
+          </button>
 
+        </div>
 
-<!-- RELOCATION -->
+      </div>
 
-<div
-v-if="member?.membership_tier === 'aspiring'"
-class="card relocation-feature"
->
+    </div>
 
-<div class="relocation-content">
+    <!-- EVENTS -->
 
-<div class="relocation-text">
+    <div class="card">
 
-<div class="relocation-label">
-Aspiring Member Benefit
-</div>
+      <h2>Your Upcoming Events</h2>
 
-<h2>Relocation Library</h2>
+      <div v-if="upcomingEvents.length === 0" class="empty">
+        No upcoming events yet.
+      </div>
 
-<p>
-Expert relocation guides designed to help you confidently plan your move to Europe.
-</p>
+      <div
+        v-for="event in upcomingEvents"
+        :key="event.id"
+        class="event-card"
+      >
 
-<NuxtLink
-to="/resources/relocation"
-class="relocation-btn"
->
-Explore the Library
-</NuxtLink>
+        <div class="event-title">
+          {{ event.event_title }}
+        </div>
 
-</div>
+        <div class="event-date">
+          {{ formatDate(event.event_date) }}
+        </div>
 
-<div class="relocation-image"></div>
+      </div>
 
-</div>
+    </div>
 
-</div>
-
-
-<!-- SAVED -->
-
-<div class="card">
-
-<h2>Saved Resources</h2>
-
-<div v-if="savedResources.length === 0" class="empty">
-No saved resources yet.
-</div>
-
-<div
-v-for="resource in savedResources"
-:key="resource.id"
-class="resource-card"
->
-
-<div class="resource-title">
-{{ resource.title }}
-</div>
-
-<div class="resource-actions">
-
-<a
-:href="resource.link_url"
-target="_blank"
-class="view-btn"
->
-View Resource
-</a>
-
-<button
-@click="removeSaved(resource.id)"
-class="remove-btn"
->
-Remove
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- EVENTS -->
-
-<div class="card">
-
-<h2>Your Upcoming Events</h2>
-
-<div v-if="upcomingEvents.length === 0" class="empty">
-No upcoming events yet.
-</div>
-
-<div
-v-for="event in upcomingEvents"
-:key="event.id"
-class="event-card"
->
-
-<div class="event-title">
-{{ event.event_title }}
-</div>
-
-<div class="event-date">
-{{ formatDate(event.event_date) }}
-</div>
-
-</div>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 
