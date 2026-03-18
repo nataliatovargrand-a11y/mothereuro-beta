@@ -185,8 +185,9 @@ View Product
 </div>
 
 </div>
+  </div> <!-- CLOSE page-container -->
 
-</div>
+</div> <!-- CLOSE page-wrapper -->
 
 </template>
 
