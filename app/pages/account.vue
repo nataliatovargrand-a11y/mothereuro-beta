@@ -14,35 +14,18 @@
 
       <div class="password-card">
 
-        <div class="password-label">
-          Private Access
-        </div>
+        <div class="password-label">Private Access</div>
 
-        <h2 class="password-title">
-          Complete Your Access
-        </h2>
+        <h2 class="password-title">Complete Your Access</h2>
 
         <p class="password-sub">
           Create your password to enter the Mother Euro platform
         </p>
 
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Create password"
-          class="password-input"
-        />
+        <input v-model="password" type="password" placeholder="Create password" class="password-input"/>
+        <input v-model="confirmPassword" type="password" placeholder="Confirm password" class="password-input"/>
 
-        <input
-          v-model="confirmPassword"
-          type="password"
-          placeholder="Confirm password"
-          class="password-input"
-        />
-
-        <p v-if="passwordError" class="password-error">
-          {{ passwordError }}
-        </p>
+        <p v-if="passwordError" class="password-error">{{ passwordError }}</p>
 
         <button @click="setPassword" class="password-btn">
           ENTER THE PLATFORM
@@ -56,16 +39,9 @@
 
     <div class="account-header">
 
-      <div class="header-left">
-
-        <h1 class="greeting">
-          Hi, {{ firstName }}
-        </h1>
-
-        <p class="welcome">
-          Welcome back to Mother Euro
-        </p>
-
+      <div>
+        <h1 class="greeting">Hi, {{ firstName }}</h1>
+        <p class="welcome">Welcome back to Mother Euro</p>
       </div>
 
       <button class="logout-btn" @click="logout">
@@ -74,18 +50,16 @@
 
     </div>
 
-    <!-- PROFILE -->
+    <!-- PROFILE CARD -->
 
     <div class="card">
 
-      <div class="card-header">
-
-        <h2>Profile</h2>
+      <div class="profile-top">
 
         <button
           v-if="!editing"
           @click="startEdit"
-          class="upload-btn"
+          class="edit-btn"
         >
           Edit Profile
         </button>
@@ -93,6 +67,8 @@
       </div>
 
       <div class="profile-card">
+
+        <!-- AVATAR -->
 
         <div class="avatar-block">
 
@@ -104,46 +80,25 @@
 
           <div v-else class="avatar-placeholder"></div>
 
-          <label class="upload-btn profile-upload">
+          <label class="upload-btn">
             Upload Photo
             <input type="file" @change="uploadAvatar" hidden />
           </label>
 
         </div>
 
+        <!-- INFO -->
+
         <div class="profile-info">
 
           <div v-if="!editing" class="profile-grid">
 
-            <div>
-              <label>Name</label>
-              <span>{{ member?.name }}</span>
-            </div>
-
-            <div>
-              <label>Email</label>
-              <span>{{ member?.email }}</span>
-            </div>
-
-            <div>
-              <label>Membership</label>
-              <span>{{ member?.membership_tier }}</span>
-            </div>
-
-            <div>
-              <label>Renewal</label>
-              <span>{{ member?.renewal_date }}</span>
-            </div>
-
-            <div>
-              <label>Industry</label>
-              <span>{{ member?.industry }}</span>
-            </div>
-
-            <div>
-              <label>City</label>
-              <span>{{ member?.city }}</span>
-            </div>
+            <div><label>Name</label><span>{{ member?.name }}</span></div>
+            <div><label>Email</label><span>{{ member?.email }}</span></div>
+            <div><label>Membership</label><span>{{ member?.membership_tier }}</span></div>
+            <div><label>Renewal</label><span>{{ member?.renewal_date }}</span></div>
+            <div><label>Industry</label><span>{{ member?.industry }}</span></div>
+            <div><label>City</label><span>{{ member?.city }}</span></div>
 
           </div>
 
@@ -154,15 +109,8 @@
             <input v-model="industry" placeholder="Industry" />
 
             <div class="edit-actions">
-
-              <button @click="saveProfile" class="save-btn">
-                Save
-              </button>
-
-              <button @click="cancelEdit" class="cancel-btn">
-                Cancel
-              </button>
-
+              <button @click="saveProfile" class="save-btn">Save</button>
+              <button @click="cancelEdit" class="cancel-btn">Cancel</button>
             </div>
 
           </div>
@@ -176,70 +124,33 @@
     <!-- SAVED -->
 
     <div class="card">
-
-      <h2>Saved Resources</h2>
+      <h2 class="section-title">Saved Resources</h2>
 
       <div v-if="savedResources.length === 0" class="empty">
         No saved resources yet.
       </div>
 
-      <div
-        v-for="resource in savedResources"
-        :key="resource.id"
-        class="resource-card"
-      >
-
-        <div class="resource-title">
-          {{ resource.title }}
+      <div v-for="resource in savedResources" :key="resource.id" class="resource-card">
+        <div>{{ resource.title }}</div>
+        <div>
+          <a :href="resource.link_url" target="_blank" class="view-btn">View</a>
+          <button @click="removeSaved(resource.id)" class="remove-btn">Remove</button>
         </div>
-
-        <div class="resource-actions">
-
-          <a
-            :href="resource.link_url"
-            target="_blank"
-            class="view-btn"
-          >
-            View Resource
-          </a>
-
-          <button
-            @click="removeSaved(resource.id)"
-            class="remove-btn"
-          >
-            Remove
-          </button>
-
-        </div>
-
       </div>
-
     </div>
 
     <!-- EVENTS -->
 
     <div class="card">
-
-      <h2>Your Upcoming Events</h2>
+      <h2 class="section-title">Your Upcoming Events</h2>
 
       <div v-if="upcomingEvents.length === 0" class="empty">
         No upcoming events yet.
       </div>
 
-      <div
-        v-for="event in upcomingEvents"
-        :key="event.id"
-        class="event-card"
-      >
-
-        <div class="event-title">
-          {{ event.event_title }}
-        </div>
-
-        <div class="event-date">
-          {{ formatDate(event.event_date) }}
-        </div>
-
+      <div v-for="event in upcomingEvents" :key="event.id" class="event-card">
+        <div>{{ event.event_title }}</div>
+        <div class="event-date">{{ formatDate(event.event_date) }}</div>
       </div>
 
     </div>
@@ -251,188 +162,205 @@
 </template>
 
 
-<script setup>
-
-import { ref, computed, onMounted } from 'vue'
-import { supabase } from '~/utils/supabase'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const loading = ref(true)
-const member = ref(null)
-const user = ref(null)
-
-const editing = ref(false)
-
-const name = ref('')
-const city = ref('')
-const industry = ref('')
-
-const savedResources = ref([])
-const upcomingEvents = ref([])
-
-const needsPassword = ref(false)
-const password = ref('')
-const confirmPassword = ref('')
-const passwordError = ref('')
-
-const firstName = computed(() => {
-  if (!member.value?.name) return 'Member'
-  return member.value.name.split(' ')[0]
-})
-
-onMounted(async () => {
-
-const { data:{ session } } = await supabase.auth.getSession()
-
-if(!session){
-router.push('/login')
-return
-}
-
-user.value = session.user
-
-// 🔥 FIX: handles invite + reset password flows reliably
-const { data: userData } = await supabase.auth.getUser()
-
-if (
-  !userData.user?.user_metadata?.password_set ||
-  window.location.hash.includes('type=recovery')
-) {
-  needsPassword.value = true
-}
-
-const { data } = await supabase
-.from('members')
-.select('*')
-.eq('id', user.value.id)
-.single()
-
-member.value = data
-
-name.value = data?.name
-city.value = data?.city
-industry.value = data?.industry
-
-const { data: saved } = await supabase
-.from('saved_resources')
-.select(`resources (*)`)
-.eq('member_id', user.value.id)
-
-savedResources.value = saved?.map(s => s.resources) || []
-
-loading.value = false
-
-})
-
-const setPassword = async () => {
-
-passwordError.value = ''
-
-if (!password.value || !confirmPassword.value) {
-  passwordError.value = 'Please fill both fields'
-  return
-}
-
-if (password.value !== confirmPassword.value) {
-  passwordError.value = 'Passwords do not match'
-  return
-}
-
-if (password.value.length < 6) {
-  passwordError.value = 'Password must be at least 6 characters'
-  return
-}
-
-const { error } = await supabase.auth.updateUser({
-  password: password.value,
-  data: { password_set: true }
-})
-
-if (error) {
-  passwordError.value = error.message
-  return
-}
-
-// ✅ FIX: no reload + clean state
-needsPassword.value = false
-
-// remove recovery hash if present
-window.history.replaceState({}, document.title, window.location.pathname)
-
-}
-
-const removeSaved = async(id)=>{
-await supabase
-.from('saved_resources')
-.delete()
-.eq('resource_id', id)
-.eq('member_id', user.value.id)
-
-savedResources.value =
-savedResources.value.filter(r=>r.id!==id)
-}
-
-const startEdit = ()=> editing.value=true
-const cancelEdit = ()=> editing.value=false
-
-const saveProfile = async ()=>{
-await supabase
-.from('members')
-.update({
-name:name.value,
-city:city.value,
-industry:industry.value
-})
-.eq('id',user.value.id)
-
-member.value.name=name.value
-member.value.city=city.value
-member.value.industry=industry.value
-
-editing.value=false
-}
-
-const uploadAvatar = async(e)=>{
-const file=e.target.files[0]
-if(!file) return
-
-const path=`${user.value.id}/${file.name}`
-
-await supabase.storage
-.from('avatars')
-.upload(path,file,{upsert:true})
-
-const { data } =
-supabase.storage.from('avatars').getPublicUrl(path)
-
-await supabase
-.from('members')
-.update({avatar_url:data.publicUrl})
-.eq('id',user.value.id)
-
-member.value.avatar_url=data.publicUrl
-}
-
-const logout = async()=>{
-await supabase.auth.signOut()
-router.push('/login')
-}
-
-const formatDate=(d)=>{
-return new Date(d).toLocaleDateString()
-}
-
-</script>
-
-
 <style scoped>
+
+.account-wrapper{
+padding:120px 24px;
+max-width:900px;
+margin:auto;
+}
+
+/* HEADER */
+
+.account-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:60px;
+}
+
+.greeting{
+font-size:44px;
+}
+
+.welcome{
+opacity:.6;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:20px;
+padding:30px;
+margin-bottom:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
+}
+
+/* PROFILE */
+
+.profile-top{
+display:flex;
+justify-content:flex-start;
+margin-bottom:20px;
+}
+
+.profile-card{
+display:flex;
+gap:40px;
+}
+
+.avatar{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.avatar-placeholder{
+width:110px;
+height:110px;
+border-radius:50%;
+background:#eee;
+}
+
+.avatar-block{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+}
+
+.profile-info{
+flex:1;
+}
+
+.profile-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+font-size:11px;
+letter-spacing:2px;
+opacity:.5;
+text-transform:uppercase;
+}
+
+span{
+font-size:16px;
+}
+
+/* BUTTONS */
+
+.logout-btn{
+padding:10px 18px;
+border-radius:999px;
+background:white;
+border:1px solid rgba(0,0,0,0.1);
+}
+
+.edit-btn{
+border:1px solid rgba(0,0,0,0.1);
+padding:8px 14px;
+border-radius:999px;
+background:white;
+}
+
+.upload-btn{
+font-size:12px;
+border:1px solid rgba(0,0,0,0.1);
+padding:6px 12px;
+border-radius:999px;
+cursor:pointer;
+}
+
+.save-btn{
+background:black;
+color:white;
+padding:10px 16px;
+border-radius:10px;
+border:none;
+}
+
+.section-title{
+font-size:28px;
+margin-bottom:20px;
+}
+
+.resource-card{
+display:flex;
+justify-content:space-between;
+padding:16px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.view-btn{
+background:black;
+color:white;
+padding:6px 12px;
+border-radius:6px;
+text-decoration:none;
+margin-right:8px;
+}
+
+.remove-btn{
+color:#c33;
+background:none;
+border:none;
+}
+
+.event-card{
+padding:16px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.event-date{
+opacity:.6;
+font-size:14px;
+}
+
+/* PASSWORD */
+
+.password-card{
+text-align:center;
+max-width:400px;
+margin:auto;
+}
+
+.password-input{
+width:100%;
+padding:14px;
+margin-bottom:12px;
+border-radius:10px;
+border:1px solid rgba(0,0,0,0.1);
+}
+
+.password-btn{
+background:#A8985F;
+color:white;
+padding:14px;
+border-radius:999px;
+width:100%;
+border:none;
+}
 
 .password-error{
 color:#c33;
-font-size:13px;
-margin-bottom:12px;
+margin-bottom:10px;
 }
 
+/* MOBILE */
+
+@media (max-width:768px){
+.profile-card{
+flex-direction:column;
+align-items:center;
+text-align:center;
+}
+.profile-grid{
+grid-template-columns:1fr;
+}
+}
 </style>
