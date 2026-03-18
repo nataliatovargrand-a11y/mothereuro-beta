@@ -50,7 +50,7 @@
     <div class="hero-card split">
 
       <img
-        src="/images/summer.jpg"
+        :src="'/images/summer.jpg'"
         class="hero-image"
       />
 
@@ -187,7 +187,7 @@ onMounted(async () => {
   margin-bottom:60px;
 }
 
-/* SPLIT HERO (IMAGE + TEXT) */
+/* SPLIT HERO */
 
 .hero-card.split{
   display:flex;
