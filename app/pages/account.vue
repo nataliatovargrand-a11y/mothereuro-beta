@@ -2,65 +2,195 @@
 
 <div class="account-wrapper">
 
-  <div v-if="loading">Loading...</div>
+  <div v-if="loading" class="loading">
+    Loading your account...
+  </div>
 
   <div v-else>
 
-    <!-- PASSWORD FLOW -->
-    <div v-if="needsPassword">
+    <!-- HEADER -->
 
-      <h2>Complete Your Access</h2>
+    <div class="account-header">
 
-      <input v-model="password" type="password" placeholder="Create password" />
-      <input v-model="confirmPassword" type="password" placeholder="Confirm password" />
+      <div>
+        <h1 class="greeting">Hi, {{ firstName }}</h1>
+        <p class="welcome">Welcome back to Mother Euro</p>
+      </div>
 
-      <p v-if="passwordError">{{ passwordError }}</p>
-
-      <button @click="setPassword">
-        ENTER THE PLATFORM
+      <button class="logout-btn" @click="logout">
+        Log Out
       </button>
 
     </div>
 
-    <!-- ACCOUNT -->
-    <div v-else>
+    <!-- PROFILE CARD -->
 
-      <div class="account-header">
-        <h1>Hi, {{ firstName }}</h1>
-        <button @click="logout">Log Out</button>
-      </div>
+    <div class="card profile-card">
 
-      <div class="card">
+      <div class="profile-top">
 
-        <button v-if="!editing" @click="editing = true">
+        <button
+          v-if="!editing"
+          @click="startEdit"
+          class="edit-btn"
+        >
           Edit Profile
         </button>
 
-        <div>
+      </div>
 
-          <img v-if="member?.avatar_url" :src="member.avatar_url" width="100" />
-          <input type="file" @change="uploadAvatar" />
+      <div class="profile-content">
+
+        <!-- LEFT: AVATAR -->
+
+        <div class="avatar-block">
+
+          <img
+            v-if="member?.avatar_url"
+            :src="member.avatar_url"
+            class="avatar"
+          />
+
+          <div v-else class="avatar-placeholder"></div>
+
+          <label class="upload-btn">
+            Upload Photo
+            <input type="file" @change="uploadAvatar" hidden />
+          </label>
 
         </div>
 
-        <div v-if="!editing">
+        <!-- RIGHT: INFO -->
 
-          <div>Name: {{ member?.name }}</div>
-          <div>Email: {{ member?.email }}</div>
-          <div>Membership: {{ member?.membership_tier }}</div>
-          <div>City: {{ member?.city }}</div>
+        <div class="profile-info">
+
+          <div v-if="!editing" class="profile-grid">
+
+            <div>
+              <label>Name</label>
+              <span>{{ member?.name }}</span>
+            </div>
+
+            <div>
+              <label>Email</label>
+              <span>{{ member?.email }}</span>
+            </div>
+
+            <div>
+              <label>Membership</label>
+              <span>{{ member?.membership_tier }}</span>
+            </div>
+
+            <div>
+              <label>Renewal</label>
+              <span>{{ member?.renewal_date }}</span>
+            </div>
+
+            <div>
+              <label>Industry</label>
+              <span>{{ member?.industry }}</span>
+            </div>
+
+            <div>
+              <label>City</label>
+              <span>{{ member?.city }}</span>
+            </div>
+
+          </div>
+
+          <!-- EDIT MODE -->
+
+          <div v-else class="edit-form">
+
+            <input v-model="name" placeholder="Name" />
+            <input v-model="city" placeholder="City" />
+            <input v-model="industry" placeholder="Industry" />
+
+            <div class="edit-actions">
+
+              <button @click="saveProfile" class="save-btn">
+                Save
+              </button>
+
+              <button @click="cancelEdit" class="cancel-btn">
+                Cancel
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 
-        <div v-else>
+      </div>
 
-          <input v-model="name" placeholder="Name" />
-          <input v-model="city" placeholder="City" />
-          <input v-model="industry" placeholder="Industry" />
+    </div>
 
-          <button @click="saveProfile">Save</button>
-          <button @click="editing = false">Cancel</button>
+    <!-- SAVED RESOURCES -->
 
+    <div class="card">
+
+      <h2 class="section-title">Saved Resources</h2>
+
+      <div v-if="!safeSavedResources.length" class="empty">
+        No saved resources yet.
+      </div>
+
+      <div
+        v-for="resource in safeSavedResources"
+        :key="resource.id"
+        class="resource-card"
+      >
+
+        <div class="resource-title">
+          {{ resource.title }}
+        </div>
+
+        <div class="resource-actions">
+
+          <a
+            :href="resource.link_url"
+            target="_blank"
+            class="view-btn"
+          >
+            View
+          </a>
+
+          <button
+            @click="removeSaved(resource.id)"
+            class="remove-btn"
+          >
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- EVENTS -->
+
+    <div class="card">
+
+      <h2 class="section-title">Your Upcoming Events</h2>
+
+      <div v-if="!safeEvents.length" class="empty">
+        No upcoming events yet.
+      </div>
+
+      <div
+        v-for="event in safeEvents"
+        :key="event.id"
+        class="event-card"
+      >
+
+        <div class="event-title">
+          {{ event.event_title }}
+        </div>
+
+        <div class="event-date">
+          {{ formatDate(event.event_date) }}
         </div>
 
       </div>
@@ -228,3 +358,202 @@ const logout = async () => {
 }
 
 </script>
+<style scoped>
+
+.account-wrapper{
+padding:120px 24px;
+max-width:900px;
+margin:auto;
+}
+
+/* HEADER */
+
+.account-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:60px;
+}
+
+.greeting{
+font-size:42px;
+font-weight:500;
+}
+
+.welcome{
+opacity:.6;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:20px;
+padding:32px;
+margin-bottom:32px;
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
+}
+
+/* PROFILE */
+
+.profile-top{
+display:flex;
+justify-content:flex-start;
+margin-bottom:20px;
+}
+
+.profile-content{
+display:flex;
+gap:40px;
+}
+
+/* AVATAR */
+
+.avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.avatar-placeholder{
+width:120px;
+height:120px;
+border-radius:50%;
+background:#eee;
+}
+
+.avatar-block{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
+}
+
+/* INFO */
+
+.profile-info{
+flex:1;
+}
+
+.profile-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:24px;
+}
+
+label{
+font-size:11px;
+letter-spacing:2px;
+text-transform:uppercase;
+opacity:.5;
+}
+
+span{
+font-size:16px;
+margin-top:4px;
+display:block;
+}
+
+/* BUTTONS */
+
+.logout-btn{
+padding:10px 18px;
+border-radius:999px;
+background:white;
+border:1px solid rgba(0,0,0,0.1);
+}
+
+.edit-btn{
+padding:8px 14px;
+border-radius:999px;
+background:white;
+border:1px solid rgba(0,0,0,0.1);
+}
+
+.upload-btn{
+font-size:12px;
+padding:6px 12px;
+border-radius:999px;
+border:1px solid rgba(0,0,0,0.1);
+cursor:pointer;
+}
+
+.save-btn{
+background:black;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+border:none;
+}
+
+.cancel-btn{
+margin-left:10px;
+}
+
+/* SECTIONS */
+
+.section-title{
+font-size:26px;
+margin-bottom:20px;
+}
+
+/* RESOURCES */
+
+.resource-card{
+display:flex;
+justify-content:space-between;
+padding:16px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.view-btn{
+background:black;
+color:white;
+padding:6px 12px;
+border-radius:6px;
+text-decoration:none;
+margin-right:8px;
+}
+
+.remove-btn{
+background:none;
+border:none;
+color:#c33;
+}
+
+/* EVENTS */
+
+.event-card{
+padding:16px 0;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.event-date{
+opacity:.6;
+font-size:14px;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+.profile-content{
+flex-direction:column;
+align-items:center;
+text-align:center;
+}
+
+.profile-grid{
+grid-template-columns:1fr;
+}
+
+.account-header{
+flex-direction:column;
+align-items:flex-start;
+gap:16px;
+}
+
+}
+
+</style>
