@@ -112,13 +112,17 @@ onMounted(async () => {
 })
 
 
+/* ✅ FIXED GROUPING (NORMALIZED) */
+
 const groupedPartners = computed(() => {
 
   const groups = {}
 
   partners.value.forEach(partner => {
 
-    const category = partner.category || "other"
+    const category = (partner.category || "other")
+      .toLowerCase()
+      .trim()
 
     if (!groups[category]) {
       groups[category] = []
@@ -219,7 +223,7 @@ const redeemPartner = async (partner) => {
 }
 
 
-/* CARD — FIXED SIZE */
+/* CARD */
 
 .partner-card{
   min-width:240px;
