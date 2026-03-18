@@ -1,141 +1,125 @@
 <template>
 
-<div class="resources-wrapper">
+<div class="page-wrapper">
+  <div class="page-container">
 
-<!-- PAGE TITLE -->
+    <!-- HEADER -->
 
-<h1 class="page-title">
-Wellness
-</h1>
+    <h1 class="page-title-main">
+      WELLNESS
+    </h1>
 
-<p class="page-intro">
-A curated collection of clinics, spas, studios and holistic wellness spaces across Europe trusted by the Mother Euro community.
-</p>
-
-
-<!-- CLINICS -->
-
-<h2 class="section-title">
-CLINICS
-</h2>
-
-<div class="card-grid">
-
-<div class="wellness-card">
-<h3>International Women’s Health Center</h3>
-<p>Madrid</p>
-<a href="https://iwhcm.com/" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>Clinica Cloe</h3>
-<p>Odontologia Especializada Madrid</p>
-<a href="https://www.clinicacloe.com/en/clinica-cloe-english/" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>Domicilio</h3>
-<p>At-home wellness services</p>
-</div>
-
-</div>
+    <p class="page-subtitle">
+      Trusted wellness recommendations across Europe — from clinics to spas and holistic experiences.
+    </p>
 
 
-<!-- SPAS -->
+    <!-- CLINICS -->
 
-<h2 class="section-title">
-SPAS
-</h2>
+    <h2 class="section-title">CLINICS</h2>
 
-<div class="card-grid">
+    <div class="carousel">
 
-<div class="wellness-card">
-<h3>Eva Ometz</h3>
-<a href="https://www.evaometz.com/" target="_blank">Visit Website</a>
-</div>
+      <div
+        v-for="item in clinics"
+        :key="item.id"
+        class="wellness-card large"
+      >
 
-<div class="wellness-card">
-<h3>Six Harmonies</h3>
-<a href="https://www.sixharmonies.es/es" target="_blank">Visit Website</a>
-</div>
+        <div class="wellness-name">
+          {{ item.name || item.title }}
+        </div>
 
-</div>
+        <div class="wellness-description">
+          {{ item.description }}
+        </div>
 
+        <div class="wellness-location">
+          {{ item.city || item.location }}
+        </div>
 
-<!-- STUDIOS -->
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="wellness-link"
+        >
+          Visit →
+        </a>
 
-<h2 class="section-title">
-STUDIOS
-</h2>
+      </div>
 
-<div class="card-grid">
-
-<div class="wellness-card">
-<h3>Luci's FitHouse</h3>
-<a href="https://lucisfithouse.com" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>Casa Kavi</h3>
-<a href="https://casakavi.com" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>Nubya</h3>
-<a href="https://nubya.es" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>AMA Studio</h3>
-<a href="https://amastudio.es" target="_blank">Visit Website</a>
-</div>
-
-<div class="wellness-card">
-<h3>Six Harmonies</h3>
-<a href="https://sixharmonies.es" target="_blank">Visit Website</a>
-</div>
-
-</div>
+    </div>
 
 
-<!-- WOO -->
+    <!-- SPAS -->
 
-<h2 class="section-title">
-WOO
-</h2>
+    <h2 class="section-title">SPAS</h2>
 
-<div class="card-grid">
+    <div class="carousel">
 
-<div
-v-for="item in woo"
-:key="item.id"
-class="wellness-card"
->
+      <div
+        v-for="item in spas"
+        :key="item.id"
+        class="wellness-card"
+      >
 
-<h3>
-{{ item.name || item.title }}
-</h3>
+        <div class="wellness-name">
+          {{ item.name || item.title }}
+        </div>
 
-<p v-if="item.description">
-{{ item.description }}
-</p>
+        <div class="wellness-location">
+          {{ item.city || item.location }}
+        </div>
 
-<a
-v-if="item.website_url"
-:href="item.website_url"
-target="_blank"
->
-Visit Website
-</a>
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="wellness-link"
+        >
+          Visit →
+        </a>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
+
+    <!-- WOO -->
+
+    <h2 class="section-title">WOO</h2>
+
+    <div class="carousel">
+
+      <div
+        v-for="item in woo"
+        :key="item.id"
+        class="wellness-card"
+      >
+
+        <div class="wellness-name">
+          {{ item.name || item.title }}
+        </div>
+
+        <div class="wellness-location">
+          {{ item.city || item.location }}
+        </div>
+
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="wellness-link"
+        >
+          Visit →
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 </template>
-
 
 
 <script setup>
@@ -143,92 +127,150 @@ Visit Website
 import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
+const clinics = ref([])
+const spas = ref([])
 const woo = ref([])
 
 onMounted(async () => {
 
-const { data } = await supabase
-.from('resources')
-.select('*')
-.eq('category','wellness')
-.eq('active', true)
+  const { data: resources } = await supabase
+    .from('resources')
+    .select('*')
+    .eq('category', 'wellness')
+    .eq('active', true)
 
-if(!data) return
+  const { data: partners } = await supabase
+    .from('partners')
+    .select('*')
+    .eq('category', 'wellness')
+    .eq('active', true)
 
-woo.value = data.filter(item =>
-item.subcategory &&
-item.subcategory.toLowerCase() === 'woo'
-)
+  const combined = [
+    ...(resources || []),
+    ...(partners || [])
+  ]
+
+  clinics.value = combined.filter(item =>
+    item.subcategory?.toLowerCase().includes('clinic')
+  )
+
+  spas.value = combined.filter(item =>
+    item.subcategory?.toLowerCase().includes('spa')
+  )
+
+  woo.value = combined.filter(item =>
+    item.subcategory?.toLowerCase().includes('woo')
+  )
 
 })
 
 </script>
 
 
-
 <style scoped>
 
-.resources-wrapper{
-padding:140px 40px;
-max-width:1200px;
-margin:auto;
+/* TITLE */
+
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
 }
 
-/* PAGE */
-
-.page-title{
-font-size:48px;
-margin-bottom:10px;
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:50px;
+  max-width:500px;
 }
 
-.page-intro{
-font-size:18px;
-opacity:.7;
-max-width:640px;
-line-height:1.6;
-margin-bottom:80px;
-}
 
-/* SECTION TITLES */
+/* SECTION */
 
 .section-title{
-font-size:18px;
-letter-spacing:2px;
-text-transform:uppercase;
-opacity:.7;
-margin-top:70px;
-margin-bottom:30px;
+  font-size:14px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:20px;
+  margin-top:40px;
 }
 
-/* CARDS */
 
-.card-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:30px;
+/* CAROUSEL */
+
+.carousel{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
 }
+
+.carousel::-webkit-scrollbar{
+  display:none;
+}
+
+
+/* CARD */
 
 .wellness-card{
-background:white;
-padding:28px;
-border-radius:18px;
-box-shadow:0 4px 20px rgba(0,0,0,0.04);
+  min-width:240px;
+  max-width:240px;
+  height:140px;
+
+  background:white;
+  border-radius:16px;
+  padding:18px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  box-shadow:0 8px 25px rgba(0,0,0,0.04);
 }
 
-.wellness-card h3{
-font-size:20px;
-margin-bottom:10px;
+/* LARGER FOR CLINICS */
+
+.wellness-card.large{
+  height:200px;
 }
 
-.wellness-card p{
-font-size:14px;
-opacity:.7;
-margin-bottom:14px;
+
+/* TEXT */
+
+.wellness-name{
+  font-size:15px;
 }
 
-.wellness-card a{
-text-decoration:underline;
-font-size:14px;
+.wellness-description{
+  font-size:13px;
+  opacity:.7;
+}
+
+.wellness-location{
+  font-size:12px;
+  opacity:.5;
+}
+
+.wellness-link{
+  font-size:12px;
+  letter-spacing:1px;
+}
+
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .page-title-main{
+    font-size:30px;
+  }
+
+  .wellness-card{
+    min-width:200px;
+    max-width:200px;
+  }
+
 }
 
 </style>
