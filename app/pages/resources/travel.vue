@@ -3,44 +3,44 @@
 <div class="page-wrapper">
   <div class="page-container">
 
-    <h1 class="page-title">Travel</h1>
+    <!-- HEADER -->
+
+    <h1 class="page-title-main">
+      TRAVEL
+    </h1>
 
     <p class="page-subtitle">
-      Curated hotels and travel experiences across Europe trusted by the Mother Euro community.
+      Curated hotels and experiences across Europe, trusted by the Mother Euro community.
     </p>
 
 
     <!-- HOTELS -->
 
-    <h2 class="section-title">Hotels</h2>
+    <h2 class="section-title">HOTELS</h2>
 
-    <div class="grid">
+    <div class="carousel">
 
       <div
         v-for="item in hotels"
         :key="item.id"
-        class="card"
+        class="travel-card"
       >
 
-        <div class="card-content">
-
-          <div class="card-title">
-            {{ item.name || item.title }}
-          </div>
-
-          <div class="card-sub" v-if="item.description">
-            {{ item.description }}
-          </div>
-
-          <a
-            v-if="item.website"
-            :href="item.website"
-            target="_blank"
-          >
-            Visit Website
-          </a>
-
+        <div class="travel-name">
+          {{ item.name || item.title }}
         </div>
+
+        <div class="travel-location">
+          {{ item.city || item.location }}
+        </div>
+
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="travel-link"
+        >
+          Visit →
+        </a>
 
       </div>
 
@@ -49,35 +49,31 @@
 
     <!-- EXPERIENCES -->
 
-    <h2 class="section-title">Experiences</h2>
+    <h2 class="section-title">EXPERIENCES</h2>
 
-    <div class="grid">
+    <div class="carousel">
 
       <div
         v-for="item in experiences"
         :key="item.id"
-        class="card"
+        class="travel-card"
       >
 
-        <div class="card-content">
-
-          <div class="card-title">
-            {{ item.name || item.title }}
-          </div>
-
-          <div class="card-sub" v-if="item.description">
-            {{ item.description }}
-          </div>
-
-          <a
-            v-if="item.website"
-            :href="item.website"
-            target="_blank"
-          >
-            Visit Website
-          </a>
-
+        <div class="travel-name">
+          {{ item.name || item.title }}
         </div>
+
+        <div class="travel-location">
+          {{ item.city || item.location }}
+        </div>
+
+        <a
+          :href="item.website || item.website_url || item.url"
+          target="_blank"
+          class="travel-link"
+        >
+          Visit →
+        </a>
 
       </div>
 
@@ -87,7 +83,6 @@
 </div>
 
 </template>
-
 
 
 <script setup>
@@ -100,108 +95,129 @@ const experiences = ref([])
 
 onMounted(async () => {
 
-/* LOAD RESOURCES */
+  const { data: resources } = await supabase
+    .from('resources')
+    .select('*')
+    .eq('category', 'travel')
+    .eq('active', true)
 
-const { data: resources } = await supabase
-.from('resources')
-.select('*')
-.eq('category','travel')
-.eq('active', true)
+  const { data: partners } = await supabase
+    .from('partners')
+    .select('*')
+    .eq('category', 'travel')
+    .eq('active', true)
 
+  const combined = [
+    ...(resources || []),
+    ...(partners || [])
+  ]
 
-/* LOAD PARTNERS */
+  hotels.value = combined.filter(item =>
+    item.subcategory?.toLowerCase().includes('hotel')
+  )
 
-const { data: partners } = await supabase
-.from('partners')
-.select('*')
-.eq('active', true)
-
-
-/* MERGE DATA */
-
-const combined = [
-...(resources || []).map(item => ({
-...item,
-website: item.website || item.website_url || item.url
-})),
-
-...(partners || []).map(item => ({
-...item,
-website: item.website || item.website_url || item.url
-}))
-]
-
-
-/* FILTER */
-
-hotels.value = combined.filter(item =>
-item.subcategory &&
-item.subcategory.toLowerCase().includes('hotel')
-)
-
-experiences.value = combined.filter(item =>
-item.subcategory &&
-item.subcategory.toLowerCase().includes('experience')
-)
+  experiences.value = combined.filter(item =>
+    item.subcategory?.toLowerCase().includes('experience')
+  )
 
 })
 
 </script>
 
 
-
 <style scoped>
 
+/* TITLE */
 
-.page-title{
-font-size:48px;
-margin-bottom:10px;
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
 }
 
-.page-intro{
-font-size:18px;
-opacity:.7;
-max-width:640px;
-line-height:1.6;
-margin-bottom:80px;
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:50px;
+  max-width:500px;
 }
+
+
+/* SECTION */
 
 .section-title{
-font-size:18px;
-letter-spacing:2px;
-text-transform:uppercase;
-opacity:.7;
-margin-top:70px;
-margin-bottom:30px;
+  font-size:14px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:20px;
+  margin-top:40px;
 }
 
-.card-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:30px;
+
+/* CAROUSEL */
+
+.carousel{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
 }
+
+.carousel::-webkit-scrollbar{
+  display:none;
+}
+
+
+/* CARD */
 
 .travel-card{
-background:white;
-padding:28px;
-border-radius:18px;
-box-shadow:0 4px 20px rgba(0,0,0,0.04);
+  min-width:240px;
+  max-width:240px;
+  height:140px;
+
+  background:white;
+  border-radius:16px;
+  padding:20px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  box-shadow:0 8px 25px rgba(0,0,0,0.04);
 }
 
-.travel-card h3{
-font-size:20px;
-margin-bottom:10px;
+
+/* TEXT */
+
+.travel-name{
+  font-size:16px;
 }
 
-.travel-card p{
-font-size:14px;
-opacity:.7;
-margin-bottom:14px;
+.travel-location{
+  font-size:13px;
+  opacity:.6;
 }
 
-.travel-card a{
-text-decoration:underline;
-font-size:14px;
+.travel-link{
+  font-size:12px;
+  letter-spacing:1px;
+}
+
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .page-title-main{
+    font-size:30px;
+  }
+
+  .travel-card{
+    min-width:200px;
+    max-width:200px;
+  }
+
 }
 
 </style>
