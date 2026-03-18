@@ -1,48 +1,46 @@
 <template>
 
 <div class="page-wrapper">
-
   <div class="page-container">
 
-    <h1 class="page-title">
-      Travel
-    </h1>
+    <h1 class="page-title">Travel</h1>
 
-    <p class="page-intro">
+    <p class="page-subtitle">
       Curated hotels and travel experiences across Europe trusted by the Mother Euro community.
     </p>
 
 
     <!-- HOTELS -->
 
-    <h2 class="section-title">
-      HOTELS
-    </h2>
+    <h2 class="section-title">Hotels</h2>
 
-    <div class="card-grid">
+    <div class="grid">
 
       <div
         v-for="item in hotels"
         :key="item.id"
-        class="travel-card"
+        class="card"
       >
 
-        <h3>
-          {{ item.name || item.title }}
-        </h3>
+        <div class="card-content">
 
-        <p v-if="item.description">
-          {{ item.description }}
-        </p>
+          <div class="card-title">
+            {{ item.name || item.title }}
+          </div>
 
-        <a
-          v-if="item.website || item.website_url || item.url"
-          :href="item.website || item.website_url || item.url"
-          target="_blank"
-          class="card-link"
-        >
-          Visit Website
-        </a>
+          <div class="card-sub" v-if="item.description">
+            {{ item.description }}
+          </div>
+
+          <a
+            v-if="item.website"
+            :href="item.website"
+            target="_blank"
+          >
+            Visit Website
+          </a>
+
+        </div>
 
       </div>
 
@@ -51,41 +49,42 @@
 
     <!-- EXPERIENCES -->
 
-    <h2 class="section-title">
-      EXPERIENCES
-    </h2>
+    <h2 class="section-title">Experiences</h2>
 
-    <div class="card-grid">
+    <div class="grid">
 
       <div
         v-for="item in experiences"
         :key="item.id"
-        class="travel-card"
+        class="card"
       >
 
-        <h3>
-          {{ item.name || item.title }}
-        </h3>
+        <div class="card-content">
 
-        <p v-if="item.description">
-          {{ item.description }}
-        </p>
+          <div class="card-title">
+            {{ item.name || item.title }}
+          </div>
 
-        <a
-          v-if="item.website || item.website_url"
-          :href="item.website || item.website_url"
-          target="_blank"
-        >
-          Visit Website
-        </a>
+          <div class="card-sub" v-if="item.description">
+            {{ item.description }}
+          </div>
+
+          <a
+            v-if="item.website"
+            :href="item.website"
+            target="_blank"
+          >
+            Visit Website
+          </a>
+
+        </div>
 
       </div>
 
     </div>
 
-  </div> <!-- CLOSE page-container -->
-
-</div> <!-- CLOSE page-wrapper -->
+  </div>
+</div>
 
 </template>
 
