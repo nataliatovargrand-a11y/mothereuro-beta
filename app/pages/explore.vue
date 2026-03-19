@@ -271,6 +271,165 @@ const searchPlatform = async () => {
 
 <style scoped>
 
-/* KEEP YOUR EXISTING STYLES EXACTLY AS IS */
+.explore-wrapper{
+  padding:140px 40px;
+  max-width:1200px;
+  margin:auto;
+}
+
+.explore-hero{
+  margin-bottom:70px;
+  max-width:700px;
+}
+
+
+/* TITLE */
+
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:40px;
+}
+
+
+/* SEARCH */
+
+.search-elevated{
+  max-width:680px;
+}
+
+.search-minimal{
+  width:100%;
+  border:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  background:transparent;
+  font-size:18px;
+  padding:16px 0;
+}
+
+.search-minimal:focus{
+  outline:none;
+  border-bottom:1px solid #A8985F;
+}
+
+
+/* SEARCH RESULTS */
+
+.search-results{
+  margin-bottom:60px;
+  max-width:700px;
+}
+
+.search-section{
+  margin-bottom:40px;
+}
+
+.search-result{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid rgba(0,0,0,0.08);
+  text-decoration:none;
+  color:inherit;
+}
+
+.result-left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.result-type{
+  font-size:12px;
+  opacity:.5;
+}
+
+.result-meta{
+  font-size:13px;
+  opacity:.6;
+}
+
+
+/* AVATAR */
+
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+
+/* MAP */
+
+.map-section{
+  margin:80px 0;
+}
+
+.section-title{
+  letter-spacing:6px;
+  font-size:12px;
+  margin-bottom:20px;
+  opacity:.6;
+}
+
+
+/* CATEGORY */
+
+.category-carousel{
+  display:flex;
+  gap:24px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  margin:60px 0;
+}
+
+.category-carousel::-webkit-scrollbar{
+  display:none;
+}
+
+.category-card{
+  min-width:220px;
+  height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:white;
+  font-size:22px;
+  letter-spacing:4px;
+  background-size:cover;
+  background-position:center;
+  border-radius:14px;
+  position:relative;
+}
+
+.category-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.25);
+  border-radius:14px;
+}
+
+.category-card span{
+  z-index:2;
+  text-transform:uppercase;
+}
+
+.beauty{background-image:url('/images/beauty.jpg')}
+.travel{background-image:url('/images/travel.jpg')}
+.gastronomy{background-image:url('/images/gastronomy.jpg')}
+.wellness{background-image:url('/images/wellness.jpg')}
+.education{background-image:url('/images/education.jpg')}
+.realestate{background-image:url('/images/realestate.jpg')}
+.relocation{background-image:url('/images/relocation.jpg')}
 
 </style>
