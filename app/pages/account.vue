@@ -203,6 +203,7 @@ const safeEvents = computed(() => upcomingEvents.value || [])
 const firstName = computed(() => {
   return member.value?.name?.split(' ')[0] || 'Member'
 })
+
 const formattedRenewal = computed(() => {
   if (!member.value?.renewal_date) return '—'
   return new Date(member.value.renewal_date).toLocaleDateString()
@@ -216,14 +217,12 @@ onMounted(async () => {
   const refresh_token = url.searchParams.get('refresh_token')
   const type = url.searchParams.get('type')
 
+  // Set session if coming from email link
   if (access_token && refresh_token) {
-
     await supabase.auth.setSession({
       access_token,
       refresh_token
     })
-
-    window.history.replaceState({}, document.title, '/account')
   }
 
   if (type === 'recovery') {
@@ -239,9 +238,9 @@ onMounted(async () => {
 
   user.value = session.user
 
+  // Only trigger password when needed
   if (
     type === 'recovery' ||
-    access_token ||
     !session.user?.user_metadata?.password_set
   ) {
     needsPassword.value = true
@@ -269,6 +268,98 @@ onMounted(async () => {
   loading.value = false
 
 })
+
+const setPassword = async () => {
+
+  passwordError.value = ''
+
+  if (!password.value || !confirmPassword.value) {
+    passwordError.value = 'Please fill both fields'
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    passwordError.value = 'Passwords do not match'
+    return
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: password.value,
+    data: { password_set: true }
+  })
+
+  if (error) {
+    passwordError.value = error.message
+    return
+  }
+
+  // Exit password flow
+  needsPassword.value = false
+
+  // Clean URL
+  window.history.replaceState({}, document.title, '/account')
+
+  // Force UI refresh
+  router.replace('/account')
+
+}
+
+const removeSaved = async(id)=>{
+  await supabase
+    .from('saved_resources')
+    .delete()
+    .eq('resource_id', id)
+    .eq('member_id', user.value.id)
+
+  savedResources.value = savedResources.value.filter(r=>r.id!==id)
+}
+
+const startEdit = ()=> editing.value=true
+const cancelEdit = ()=> editing.value=false
+
+const saveProfile = async ()=>{
+  await supabase
+    .from('members')
+    .update({
+      name:name.value,
+      city:city.value,
+      industry:industry.value
+    })
+    .eq('id',user.value.id)
+
+  member.value.name=name.value
+  member.value.city=city.value
+  member.value.industry=industry.value
+
+  editing.value=false
+}
+
+const uploadAvatar = async(e)=>{
+  const file=e.target.files[0]
+  if(!file) return
+
+  const path=`${user.value.id}/${file.name}`
+
+  await supabase.storage.from('avatars').upload(path,file,{upsert:true})
+
+  const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+
+  await supabase
+    .from('members')
+    .update({avatar_url:data.publicUrl})
+    .eq('id',user.value.id)
+
+  member.value.avatar_url=data.publicUrl
+}
+
+const logout = async()=>{
+  await supabase.auth.signOut()
+  router.push('/login')
+}
+
+const formatDate=(d)=>{
+  return new Date(d).toLocaleDateString()
+}
 
 </script>
 <style>
