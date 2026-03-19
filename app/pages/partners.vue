@@ -95,6 +95,10 @@
 
 <script setup>
 
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
@@ -111,8 +115,6 @@ onMounted(async () => {
 
 })
 
-
-/* ✅ FIXED GROUPING (NORMALIZED) */
 
 const groupedPartners = computed(() => {
 
@@ -174,9 +176,6 @@ const redeemPartner = async (partner) => {
   margin:auto;
 }
 
-
-/* HEADER */
-
 .partners-header{
   margin-bottom:60px;
 }
@@ -196,9 +195,6 @@ const redeemPartner = async (partner) => {
   line-height:1.5;
 }
 
-
-/* CATEGORY */
-
 .category-section{
   margin-bottom:60px;
 }
@@ -211,9 +207,6 @@ const redeemPartner = async (partner) => {
   margin-bottom:20px;
 }
 
-
-/* CAROUSEL */
-
 .partners-carousel{
   display:flex;
   gap:20px;
@@ -225,43 +218,28 @@ const redeemPartner = async (partner) => {
   display:none;
 }
 
-
-/* CARD */
-
 .partner-card{
   min-width:240px;
   max-width:240px;
   height:300px;
-
   background:white;
   border-radius:18px;
   padding:20px;
-
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
-
-
-/* LOGO */
 
 .partner-logo{
   width:80px;
   margin-bottom:10px;
 }
 
-
-/* NAME */
-
 .partner-name{
   font-size:16px;
   margin-bottom:10px;
 }
-
-
-/* BENEFIT */
 
 .benefit-box{
   background:#f6f6f6;
@@ -280,9 +258,6 @@ const redeemPartner = async (partner) => {
 .benefit-text{
   font-size:13px;
 }
-
-
-/* CODE */
 
 .code-section{
   display:flex;
@@ -303,16 +278,10 @@ const redeemPartner = async (partner) => {
   font-size:11px;
 }
 
-
-/* LINK */
-
 .visit-btn{
   font-size:12px;
   margin-top:8px;
 }
-
-
-/* MOBILE */
 
 @media (max-width:768px){
 

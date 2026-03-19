@@ -3,19 +3,26 @@
 <div class="page-wrapper">
   <div class="page-container">
 
-    <h1 class="page-title">Events</h1>
+    <!-- HEADER -->
+
+    <h1 class="page-title-main">
+      EVENTS
+    </h1>
 
     <p class="page-subtitle">
-      Private gatherings, curated experiences, and meaningful connections across Europe.
+      Discover curated gatherings across Europe.
     </p>
+
+    <!-- LUMA EMBED -->
 
     <div class="events-embed">
 
       <iframe
         src="https://luma.com/embed/calendar/cal-Hv0aqpqNkf2UIKs/events"
-        class="luma-embed"
+        width="100%"
+        height="600"
         frameborder="0"
-        allowfullscreen
+        style="border:1px solid #e5e5e5;border-radius:12px;"
       ></iframe>
 
     </div>
@@ -26,29 +33,54 @@
 </template>
 
 
+<script setup>
+
+definePageMeta({
+  middleware: 'auth'
+})
+
+</script>
+
+
 <style scoped>
 
+/* TITLE */
+
+.page-title-main{
+  font-size:42px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+.page-subtitle{
+  font-size:16px;
+  opacity:.65;
+  margin-bottom:50px;
+  max-width:500px;
+}
+
+
+/* EMBED */
+
 .events-embed{
-  margin-top:40px;
-}
-
-/* FIXED + PREMIUM EMBED */
-
-.luma-embed{
   width:100%;
-  height:720px;
-  border:none;
-  border-radius:18px;
-  background:white;
-  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  max-width:100%;
+  overflow:hidden;
 }
+
 
 /* MOBILE */
 
 @media (max-width:768px){
-  .luma-embed{
-    height:600px;
+
+  .page-title-main{
+    font-size:30px;
   }
+
+  .events-embed iframe{
+    height:500px;
+  }
+
 }
 
 </style>
