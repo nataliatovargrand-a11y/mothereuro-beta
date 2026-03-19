@@ -1,6 +1,6 @@
-export default defineNuxtRouteMiddleware(async (to) => {
+import { supabase } from '~/utils/supabase'
 
-  const supabase = useNuxtApp().$supabase
+export default defineNuxtRouteMiddleware(async (to) => {
 
   const publicPages = ['/login', '/update-password']
 
@@ -8,9 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const { data: { session } } = await supabase.auth.getSession()
 
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!session && !user) {
+  if (!session) {
     return navigateTo('/login')
   }
 

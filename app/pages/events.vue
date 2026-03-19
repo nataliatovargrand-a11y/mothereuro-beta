@@ -34,11 +34,7 @@
 
 
 <script setup>
-
-definePageMeta({
-  middleware: 'auth'
-})
-
+// no page-level middleware — handled globally
 </script>
 
 

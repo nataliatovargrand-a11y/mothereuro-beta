@@ -95,10 +95,6 @@
 
 <script setup>
 
-definePageMeta({
-  middleware: 'auth'
-})
-
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
