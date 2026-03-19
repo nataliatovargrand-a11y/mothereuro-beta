@@ -9,32 +9,74 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
 
-      <NuxtLink to="/account" class="nav-item">
-        Account
-      </NuxtLink>
+      <!-- LEFT SIDE (only if logged in) -->
+      <template v-if="isLoggedIn">
 
-      <NuxtLink to="/explore" class="nav-item">
-        Explore
-      </NuxtLink>
+        <NuxtLink to="/account" class="nav-item">
+          Account
+        </NuxtLink>
 
+        <NuxtLink to="/explore" class="nav-item">
+          Explore
+        </NuxtLink>
+
+      </template>
+
+      <!-- CENTER LOGO -->
       <div class="logo-center">
         <NuxtLink to="/">
           <img src="/images/logo.png" class="footer-logo" />
         </NuxtLink>
       </div>
 
-      <NuxtLink to="/events" class="nav-item">
-        Events
-      </NuxtLink>
+      <!-- RIGHT SIDE (only if logged in) -->
+      <template v-if="isLoggedIn">
 
-      <NuxtLink to="/partners" class="nav-item">
-        Partners
-      </NuxtLink>
+        <NuxtLink to="/events" class="nav-item">
+          Events
+        </NuxtLink>
+
+        <NuxtLink to="/partners" class="nav-item">
+          Partners
+        </NuxtLink>
+
+      </template>
+
+      <!-- LOGGED OUT STATE -->
+      <template v-else>
+
+        <NuxtLink to="/login" class="nav-item">
+          Log In
+        </NuxtLink>
+
+        <div></div>
+
+        <div></div>
+
+        <div></div>
+
+      </template>
 
     </nav>
 
   </div>
 </template>
+
+
+<script setup>
+
+import { ref, onMounted } from 'vue'
+import { supabase } from '~/utils/supabase'
+
+const isLoggedIn = ref(false)
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  isLoggedIn.value = !!session
+})
+
+</script>
+
 
 <style scoped>
 
