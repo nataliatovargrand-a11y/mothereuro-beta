@@ -19,69 +19,15 @@
       />
     </div>
 
-    <!-- FILTERS -->
-
-    <div class="filters">
-
-      <div class="filter-group">
-
-        <div class="filter-title">City</div>
-
-        <button
-          class="filter-pill"
-          :class="{ active: selectedCity === 'All' }"
-          @click="selectedCity = 'All'"
-        >
-          All
-        </button>
-
-        <button
-          v-for="city in cities"
-          :key="city"
-          class="filter-pill"
-          :class="{ active: selectedCity === city }"
-          @click="selectedCity = city"
-        >
-          {{ city }}
-        </button>
-
-      </div>
-
-      <div class="filter-group">
-
-        <div class="filter-title">Industry</div>
-
-        <button
-          class="filter-pill"
-          :class="{ active: selectedIndustry === 'All' }"
-          @click="selectedIndustry = 'All'"
-        >
-          All
-        </button>
-
-        <button
-          v-for="industry in industries"
-          :key="industry"
-          class="filter-pill"
-          :class="{ active: selectedIndustry === industry }"
-          @click="selectedIndustry = industry"
-        >
-          {{ industry }}
-        </button>
-
-      </div>
-
-    </div>
-
     <!-- MEMBERS GRID -->
 
     <div class="members-grid">
 
-      <div
+      <NuxtLink
         v-for="member in filteredMembers"
         :key="member.id"
+        :to="'/members/' + member.id"
         class="member-card"
-        @click="toggleMember(member.id)"
       >
 
         <img
@@ -96,7 +42,7 @@
           {{ member.first_name }}
         </div>
 
-        <div v-if="member.industry" class="member-industry">
+        <div v-if="member.industry" class="member-meta">
           {{ member.industry }}
         </div>
 
@@ -104,31 +50,7 @@
           {{ member.city }}
         </div>
 
-        <!-- EXPANDED DETAILS -->
-
-        <div
-          v-if="expandedMember === member.id"
-          class="member-details"
-        >
-
-          <div class="detail-row">
-            <span class="label">Industry</span>
-            <span>{{ member.industry || '—' }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span class="label">City</span>
-            <span>{{ member.city || '—' }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span class="label">Membership</span>
-            <span>{{ member.membership_tier || 'Member' }}</span>
-          </div>
-
-        </div>
-
-      </div>
+      </NuxtLink>
 
     </div>
 
@@ -136,16 +58,13 @@
 
 </template>
 
+
 <script setup>
 
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const members = ref([])
-const expandedMember = ref(null)
-
-const selectedCity = ref("All")
-const selectedIndustry = ref("All")
 const searchQuery = ref("")
 
 onMounted(async () => {
@@ -158,52 +77,22 @@ onMounted(async () => {
 
 })
 
-const toggleMember = (id) => {
-
-  if (expandedMember.value === id) {
-    expandedMember.value = null
-  } else {
-    expandedMember.value = id
-  }
-
-}
-
-const cities = computed(() => {
-
-  const unique = [...new Set(members.value.map(m => m.city).filter(Boolean))]
-  return unique.sort()
-
-})
-
-const industries = computed(() => {
-
-  const unique = [...new Set(members.value.map(m => m.industry).filter(Boolean))]
-  return unique.sort()
-
-})
-
 const filteredMembers = computed(() => {
 
-  return members.value.filter(member => {
+  if (!searchQuery.value) return members.value
 
-    const cityMatch =
-      selectedCity.value === "All" || member.city === selectedCity.value
+  const query = searchQuery.value.toLowerCase()
 
-    const industryMatch =
-      selectedIndustry.value === "All" || member.industry === selectedIndustry.value
-
-    const searchMatch =
-      member.first_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      member.city?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      member.industry?.toLowerCase().includes(searchQuery.value.toLowerCase())
-
-    return cityMatch && industryMatch && searchMatch
-
-  })
+  return members.value.filter(member =>
+    member.first_name?.toLowerCase().includes(query) ||
+    member.city?.toLowerCase().includes(query) ||
+    member.industry?.toLowerCase().includes(query)
+  )
 
 })
 
 </script>
+
 
 <style scoped>
 
@@ -227,6 +116,7 @@ const filteredMembers = computed(() => {
   opacity:.6;
 }
 
+
 /* SEARCH */
 
 .search-bar{
@@ -235,138 +125,100 @@ const filteredMembers = computed(() => {
 
 .search-input{
   width:100%;
-  padding:12px 16px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,0.15);
-  font-size:14px;
+  border:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  padding:14px 0;
+  font-size:16px;
+  background:transparent;
 }
 
 .search-input:focus{
   outline:none;
-  border-color:black;
+  border-bottom:1px solid #A8985F;
 }
 
-/* FILTERS */
-
-.filters{
-  margin-bottom:50px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-
-.filter-group{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-
-.filter-title{
-  margin-right:10px;
-  font-size:12px;
-  letter-spacing:1px;
-  opacity:.6;
-}
-
-.filter-pill{
-  border:1px solid rgba(0,0,0,0.15);
-  background:white;
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:12px;
-  letter-spacing:1px;
-  cursor:pointer;
-}
-
-.filter-pill.active{
-  background:black;
-  color:white;
-  border-color:black;
-}
 
 /* GRID */
 
 .members-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:30px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:24px;
+  margin-top:40px;
 }
+
 
 /* CARD */
 
 .member-card{
   background:white;
   border-radius:20px;
-  padding:26px;
+  padding:28px 20px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  transition:all .25s ease;
-  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,0.04);
+  transition:transform .2s ease, box-shadow .2s ease;
+  text-decoration:none;
+  color:inherit;
 }
 
 .member-card:hover{
   transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  box-shadow:0 20px 40px rgba(0,0,0,0.06);
 }
+
 
 /* AVATAR */
 
 .member-avatar{
-  width:96px;
-  height:96px;
+  width:80px;
+  height:80px;
   border-radius:50%;
   object-fit:cover;
   margin:0 auto 14px;
 }
 
 .member-avatar-placeholder{
-  width:96px;
-  height:96px;
+  width:80px;
+  height:80px;
   border-radius:50%;
   background:#eee;
   margin:0 auto 14px;
 }
 
+
 /* TEXT */
 
 .member-name{
   font-size:16px;
-  letter-spacing:.5px;
-  font-weight:500;
+  margin-bottom:6px;
 }
 
-.member-industry{
+.member-meta{
   font-size:13px;
   opacity:.7;
 }
 
 .member-city{
   font-size:11px;
-  letter-spacing:1px;
-  opacity:.5;
+  letter-spacing:2px;
   text-transform:uppercase;
+  opacity:.5;
+  margin-top:6px;
 }
 
-/* EXPANDED */
 
-.member-details{
-  margin-top:18px;
-  padding-top:18px;
-  border-top:1px solid rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
+/* MOBILE */
 
-.detail-row{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-}
+@media (max-width:768px){
 
-.label{
-  opacity:.6;
+  .members-wrapper{
+    padding:100px 20px 120px;
+  }
+
+  .members-header h1{
+    font-size:30px;
+  }
+
 }
 
 </style>
