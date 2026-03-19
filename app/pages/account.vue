@@ -364,7 +364,84 @@ const formatDate=(d)=>{
 </script>
 <style>
 
+/* PASSWORD FLOW */
 
+.password-wrapper{
+  min-height:70vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.password-card{
+  width:100%;
+  max-width:420px;
+  background:white;
+  border-radius:20px;
+  padding:40px 32px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  text-align:left;
+}
+
+/* TITLE */
+
+.password-title{
+  font-size:32px;
+  margin-bottom:12px;
+  font-weight:400;
+  line-height:1.2;
+}
+
+.password-sub{
+  font-size:15px;
+  opacity:.6;
+  margin-bottom:30px;
+  line-height:1.5;
+}
+
+/* INPUTS */
+
+.password-input{
+  width:100%;
+  border:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  padding:14px 0;
+  margin-bottom:18px;
+  font-size:16px;
+  background:transparent;
+}
+
+.password-input:focus{
+  outline:none;
+  border-bottom:1px solid #A8985F;
+}
+
+/* ERROR */
+
+.password-error{
+  color:#c33;
+  font-size:13px;
+  margin-bottom:14px;
+}
+
+/* BUTTON */
+
+.password-btn{
+  width:100%;
+  background:#A8985F;
+  color:white;
+  border:none;
+  padding:14px;
+  border-radius:30px;
+  font-size:12px;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:opacity .2s ease;
+}
+
+.password-btn:hover{
+  opacity:.85;
+}
 
 /* HEADER */
 
