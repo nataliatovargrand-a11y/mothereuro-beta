@@ -1,95 +1,89 @@
 <template>
   <div>
 
-    <!-- Page Content -->
     <div class="page-content">
       <NuxtPage />
     </div>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
 
-      <!-- LEFT SIDE (only if logged in) -->
-      <template v-if="isLoggedIn">
+      <NuxtLink
+        to="/account"
+        class="nav-item"
+        :class="{ hidden: !isLoggedIn }"
+      >
+        Account
+      </NuxtLink>
 
-        <NuxtLink to="/account" class="nav-item">
-          Account
-        </NuxtLink>
+      <NuxtLink
+        to="/explore"
+        class="nav-item"
+        :class="{ hidden: !isLoggedIn }"
+      >
+        Explore
+      </NuxtLink>
 
-        <NuxtLink to="/explore" class="nav-item">
-          Explore
-        </NuxtLink>
-
-      </template>
-
-      <!-- CENTER LOGO -->
       <div class="logo-center">
         <NuxtLink to="/">
           <img src="/images/logo.png" class="footer-logo" />
         </NuxtLink>
       </div>
 
-      <!-- RIGHT SIDE (only if logged in) -->
-      <template v-if="isLoggedIn">
+      <NuxtLink
+        to="/events"
+        class="nav-item"
+        :class="{ hidden: !isLoggedIn }"
+      >
+        Events
+      </NuxtLink>
 
-        <NuxtLink to="/events" class="nav-item">
-          Events
-        </NuxtLink>
-
-        <NuxtLink to="/partners" class="nav-item">
-          Partners
-        </NuxtLink>
-
-      </template>
-
-      <!-- LOGGED OUT STATE -->
-      <template v-else>
-
-        <NuxtLink to="/login" class="nav-item">
-          Log In
-        </NuxtLink>
-
-        <div></div>
-
-        <div></div>
-
-        <div></div>
-
-      </template>
+      <NuxtLink
+        to="/partners"
+        class="nav-item"
+        :class="{ hidden: !isLoggedIn }"
+      >
+        Partners
+      </NuxtLink>
 
     </nav>
 
   </div>
 </template>
 
-
 <script setup>
-
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const isLoggedIn = ref(false)
+let listener = null
 
 onMounted(async () => {
+
+  // initial check
   const { data: { session } } = await supabase.auth.getSession()
   isLoggedIn.value = !!session
+
+  // listen for login/logout changes
+  const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    isLoggedIn.value = !!session
+  })
+
+  listener = data.subscription
+
 })
 
+onUnmounted(() => {
+  if (listener) listener.unsubscribe()
+})
 </script>
 
-
 <style scoped>
-
-/* PAGE CONTENT */
 
 .page-content{
   padding-bottom:90px;
 }
 
-/* NAV BAR */
-
 .bottom-nav{
-
   position:fixed;
   bottom:0;
   left:0;
@@ -106,21 +100,14 @@ onMounted(async () => {
   border-top:1px solid rgba(0,0,0,0.05);
 
   z-index:1000;
-
 }
 
-/* NAV ITEMS */
-
 .nav-item{
-
   text-align:center;
-
   font-size:11px;
   letter-spacing:2px;
-
   text-decoration:none;
   color:black;
-
   opacity:.6;
 
   display:flex;
@@ -128,30 +115,26 @@ onMounted(async () => {
   align-items:center;
 
   transition:opacity .2s ease;
-
 }
 
 .nav-item:hover{
   opacity:1;
 }
 
-/* CENTER LOGO */
+.hidden{
+  visibility:hidden;
+}
 
 .logo-center{
-
   display:flex;
   justify-content:center;
   align-items:center;
-
 }
 
 .footer-logo{
-
   width:36px;
   height:auto;
-
   transition:transform .25s ease;
-
 }
 
 .footer-logo:hover{
