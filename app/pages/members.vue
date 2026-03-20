@@ -28,7 +28,7 @@
         :key="member.id"
         :to="'/members/' + member.id"
         class="member-card"
-        v-if="member.first_name"
+        v-if="member && member.first_name"
       >
 
         <img
@@ -74,37 +74,44 @@ onMounted(async () => {
     .from('members')
     .select('*')
     .not('first_name', 'is', null)
-    .not('first_name', 'eq', '')
+    .neq('first_name', '')
 
-  members.value = data || []
+  // HARD CLEAN (prevents ALL crashes)
+  members.value = (data || []).filter(
+    m => m && typeof m.first_name === 'string' && m.first_name.length > 0
+  )
 
 })
 
 
 const filteredMembers = computed(() => {
 
+  const safeMembers = members.value.filter(
+    m => m && typeof m.first_name === 'string'
+  )
+
   // no search → show all
   if (!searchQuery.value) {
-    return members.value
+    return safeMembers
   }
 
-  const query = searchQuery.value.toLowerCase()
+  const query = searchQuery.value.toLowerCase().trim()
 
-  const results = members.value.filter(member =>
-    member.first_name?.toLowerCase().includes(query)
+  const results = safeMembers.filter(member =>
+    member.first_name.toLowerCase().includes(query)
   )
 
   // exact match → ONLY that person
   const exactMatch = results.find(m =>
-    m.first_name?.toLowerCase() === query
+    m.first_name.toLowerCase() === query
   )
 
   if (exactMatch) {
     return [exactMatch]
   }
 
-  // otherwise → show best match ONLY
-  return results.slice(0, 1)
+  // fallback → ONLY best result
+  return results.length ? [results[0]] : []
 
 })
 
