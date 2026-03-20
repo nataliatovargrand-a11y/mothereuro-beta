@@ -1,6 +1,22 @@
 <template>
 
-  <div class="profile-wrapper" v-if="member">
+  <!-- LOADING -->
+
+  <div v-if="loading" class="profile-wrapper">
+    <div class="loading">Loading member...</div>
+  </div>
+
+  <!-- NOT FOUND -->
+
+  <div v-else-if="!member" class="profile-wrapper">
+    <div class="not-found">
+      Member not found
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+
+  <div v-else class="profile-wrapper">
 
     <div class="profile-header">
 
@@ -9,6 +25,8 @@
         :src="member.avatar_url"
         class="profile-avatar"
       />
+
+      <div v-else class="profile-avatar-placeholder"></div>
 
       <div class="profile-name">
         {{ member.first_name }}
@@ -60,28 +78,47 @@
 
 </template>
 
+
 <script setup>
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const route = useRoute()
+const router = useRouter()
+
 const member = ref(null)
+const loading = ref(true)
 
 onMounted(async () => {
 
-  const { data } = await supabase
+  const id = route.params.id
+
+  // guard against invalid ids
+  if (!id || id.length < 10) {
+    router.push('/members')
+    return
+  }
+
+  const { data, error } = await supabase
     .from('members')
     .select('*')
-    .eq('id', route.params.id)
+    .eq('id', id)
     .single()
 
+  if (error || !data) {
+    router.push('/members')
+    return
+  }
+
   member.value = data
+  loading.value = false
 
 })
 
 </script>
+
 
 <style scoped>
 
@@ -91,10 +128,28 @@ onMounted(async () => {
   margin:0 auto;
 }
 
+/* STATES */
+
+.loading{
+  text-align:center;
+  opacity:.6;
+}
+
+.not-found{
+  text-align:center;
+  opacity:.6;
+}
+
+
+/* HEADER */
+
 .profile-header{
   text-align:center;
   margin-bottom:60px;
 }
+
+
+/* AVATAR */
 
 .profile-avatar{
   width:140px;
@@ -103,6 +158,17 @@ onMounted(async () => {
   object-fit:cover;
   margin-bottom:20px;
 }
+
+.profile-avatar-placeholder{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:#eee;
+  margin:0 auto 20px;
+}
+
+
+/* TEXT */
 
 .profile-name{
   font-size:32px;
@@ -119,7 +185,11 @@ onMounted(async () => {
   letter-spacing:2px;
   opacity:.5;
   margin-top:6px;
+  text-transform:uppercase;
 }
+
+
+/* BODY */
 
 .profile-body{
   display:flex;
@@ -127,10 +197,16 @@ onMounted(async () => {
   gap:40px;
 }
 
+
+/* SECTIONS */
+
 .profile-section h3{
   font-size:18px;
   margin-bottom:10px;
 }
+
+
+/* LINKS */
 
 .profile-link{
   display:inline-block;
@@ -138,6 +214,22 @@ onMounted(async () => {
   text-decoration:none;
   border-bottom:1px solid black;
   padding-bottom:2px;
+  font-size:14px;
+}
+
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .profile-wrapper{
+    padding:120px 20px;
+  }
+
+  .profile-name{
+    font-size:26px;
+  }
+
 }
 
 </style>
