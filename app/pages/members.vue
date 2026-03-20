@@ -26,9 +26,8 @@
       <NuxtLink
         v-for="member in filteredMembers"
         :key="member.id"
-        :to="'/members/' + member.id"
+        :to="member.id ? `/members/${member.id}` : '/members'"
         class="member-card"
-        v-if="member && member.first_name"
       >
 
         <img
@@ -40,7 +39,7 @@
         <div v-else class="member-avatar-placeholder"></div>
 
         <div class="member-name">
-          {{ member.first_name }}
+          {{ member.first_name || 'Member' }}
         </div>
 
         <div v-if="member.industry" class="member-meta">
@@ -70,15 +69,22 @@ const searchQuery = ref("")
 
 onMounted(async () => {
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('members')
     .select('*')
-    .not('first_name', 'is', null)
-    .neq('first_name', '')
 
-  // HARD CLEAN (prevents ALL crashes)
-  members.value = (data || []).filter(
-    m => m && typeof m.first_name === 'string' && m.first_name.length > 0
+  if (error) {
+    console.error('Error loading members:', error)
+    members.value = []
+    return
+  }
+
+  // HARD SAFE FILTER (prevents ALL bugs)
+  members.value = (data || []).filter(m =>
+    m &&
+    m.id &&                     // CRITICAL: ensures routing works
+    typeof m.first_name === 'string' &&
+    m.first_name.length > 0
   )
 
 })
@@ -86,11 +92,9 @@ onMounted(async () => {
 
 const filteredMembers = computed(() => {
 
-  const safeMembers = members.value.filter(
-    m => m && typeof m.first_name === 'string'
-  )
+  const safeMembers = members.value
 
-  // no search → show all
+  // NO SEARCH → show all
   if (!searchQuery.value) {
     return safeMembers
   }
@@ -101,7 +105,7 @@ const filteredMembers = computed(() => {
     member.first_name.toLowerCase().includes(query)
   )
 
-  // exact match → ONLY that person
+  // EXACT MATCH → ONLY THAT PERSON
   const exactMatch = results.find(m =>
     m.first_name.toLowerCase() === query
   )
@@ -110,7 +114,7 @@ const filteredMembers = computed(() => {
     return [exactMatch]
   }
 
-  // fallback → ONLY best result
+  // OTHERWISE → SHOW FIRST RESULT ONLY
   return results.length ? [results[0]] : []
 
 })
