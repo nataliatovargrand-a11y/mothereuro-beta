@@ -13,7 +13,7 @@
     <div class="profile-header">
 
       <img
-        v-if="member?.avatar_url"
+        v-if="member.avatar_url"
         :src="member.avatar_url"
         class="profile-avatar"
       />
@@ -21,14 +21,14 @@
       <div v-else class="profile-avatar-placeholder"></div>
 
       <div class="profile-name">
-        {{ member?.first_name }}
+        {{ member.first_name }}
       </div>
 
-      <div v-if="member?.industry" class="profile-industry">
+      <div v-if="member.industry" class="profile-industry">
         {{ member.industry }}
       </div>
 
-      <div v-if="member?.city" class="profile-city">
+      <div v-if="member.city" class="profile-city">
         {{ member.city }}
       </div>
 
@@ -36,16 +36,16 @@
 
     <div class="profile-body">
 
-      <div v-if="member?.bio" class="profile-section">
+      <div v-if="member.bio" class="profile-section">
         <h3>About</h3>
         <p>{{ member.bio }}</p>
       </div>
 
-      <div v-if="member?.linkedin || member?.website" class="profile-section">
+      <div v-if="member.linkedin || member.website" class="profile-section">
         <h3>Links</h3>
 
         <a
-          v-if="member?.linkedin"
+          v-if="member.linkedin"
           :href="member.linkedin"
           target="_blank"
           class="profile-link"
@@ -54,7 +54,7 @@
         </a>
 
         <a
-          v-if="member?.website"
+          v-if="member.website"
           :href="member.website"
           target="_blank"
           class="profile-link"
@@ -81,42 +81,34 @@
 
 <script setup>
 
-import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { ref, watchEffect } from 'vue'
 import { supabase } from '~/utils/supabase'
 
 const route = useRoute()
-const router = useRouter()
 
 const member = ref(null)
 const loading = ref(true)
 
-onMounted(async () => {
+watchEffect(async () => {
 
-  try {
+  const id = route.params.id
 
-    const id = route.params.id
+  if (!id) return
 
-    if (!id) {
-      router.push('/members')
-      return
-    }
+  loading.value = true
 
-    const { data, error } = await supabase
-      .from('members')
-      .select('*')
-      .eq('id', id)
-      .single()
+  const { data, error } = await supabase
+    .from('members')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
 
-    if (error || !data) {
-      member.value = null
-    } else {
-      member.value = data
-    }
-
-  } catch (err) {
-    console.error(err)
+  if (error) {
+    console.error('Error loading member:', error)
     member.value = null
+  } else {
+    member.value = data
   }
 
   loading.value = false
@@ -146,14 +138,12 @@ onMounted(async () => {
   opacity:.6;
 }
 
-
 /* HEADER */
 
 .profile-header{
   text-align:center;
   margin-bottom:60px;
 }
-
 
 /* AVATAR */
 
@@ -172,7 +162,6 @@ onMounted(async () => {
   background:#eee;
   margin:0 auto 20px;
 }
-
 
 /* TEXT */
 
@@ -194,7 +183,6 @@ onMounted(async () => {
   text-transform:uppercase;
 }
 
-
 /* BODY */
 
 .profile-body{
@@ -203,14 +191,12 @@ onMounted(async () => {
   gap:40px;
 }
 
-
 /* SECTIONS */
 
 .profile-section h3{
   font-size:18px;
   margin-bottom:10px;
 }
-
 
 /* LINKS */
 
@@ -222,7 +208,6 @@ onMounted(async () => {
   padding-bottom:2px;
   font-size:14px;
 }
-
 
 /* MOBILE */
 
