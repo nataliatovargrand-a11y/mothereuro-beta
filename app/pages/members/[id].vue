@@ -6,22 +6,14 @@
     <div class="loading">Loading member...</div>
   </div>
 
-  <!-- NOT FOUND -->
-
-  <div v-else-if="!member" class="profile-wrapper">
-    <div class="not-found">
-      Member not found
-    </div>
-  </div>
-
   <!-- PROFILE -->
 
-  <div v-else class="profile-wrapper">
+  <div v-else-if="member" class="profile-wrapper">
 
     <div class="profile-header">
 
       <img
-        v-if="member.avatar_url"
+        v-if="member?.avatar_url"
         :src="member.avatar_url"
         class="profile-avatar"
       />
@@ -29,14 +21,14 @@
       <div v-else class="profile-avatar-placeholder"></div>
 
       <div class="profile-name">
-        {{ member.first_name }}
+        {{ member?.first_name }}
       </div>
 
-      <div v-if="member.industry" class="profile-industry">
+      <div v-if="member?.industry" class="profile-industry">
         {{ member.industry }}
       </div>
 
-      <div v-if="member.city" class="profile-city">
+      <div v-if="member?.city" class="profile-city">
         {{ member.city }}
       </div>
 
@@ -44,16 +36,16 @@
 
     <div class="profile-body">
 
-      <div v-if="member.bio" class="profile-section">
+      <div v-if="member?.bio" class="profile-section">
         <h3>About</h3>
         <p>{{ member.bio }}</p>
       </div>
 
-      <div v-if="member.linkedin || member.website" class="profile-section">
+      <div v-if="member?.linkedin || member?.website" class="profile-section">
         <h3>Links</h3>
 
         <a
-          v-if="member.linkedin"
+          v-if="member?.linkedin"
           :href="member.linkedin"
           target="_blank"
           class="profile-link"
@@ -62,7 +54,7 @@
         </a>
 
         <a
-          v-if="member.website"
+          v-if="member?.website"
           :href="member.website"
           target="_blank"
           class="profile-link"
@@ -74,6 +66,14 @@
 
     </div>
 
+  </div>
+
+  <!-- NOT FOUND -->
+
+  <div v-else class="profile-wrapper">
+    <div class="not-found">
+      Member not found
+    </div>
   </div>
 
 </template>
@@ -93,26 +93,32 @@ const loading = ref(true)
 
 onMounted(async () => {
 
-  const id = route.params.id
+  try {
 
-  // guard against invalid ids
-  if (!id || id.length < 10) {
-    router.push('/members')
-    return
+    const id = route.params.id
+
+    if (!id) {
+      router.push('/members')
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('members')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (error || !data) {
+      member.value = null
+    } else {
+      member.value = data
+    }
+
+  } catch (err) {
+    console.error(err)
+    member.value = null
   }
 
-  const { data, error } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', id)
-    .single()
-
-  if (error || !data) {
-    router.push('/members')
-    return
-  }
-
-  member.value = data
   loading.value = false
 
 })
