@@ -28,6 +28,7 @@
         :key="member.id"
         :to="'/members/' + member.id"
         class="member-card"
+        v-if="member.first_name"
       >
 
         <img
@@ -72,22 +73,38 @@ onMounted(async () => {
   const { data } = await supabase
     .from('members')
     .select('*')
+    .not('first_name', 'is', null)
+    .not('first_name', 'eq', '')
 
   members.value = data || []
 
 })
 
+
 const filteredMembers = computed(() => {
 
-  if (!searchQuery.value) return members.value
+  // no search → show all
+  if (!searchQuery.value) {
+    return members.value
+  }
 
   const query = searchQuery.value.toLowerCase()
 
-  return members.value.filter(member =>
-    member.first_name?.toLowerCase().includes(query) ||
-    member.city?.toLowerCase().includes(query) ||
-    member.industry?.toLowerCase().includes(query)
+  const results = members.value.filter(member =>
+    member.first_name?.toLowerCase().includes(query)
   )
+
+  // exact match → ONLY that person
+  const exactMatch = results.find(m =>
+    m.first_name?.toLowerCase() === query
+  )
+
+  if (exactMatch) {
+    return [exactMatch]
+  }
+
+  // otherwise → show best match ONLY
+  return results.slice(0, 1)
 
 })
 
