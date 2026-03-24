@@ -19,22 +19,19 @@ Trusted real estate partners helping families find and invest in exceptional hom
       Real Estate Partner
     </div>
 
-    <!-- PROFILE + TEXT -->
     <div class="iconic-row">
 
       <img
-        src="/images/partners/iconic-profile.jpg"
+        src="/images/iconic-profile.jpg"
         class="iconic-avatar"
       />
 
       <div>
-
         <h2>ICONIC Living</h2>
 
         <div class="iconic-names">
           Rossana Jaramillo & Claudia Razabal
         </div>
-
       </div>
 
     </div>
@@ -46,13 +43,12 @@ Trusted real estate partners helping families find and invest in exceptional hom
       For clients moving from abroad
     </p>
 
-    <!-- BUTTONS -->
     <div class="iconic-actions">
 
       <a
         href="https://www.iconicliving.site/en"
         target="_blank"
-        class="card-button"
+        class="card-button dark"
       >
         Visit Website
       </a>
@@ -60,7 +56,7 @@ Trusted real estate partners helping families find and invest in exceptional hom
       <a
         href="https://wa.me/34664770431"
         target="_blank"
-        class="card-button secondary"
+        class="card-button outline-dark"
       >
         Contact
       </a>
@@ -214,16 +210,29 @@ letter-spacing:2px;
 text-decoration:none;
 }
 
+/* DARK VERSION FOR LIGHT CARD */
+
+.card-button.dark{
+background:black;
+color:white;
+}
+
+.card-button.outline-dark{
+background:transparent;
+border:1px solid black;
+color:black;
+}
+
 
 /* BACKGROUNDS */
 
 .iconic{
-  background:#f5f3ef;
-  color:#2E2B29;
+background:#f5f3ef;
+color:#2E2B29;
 }
 
 .iconic::after{
-  display:none;
+display:none;
 }
 
 .persepolis{
@@ -233,6 +242,8 @@ background-image:url('/images/persepolis.jpg');
 .practica{
 background-image:url('/images/practica.jpg');
 }
+
+
 /* ICONIC CUSTOM */
 
 .iconic-row{
@@ -247,12 +258,11 @@ width:64px;
 height:64px;
 border-radius:50%;
 object-fit:cover;
-border:2px solid rgba(255,255,255,0.8);
 }
 
 .iconic-names{
 font-size:14px;
-opacity:.9;
+opacity:.8;
 margin-top:4px;
 }
 
@@ -266,11 +276,25 @@ display:flex;
 gap:12px;
 }
 
-/* SECONDARY BUTTON */
 
-.card-button.secondary{
-background:transparent;
-border:1px solid white;
-color:white;
+/* MOBILE */
+
+@media (max-width:768px){
+
+.resources-wrapper{
+padding:100px 20px;
 }
+
+.hero-card{
+height:auto;
+padding:40px 24px;
+}
+
+.iconic-row{
+flex-direction:column;
+text-align:center;
+}
+
+}
+
 </style>
