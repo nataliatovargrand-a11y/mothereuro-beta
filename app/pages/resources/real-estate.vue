@@ -13,30 +13,63 @@ Trusted real estate partners helping families find and invest in exceptional hom
 
 <div class="hero-card iconic">
 
-<div class="card-content">
+  <div class="card-content">
 
-<div class="card-label">
-Real Estate Partner
+    <div class="card-label">
+      Real Estate Partner
+    </div>
+
+    <!-- PROFILE + TEXT -->
+    <div class="iconic-row">
+
+      <img
+        src="/images/partners/iconic-profile.jpg"
+        class="iconic-avatar"
+      />
+
+      <div>
+
+        <h2>ICONIC Living</h2>
+
+        <div class="iconic-names">
+          Rossana Jaramillo & Claudia Razabal
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="iconic-description">
+      Tailored real estate consultancy<br/>
+      Specializing in rentals and purchases in Madrid<br/>
+      360º support throughout the entire process<br/>
+      For clients moving from abroad
+    </p>
+
+    <!-- BUTTONS -->
+    <div class="iconic-actions">
+
+      <a
+        href="https://www.iconicliving.site/en"
+        target="_blank"
+        class="card-button"
+      >
+        Visit Website
+      </a>
+
+      <a
+        href="https://wa.me/34664770431"
+        target="_blank"
+        class="card-button secondary"
+      >
+        Contact
+      </a>
+
+    </div>
+
+  </div>
+
 </div>
-
-<h2>ICONIC Living</h2>
-
-<p>
-Rossana Jaramillo & Claudia Razabal
-</p>
-
-<a
-href="https://www.iconicliving.site/en"
-target="_blank"
-class="card-button"
->
-Explore ICONIC Living
-</a>
-
-</div>
-
-</div>
-
 
 
 <!-- PERSEPOLIS -->
@@ -195,5 +228,44 @@ background-image:url('/images/persepolis.jpg');
 .practica{
 background-image:url('/images/practica.jpg');
 }
+/* ICONIC CUSTOM */
 
+.iconic-row{
+display:flex;
+align-items:center;
+gap:18px;
+margin-bottom:16px;
+}
+
+.iconic-avatar{
+width:64px;
+height:64px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(255,255,255,0.8);
+}
+
+.iconic-names{
+font-size:14px;
+opacity:.9;
+margin-top:4px;
+}
+
+.iconic-description{
+margin-bottom:24px;
+max-width:420px;
+}
+
+.iconic-actions{
+display:flex;
+gap:12px;
+}
+
+/* SECONDARY BUTTON */
+
+.card-button.secondary{
+background:transparent;
+border:1px solid white;
+color:white;
+}
 </style>
