@@ -31,7 +31,7 @@ Trusted real estate partners helping families find and invest in exceptional hom
         <h2>ICONIC Living</h2>
 
         <div class="iconic-names">
-          Rossana Jaramillo & Claudia Razabal
+          Rossana Jaramillo & Claudia Irazabal
         </div>
 
         <p class="iconic-description">
