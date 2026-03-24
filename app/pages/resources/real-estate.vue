@@ -227,8 +227,10 @@ color:black;
 /* BACKGROUNDS */
 
 .iconic{
-background:#f5f3ef;
+background:#F8F6F2; /* lighter */
 color:#2E2B29;
+border:1px solid rgba(0,0,0,0.04);
+box-shadow:0 8px 30px rgba(0,0,0,0.04);
 }
 
 .iconic::after{
@@ -244,11 +246,11 @@ background-image:url('/images/practica.jpg');
 }
 
 
-/* ICONIC LAYOUT (FIXED) */
+/* ICONIC LAYOUT */
 
 .iconic-header{
 display:flex;
-align-items:flex-start;
+align-items:center; /* FIXED vertical alignment */
 gap:28px;
 }
 
