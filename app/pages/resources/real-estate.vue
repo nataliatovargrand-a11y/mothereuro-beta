@@ -218,7 +218,12 @@ text-decoration:none;
 /* BACKGROUNDS */
 
 .iconic{
-background-image:url('/images/iconic-living.jpg');
+  background:#f5f3ef;
+  color:#2E2B29;
+}
+
+.iconic::after{
+  display:none;
 }
 
 .persepolis{
