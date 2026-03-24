@@ -19,47 +19,49 @@ Trusted real estate partners helping families find and invest in exceptional hom
       Real Estate Partner
     </div>
 
-    <div class="iconic-row">
+    <div class="iconic-header">
 
       <img
         src="/images/iconic-profile.jpg"
         class="iconic-avatar"
       />
 
-      <div>
+      <div class="iconic-text">
+
         <h2>ICONIC Living</h2>
 
         <div class="iconic-names">
           Rossana Jaramillo & Claudia Razabal
         </div>
+
+        <p class="iconic-description">
+          Tailored real estate consultancy<br/>
+          Specializing in rentals and purchases in Madrid<br/>
+          360º support throughout the entire process<br/>
+          For clients moving from abroad
+        </p>
+
+        <div class="iconic-actions">
+
+          <a
+            href="https://www.iconicliving.site/en"
+            target="_blank"
+            class="card-button dark"
+          >
+            Visit Website
+          </a>
+
+          <a
+            href="https://wa.me/34664770431"
+            target="_blank"
+            class="card-button outline-dark"
+          >
+            Contact
+          </a>
+
+        </div>
+
       </div>
-
-    </div>
-
-    <p class="iconic-description">
-      Tailored real estate consultancy<br/>
-      Specializing in rentals and purchases in Madrid<br/>
-      360º support throughout the entire process<br/>
-      For clients moving from abroad
-    </p>
-
-    <div class="iconic-actions">
-
-      <a
-        href="https://www.iconicliving.site/en"
-        target="_blank"
-        class="card-button dark"
-      >
-        Visit Website
-      </a>
-
-      <a
-        href="https://wa.me/34664770431"
-        target="_blank"
-        class="card-button outline-dark"
-      >
-        Contact
-      </a>
 
     </div>
 
@@ -175,7 +177,7 @@ border-radius:18px;
 .card-content{
 position:relative;
 z-index:2;
-max-width:480px;
+max-width:520px;
 }
 
 .card-label{
@@ -187,7 +189,7 @@ opacity:.8;
 
 .hero-card h2{
 font-size:34px;
-margin-bottom:16px;
+margin-bottom:6px;
 }
 
 .hero-card p{
@@ -209,8 +211,6 @@ font-size:12px;
 letter-spacing:2px;
 text-decoration:none;
 }
-
-/* DARK VERSION FOR LIGHT CARD */
 
 .card-button.dark{
 background:black;
@@ -244,36 +244,40 @@ background-image:url('/images/practica.jpg');
 }
 
 
-/* ICONIC CUSTOM */
+/* ICONIC LAYOUT (FIXED) */
 
-.iconic-row{
+.iconic-header{
 display:flex;
-align-items:center;
-gap:18px;
-margin-bottom:16px;
+align-items:flex-start;
+gap:28px;
 }
 
 .iconic-avatar{
-width:64px;
-height:64px;
+width:110px;
+height:110px;
 border-radius:50%;
 object-fit:cover;
+flex-shrink:0;
+}
+
+.iconic-text{
+max-width:500px;
 }
 
 .iconic-names{
-font-size:14px;
-opacity:.8;
-margin-top:4px;
+font-size:15px;
+opacity:.7;
+margin-bottom:18px;
 }
 
 .iconic-description{
-margin-bottom:24px;
-max-width:420px;
+line-height:1.7;
+margin-bottom:26px;
 }
 
 .iconic-actions{
 display:flex;
-gap:12px;
+gap:14px;
 }
 
 
@@ -290,9 +294,14 @@ height:auto;
 padding:40px 24px;
 }
 
-.iconic-row{
+.iconic-header{
 flex-direction:column;
-text-align:center;
+align-items:flex-start;
+}
+
+.iconic-avatar{
+width:90px;
+height:90px;
 }
 
 }
