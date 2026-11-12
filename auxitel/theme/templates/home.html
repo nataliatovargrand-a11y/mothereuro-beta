@@ -1,0 +1,39 @@
+<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
+<main class="wp-block-group">
+<!-- wp:group {"tagName":"section","align":"full","className":"auxi-section-sm auxi-dots-dark","backgroundColor":"navy-950","textColor":"white","layout":{"type":"constrained"}} -->
+<section class="wp-block-group alignfull auxi-section-sm auxi-dots-dark has-white-color has-text-color has-navy-950-background-color has-background"><!-- wp:group {"className":"auxi-section-head alignwide","layout":{"type":"default"}} -->
+<div class="wp-block-group auxi-section-head alignwide"><!-- wp:paragraph {"className":"auxi-eyebrow"} -->
+<p class="auxi-eyebrow">Noticias y artículos</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Lo último de Auxitel.</h1>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></section>
+<!-- /wp:group -->
+<!-- wp:group {"tagName":"section","align":"full","className":"auxi-section auxi-dots","backgroundColor":"grey-50","layout":{"type":"constrained"}} -->
+<section class="wp-block-group alignfull auxi-section auxi-dots has-grey-50-background-color has-background">
+<!-- wp:query {"queryId":1,"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"auxi-news alignwide","align":"wide"} -->
+<div class="wp-block-query auxi-news alignwide"><!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
+<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/9"} /-->
+<!-- wp:group {"className":"auxi-news-body","layout":{"type":"default"}} -->
+<div class="wp-block-group auxi-news-body"><!-- wp:post-date {"format":"j M Y"} /-->
+<!-- wp:post-title {"level":3,"isLink":true,"fontSize":"large"} /--></div>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+<!-- wp:query-no-results -->
+<!-- wp:paragraph -->
+<p>No hay noticias todavía.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query -->
+</section>
+<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->

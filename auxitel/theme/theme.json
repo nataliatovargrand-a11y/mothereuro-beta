@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": true,
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "custom": true,
+      "palette": [
+        { "slug": "navy-950", "name": "Marino noche", "color": "#020D21" },
+        { "slug": "navy-900", "name": "Marino profundo", "color": "#051634" },
+        { "slug": "navy-800", "name": "Marino tarjeta", "color": "#071D42" },
+        { "slug": "navy", "name": "Marino Auxitel", "color": "#012C63" },
+        { "slug": "line", "name": "Línea oscura", "color": "#17325E" },
+        { "slug": "accent", "name": "Burdeos", "color": "#8E2A3E" },
+        { "slug": "white", "name": "Blanco", "color": "#FFFFFF" },
+        { "slug": "grey-50", "name": "Gris claro", "color": "#F3F4F6" },
+        { "slug": "grey-200", "name": "Gris línea", "color": "#E3E5E9" },
+        { "slug": "grey-300", "name": "Gris texto suave", "color": "#D3D7DD" },
+        { "slug": "grey-500", "name": "Gris medio", "color": "#6F757E" },
+        { "slug": "grey-700", "name": "Gris texto", "color": "#555B64" },
+        { "slug": "ink", "name": "Tinta", "color": "#0B1B36" }
+      ]
+    },
+    "typography": {
+      "defaultFontSizes": false,
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "slug": "archivo",
+          "name": "Archivo",
+          "fontFamily": "Archivo, system-ui, sans-serif",
+          "fontFace": [
+            { "fontFamily": "Archivo", "fontStyle": "normal", "fontWeight": "100 900", "fontDisplay": "swap", "src": [ "file:./assets/fonts/archivo-latin-wght-normal.woff2" ] },
+            { "fontFamily": "Archivo", "fontStyle": "normal", "fontWeight": "100 900", "fontDisplay": "swap", "src": [ "file:./assets/fonts/archivo-latin-ext-wght-normal.woff2" ] }
+          ]
+        },
+        {
+          "slug": "mono",
+          "name": "IBM Plex Mono",
+          "fontFamily": "\"IBM Plex Mono\", ui-monospace, monospace",
+          "fontFace": [
+            { "fontFamily": "IBM Plex Mono", "fontStyle": "normal", "fontWeight": "400", "fontDisplay": "swap", "src": [ "file:./assets/fonts/ibm-plex-mono-latin-400-normal.woff2" ] },
+            { "fontFamily": "IBM Plex Mono", "fontStyle": "normal", "fontWeight": "500", "fontDisplay": "swap", "src": [ "file:./assets/fonts/ibm-plex-mono-latin-500-normal.woff2" ] },
+            { "fontFamily": "IBM Plex Mono", "fontStyle": "normal", "fontWeight": "400", "fontDisplay": "swap", "src": [ "file:./assets/fonts/ibm-plex-mono-latin-ext-400-normal.woff2" ] },
+            { "fontFamily": "IBM Plex Mono", "fontStyle": "normal", "fontWeight": "500", "fontDisplay": "swap", "src": [ "file:./assets/fonts/ibm-plex-mono-latin-ext-500-normal.woff2" ] }
+          ]
+        }
+      ],
+      "fontSizes": [
+        { "slug": "small", "name": "Pequeño", "size": "0.875rem" },
+        { "slug": "base", "name": "Base", "size": "1.0625rem" },
+        { "slug": "large", "name": "Grande", "size": "1.25rem" },
+        { "slug": "x-large", "name": "Muy grande", "size": "1.75rem", "fluid": { "min": "1.5rem", "max": "1.75rem" } },
+        { "slug": "xx-large", "name": "Titular sección", "size": "3.5rem", "fluid": { "min": "2.25rem", "max": "3.75rem" } },
+        { "slug": "display", "name": "Titular portada", "size": "5.25rem", "fluid": { "min": "2.75rem", "max": "5.5rem" } }
+      ]
+    },
+    "spacing": {
+      "units": [ "px", "rem", "%", "vw" ],
+      "spacingSizes": [
+        { "slug": "20", "name": "XS", "size": "0.5rem" },
+        { "slug": "30", "name": "S", "size": "1rem" },
+        { "slug": "40", "name": "M", "size": "1.5rem" },
+        { "slug": "50", "name": "L", "size": "2.5rem" },
+        { "slug": "60", "name": "XL", "size": "clamp(3rem, 6vw, 5rem)" },
+        { "slug": "70", "name": "XXL", "size": "clamp(4rem, 9vw, 7rem)" }
+      ]
+    },
+    "layout": { "contentSize": "1200px", "wideSize": "1320px" },
+    "border": { "radius": true }
+  },
+  "styles": {
+    "color": { "background": "var(--wp--preset--color--white)", "text": "var(--wp--preset--color--ink)" },
+    "typography": { "fontFamily": "var(--wp--preset--font-family--archivo)", "fontSize": "var(--wp--preset--font-size--base)", "lineHeight": "1.6" },
+    "spacing": { "padding": { "left": "clamp(1.25rem, 3vw, 2rem)", "right": "clamp(1.25rem, 3vw, 2rem)" }, "blockGap": "1.5rem" },
+    "elements": {
+      "heading": { "typography": { "fontWeight": "400", "lineHeight": "1.05", "letterSpacing": "-0.02em" } },
+      "h1": { "typography": { "fontSize": "var(--wp--preset--font-size--display)", "fontWeight": "300", "letterSpacing": "-0.03em" } },
+      "h2": { "typography": { "fontSize": "var(--wp--preset--font-size--xx-large)", "fontWeight": "300", "letterSpacing": "-0.03em" } },
+      "h3": { "typography": { "fontSize": "var(--wp--preset--font-size--x-large)", "fontWeight": "500" } },
+      "link": { "color": { "text": "var(--wp--preset--color--navy)" }, ":hover": { "color": { "text": "var(--wp--preset--color--accent)" } } },
+      "button": {
+        "color": { "background": "var(--wp--preset--color--accent)", "text": "var(--wp--preset--color--white)" },
+        "border": { "radius": "999px" },
+        "spacing": { "padding": { "top": "0.95rem", "bottom": "0.95rem", "left": "1.75rem", "right": "1.75rem" } },
+        "typography": { "fontWeight": "600", "fontSize": "1rem" },
+        ":hover": { "color": { "background": "#741F31", "text": "var(--wp--preset--color--white)" } }
+      }
+    }
+  },
+  "templateParts": [
+    { "name": "header", "title": "Cabecera", "area": "header" },
+    { "name": "footer", "title": "Pie de página", "area": "footer" }
+  ],
+  "customTemplates": [
+    { "name": "page-contacto", "title": "Contacto", "postTypes": [ "page" ] },
+    { "name": "page-trabaja-con-nosotros", "title": "Trabaja con nosotros", "postTypes": [ "page" ] }
+  ]
+}
